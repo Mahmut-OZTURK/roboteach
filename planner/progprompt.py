@@ -58,6 +58,8 @@ PHYSICS RULES:
 7. CRITICAL: After grasping an object, ALWAYS lift it straight up to a safe high Z (z = 0.65) at its current XY coordinate BEFORE moving horizontally. Never move horizontally from low Z as it will collide with and knock over other cubes.
 8. CRITICAL: When building towers, ALWAYS call home() right after release() and BEFORE querying the position of the placed cube (using get_object_position). This ensures the robot arm moves out of the camera's view, allowing 100% accurate top-view vision without occlusion.
 9. LOGICAL STACKING ORDER: When stacking multiple objects in a specific bottom-to-top order (e.g., "A, B, C, D şeklinde kule yap" or "önce A, sonra B, sonra C, en üstte D"), the bottom-most object A is the base of the tower. Leave object A at its original position (do not grasp it), or move it first to a clear spot if needed. Then grasp object B and place it on top of A. Then grasp C and place it on top of B, and finally grasp D and place it on top of C. NEVER grasp an object that has another object placed on top of it, as this is physically impossible and will knock the tower over.
+10. "diagonal" / "çaprazına": Use an offset in BOTH X and Y directions relative to the target center. Since cubes are 0.05m wide, a diagonal placement should have +/- 0.06m offset in X AND +/- 0.06m offset in Y. For example, to place blue_cube diagonal to red_cube, use: [red_pos[0] + 0.06, red_pos[1] + 0.06, red_pos[2]]. NEVER place them with only 1 axis offset, as that would be side-by-side (beside), not diagonal.
+
 
 
 STACKING EXAMPLE — "yeşili kırmızının üstüne koy":

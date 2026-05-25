@@ -1,0 +1,10 @@
+{
+    "task_type": "place_diagonally",
+    "calibrated": true,
+    "last_task": "kırmızının çaprazına mavi kutuyu sarı kutunun çaprazına yeşil kutuyu koy",
+    "instructions": [
+        "Ensure correct spatial arrangement according to task descriptions.",
+        "Ensure correct placement according to the task description."
+    ],
+    "success_count": 1
+}

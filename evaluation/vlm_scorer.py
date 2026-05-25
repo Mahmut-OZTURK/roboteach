@@ -104,6 +104,7 @@ EVALUATION RULES:
 - For tower stacking/ordering tasks (e.g. "kule", "sırala", "üst üste diz", "order"), the cubes MUST form a single vertical tower. You MUST verify the EXACT vertical order of the colors from bottom to top. If the tower has collapsed, is slanted/fallen, or if the cubes are in the wrong vertical color sequence, SUCCESS = False and Score = 0.0.
 - If the task is "put inside" or "içine koy", the object MUST be completely inside the brown box.
 - If the task is "put beside" or "yanına koy", the objects must be next to each other on the table.
+- If the task is "diagonal" or "çaprazına", the object MUST be placed diagonally relative to the other object (offsetted on both X and Y axes, forming a 45-degree corner relationship), NOT directly stacked and NOT directly straight side-by-side. Verify from the top view.
 - NEGATIVE CONSTRAINTS (e.g. "do not move X") are CRITICAL. Violation = Score 0.
 - Objects MUST NOT be on the floor.
 

@@ -1,7 +1,7 @@
 {
     "task_type": "build_tower",
     "calibrated": true,
-    "last_task": "kutuları kule gibi üst üste diz",
+    "last_task": "kutuları kule gibi üst üste diz kutular şu sıraya sahip olmalıdır en altta mavi üstünde kırmızı üstünde yeşil en üstte de sarı",
     "instructions": [
         "Make sure the object is directly on top of the target object.",
         "Ensure precise placement of objects on top of each other.",
@@ -11,5 +11,5 @@
         "Ensure the cubes are stacked directly on top of each other to achieve the task.",
         "To achieve the task, the blocks need to be stacked vertically, one on top of the other."
     ],
-    "success_count": 7
+    "success_count": 8
 }
