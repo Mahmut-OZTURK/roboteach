@@ -152,9 +152,9 @@ Specifically, check if any object is described as ALREADY being in a certain sta
 CRITICAL: Do NOT confuse the TARGET GOAL state (the desired final state that the robot is asked to build, e.g., "build a tower in order X, Y, Z" or "put X on Y") with the INITIAL starting state. If the prompt describes a goal/target stack to build, it is NOT an initial state stack. The initial state should be empty unless the task EXPLICITLY states that they START or ALREADY are in a stack before the task begins.
 
 For example:
-- "put green on yellow but red is already on blue" -> {"stacks": [["red_cube", "blue_cube"]], "inside_box": []}
-- "build a tower: blue at bottom, red on top, then green" -> {"stacks": [], "inside_box": []} (This is a target goal state, NOT an initial state!)
-- "kutuları kule gibi üst üste diz: en altta mavi üstünde kırmızı" -> {"stacks": [], "inside_box": []} (Target goal state, NOT initial state!)
+- "put green on yellow but red is already on blue" -> {{"stacks": [["red_cube", "blue_cube"]], "inside_box": []}}
+- "build a tower: blue at bottom, red on top, then green" -> {{"stacks": [], "inside_box": []}} (This is a target goal state, NOT an initial state!)
+- "kutuları kule gibi üst üste diz: en altta mavi üstünde kırmızı" -> {{"stacks": [], "inside_box": []}} (Target goal state, NOT initial state!)
 
 Format the response ONLY as a JSON with two keys:
 1. "stacks": a list of lists of two strings: [["top_cube_name", "bottom_cube_name"]]. Use exact names: "red_cube", "blue_cube", "green_cube", "yellow_cube".
