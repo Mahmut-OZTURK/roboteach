@@ -1,0 +1,12 @@
+{
+    "task_type": "build_tower",
+    "instructions": [
+        "Make sure the object is directly on top of the target object.",
+        "Ensure precise placement of objects on top of each other.",
+        "Make sure to place the green cube directly on top of the blue cube.",
+        "Ensure the blue_cube is directly stacked on the red_cube to achieve the task.",
+        "Make sure to align the cubes properly when stacking them.",
+        "Ensure the cubes are stacked directly on top of each other to achieve the task.",
+        "To achieve the task, the blocks need to be stacked vertically, one on top of the other."
+    ]
+}

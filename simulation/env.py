@@ -17,7 +17,7 @@ class RoboTeachEnv:
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0, 0, -9.81)
         p.setRealTimeSimulation(0)
-        p.setPhysicsEngineParameter(numSolverIterations=100)
+        p.setPhysicsEngineParameter(numSolverIterations=150)
 
         # Zemin
         self.plane = p.loadURDF("plane.urdf")
@@ -53,8 +53,6 @@ class RoboTeachEnv:
                            "color_rgb": [0, 255, 0]},
             "yellow_cube": {"type": "box", "half_extents": [0.025, 0.025, 0.025],
                             "color_rgb": [255, 255, 0]},
-            "brown_box": {"type": "box", "half_extents": [0.08, 0.06, 0.04],
-                          "color_rgb": [160, 100, 50]},
         }
 
         # İlk fizik yerleşimi
@@ -70,17 +68,17 @@ class RoboTeachEnv:
                                      rgbaColor=[0.6, 0.4, 0.2, 1])
         collision = p.createCollisionShape(p.GEOM_BOX, halfExtents=table_size)
         table = p.createMultiBody(0, collision, visual, table_pos)
-        p.changeDynamics(table, -1, lateralFriction=1.0, restitution=0.0)
+        p.changeDynamics(table, -1, lateralFriction=2.0, restitution=0.0)
         return table
 
     def _stable_dynamics(self, obj_id):
         """Objeye kararlı fizik parametreleri uygular."""
         p.changeDynamics(obj_id, -1,
-                         lateralFriction=1.5,
-                         spinningFriction=0.1,
+                         lateralFriction=2.0,
+                         spinningFriction=0.2,
                          rollingFriction=0.01,
-                         linearDamping=0.8,
-                         angularDamping=0.8,
+                         linearDamping=0.9,
+                         angularDamping=0.9,
                          restitution=0.0)
 
     def _load_objects(self):
@@ -111,76 +109,7 @@ class RoboTeachEnv:
         self.objects["yellow_cube"] = p.createMultiBody(0.2, yc, yv, [0.20, 0.05, 0.45])
         self._stable_dynamics(self.objects["yellow_cube"])
 
-        # ─── Açık karton kutu (geniş, 4 küpü rahat alır) ───
-        self.objects["brown_box"] = self._create_open_box(
-            position=[0.05, 0.0, 0.42],
-            inner_size=[0.12, 0.09],    # İç boyut: 24x18cm (4 küp sığar)
-            wall_height=0.05,           # Duvar yüksekliği: 5cm
-            wall_thickness=0.005,       # Duvar kalınlığı: 5mm
-            color=[0.65, 0.45, 0.25, 1] # Karton kahverengisi
-        )
-
         print(f"📦 Nesneler: {list(self.objects.keys())}")
-
-    def _create_open_box(self, position, inner_size, wall_height, wall_thickness, color):
-        """Duvarları ve tabanı olan açık bir kutu oluşturur."""
-        ix, iy = inner_size
-        wh = wall_height
-        wt = wall_thickness
-        px, py, pz = position
-
-        parts_visual = []
-        parts_collision = []
-        parts_pos = []
-
-        # Taban
-        parts_visual.append(p.createVisualShape(p.GEOM_BOX, halfExtents=[ix, iy, wt], rgbaColor=color))
-        parts_collision.append(p.createCollisionShape(p.GEOM_BOX, halfExtents=[ix, iy, wt]))
-        parts_pos.append([0, 0, 0])
-
-        # Sol duvar (-x)
-        parts_visual.append(p.createVisualShape(p.GEOM_BOX, halfExtents=[wt, iy, wh/2], rgbaColor=color))
-        parts_collision.append(p.createCollisionShape(p.GEOM_BOX, halfExtents=[wt, iy, wh/2]))
-        parts_pos.append([-ix, 0, wh/2 + wt])
-
-        # Sağ duvar (+x)
-        parts_visual.append(p.createVisualShape(p.GEOM_BOX, halfExtents=[wt, iy, wh/2], rgbaColor=color))
-        parts_collision.append(p.createCollisionShape(p.GEOM_BOX, halfExtents=[wt, iy, wh/2]))
-        parts_pos.append([ix, 0, wh/2 + wt])
-
-        # Arka duvar (-y)
-        parts_visual.append(p.createVisualShape(p.GEOM_BOX, halfExtents=[ix, wt, wh/2], rgbaColor=color))
-        parts_collision.append(p.createCollisionShape(p.GEOM_BOX, halfExtents=[ix, wt, wh/2]))
-        parts_pos.append([0, -iy, wh/2 + wt])
-
-        # Ön duvar (+y)
-        parts_visual.append(p.createVisualShape(p.GEOM_BOX, halfExtents=[ix, wt, wh/2], rgbaColor=color))
-        parts_collision.append(p.createCollisionShape(p.GEOM_BOX, halfExtents=[ix, wt, wh/2]))
-        parts_pos.append([0, iy, wh/2 + wt])
-
-        # Taban bodysi oluştur
-        base_id = p.createMultiBody(
-            baseMass=0,  # Sabit (hareket etmeyen)
-            baseCollisionShapeIndex=parts_collision[0],
-            baseVisualShapeIndex=parts_visual[0],
-            basePosition=position,
-            linkMasses=[0, 0, 0, 0],
-            linkCollisionShapeIndices=parts_collision[1:],
-            linkVisualShapeIndices=parts_visual[1:],
-            linkPositions=parts_pos[1:],
-            linkOrientations=[[0, 0, 0, 1]] * 4,
-            linkInertialFramePositions=[[0, 0, 0]] * 4,
-            linkInertialFrameOrientations=[[0, 0, 0, 1]] * 4,
-            linkParentIndices=[0, 0, 0, 0],
-            linkJointTypes=[p.JOINT_FIXED] * 4,
-            linkJointAxis=[[0, 0, 0]] * 4,
-        )
-
-        p.changeDynamics(base_id, -1, lateralFriction=1.0, restitution=0.0)
-        for link in range(4):
-            p.changeDynamics(base_id, link, lateralFriction=1.0, restitution=0.0)
-
-        return base_id
 
     def step(self):
         p.stepSimulation()
@@ -197,7 +126,7 @@ class RoboTeachEnv:
             p.resetBasePositionAndOrientation(obj_id, pos, [0, 0, 0, 1])
             p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
         # Robot eklemlerini sıfırla
-        rest = [0.0, 0.0, 0.0, -1.5708, 0.0, 1.8675, 0.0, 0, 0, 0.04, 0.04, 0]
+        rest = [-1.2, 0.0, 0.0, -1.5708, 0.0, 1.8675, 0.0, 0, 0, 0.04, 0.04, 0]
         for i in range(12):
             if i < p.getNumJoints(self.robot_id):
                 p.resetJointState(self.robot_id, i, rest[i])
@@ -205,32 +134,84 @@ class RoboTeachEnv:
             p.stepSimulation()
             time.sleep(1.0 / 240.0)
 
-    def randomize(self):
-        """Küpleri masa üzerinde rastgele yerleştirir (kutu sabit kalır)."""
-        print("  🎲 Objeler rastgele yerleştiriliyor...")
+    def randomize(self, initial_state=None):
+        """Küpleri masa üzerinde rastgele yerleştirir (gerekirse başlangıç yığınlarını kurar)."""
+        print("  🎲 Objeler yerleştiriliyor...")
+        
+        stacks = []
+        if initial_state and isinstance(initial_state, dict):
+            stacks = initial_state.get("stacks", [])
+        
+        # Hangi küpün hangi küpün üzerinde olduğunu haritalandır
+        # stacks: [["top_cube", "bottom_cube"]]
+        top_to_bottom = {pair[0]: pair[1] for pair in stacks if len(pair) == 2}
+        bottom_to_top = {pair[1]: pair[0] for pair in stacks if len(pair) == 2}
+        
+        # Sadece en alttaki küpleri veya yığınlanmamış küpleri konumlandıracağız
+        all_cubes = ["red_cube", "blue_cube", "green_cube", "yellow_cube"]
+        base_cubes = [cube for cube in all_cubes if cube not in top_to_bottom]
+        
         positions = []
-        # Kutunun pozisyonunu ekle (küpler kutunun üstüne spawn olmasın)
-        box_pos = list(p.getBasePositionAndOrientation(self.objects["brown_box"])[0])
-        positions.append((box_pos[0], box_pos[1]))
-
-        movable = ["red_cube", "blue_cube", "green_cube", "yellow_cube"]
-        for name in movable:
+        cube_positions = {}
+        
+        # En alttaki veya bağımsız küpleri konumlandır
+        for name in base_cubes:
             obj_id = self.objects[name]
             while True:
                 x = random.uniform(0.08, 0.28)
                 y = random.uniform(-0.18, 0.18)
                 too_close = False
                 for px, py in positions:
-                    if abs(x - px) < 0.07 and abs(y - py) < 0.07:
+                    if abs(x - px) < 0.08 and abs(y - py) < 0.08:
                         too_close = True
                         break
                 if not too_close:
                     break
             positions.append((x, y))
-            p.resetBasePositionAndOrientation(obj_id, [x, y, 0.45], [0, 0, 0, 1])
+            z = 0.425
+            p.resetBasePositionAndOrientation(obj_id, [x, y, z], [0, 0, 0, 1])
             p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
+            cube_positions[name] = [x, y, z]
 
-        for _ in range(100):
+        # Şimdi üstteki küpleri yığın sırasına göre yerleştir
+        placed = set(base_cubes)
+        remaining = set(top_to_bottom.keys())
+        
+        while remaining:
+            progress = False
+            for top_cube in list(remaining):
+                bottom_cube = top_to_bottom[top_cube]
+                if bottom_cube in placed:
+                    bx, by, bz = cube_positions[bottom_cube]
+                    # Üstteki küpü hafifçe boşlukla üzerine koy (küp boyutu 5cm, 2mm tolerans ekliyoruz ki fizik motoru çakışıp fırlatmasın)
+                    tz = bz + 0.052
+                    obj_id = self.objects[top_cube]
+                    p.resetBasePositionAndOrientation(obj_id, [bx, by, tz], [0, 0, 0, 1])
+                    p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
+                    cube_positions[top_cube] = [bx, by, tz]
+                    placed.add(top_cube)
+                    remaining.remove(top_cube)
+                    progress = True
+            if not progress:
+                # Kısır döngü durumunda geri kalanları rastgele at
+                for top_cube in remaining:
+                    obj_id = self.objects[top_cube]
+                    while True:
+                        x = random.uniform(0.08, 0.28)
+                        y = random.uniform(-0.18, 0.18)
+                        too_close = False
+                        for px, py in positions:
+                            if abs(x - px) < 0.08 and abs(y - py) < 0.08:
+                                too_close = True
+                                break
+                        if not too_close:
+                            break
+                    positions.append((x, y))
+                    p.resetBasePositionAndOrientation(obj_id, [x, y, 0.425], [0, 0, 0, 1])
+                    p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
+                break
+
+        for _ in range(120):
             p.stepSimulation()
             time.sleep(1.0 / 240.0)
 

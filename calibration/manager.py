@@ -26,7 +26,7 @@ class CalibrationManager:
         os.makedirs(knowledge_dir, exist_ok=True)
 
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-        self.model = "meta-llama/llama-4-scout-17b-16e-instruct"
+        self.model = "llama-3.3-70b-versatile"
         print("✅ CalibrationManager hazır")
 
     # ─── Görev Sınıflandırma (LLM-native, sınırsız) ───
@@ -143,3 +143,82 @@ Respond with ONLY the snake_case category name, nothing else."""
             with open(path, 'r') as f:
                 return json.load(f).get("instructions", [])
         return []
+
+    def get_initial_scene_config(self, task: str) -> dict:
+        """Görevi analiz ederek başlangıç sahne kurulumunu (stack, inside_box) belirler."""
+        prompt = f"""Analyze this robot manipulation task to see if it specifies a special initial scene configuration or starting state for the objects (red_cube, blue_cube, green_cube, yellow_cube).
+Specifically, check if any object is described as ALREADY being in a certain state BEFORE the main action starts (e.g. "X is already on top of Y", "X starts inside the box", "X is stacked on Y").
+
+Format the response ONLY as a JSON with two keys:
+1. "stacks": a list of lists of two strings: [["top_cube_name", "bottom_cube_name"]]. Use exact names: "red_cube", "blue_cube", "green_cube", "yellow_cube".
+2. "inside_box": a list of strings of cubes that start inside the box.
+
+Task: "{task}"
+
+Respond with ONLY the JSON object, nothing else."""
+
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.0, max_tokens=150
+            )
+            content = resp.choices[0].message.content.strip()
+            import json
+            import re
+            match = re.search(r"(\{.*\})", content, re.DOTALL)
+            if match:
+                data = json.loads(match.group(1))
+                print(f"  📐 Başlangıç kurulumu: {data}")
+                return data
+        except Exception as e:
+            print(f"  ⚠️  Başlangıç kurulumu analiz hatası: {e}")
+        return {"stacks": [], "inside_box": []}
+
+    def break_down_task(self, task: str) -> list:
+        """Görevi ardışık adımlara / kontrol noktalarına böler."""
+        prompt = f"""Analyze this robot manipulation task and break it down into sequential checkpoints (steps) that need to be accomplished.
+Each checkpoint must be a simple, short task description focusing on a single step/action (e.g. "grasp A and place on B", "move A inside the box", "move A to an empty space to unstack").
+
+Examples:
+- "put the blue cube on red, but red is already on blue" -> [
+    "move red_cube to an empty space to unstack",
+    "put blue_cube on top of red_cube"
+  ]
+- "put all cubes in the box" -> [
+    "put red_cube inside brown_box",
+    "put blue_cube inside brown_box",
+    "put green_cube inside brown_box",
+    "put yellow_cube inside brown_box"
+  ]
+- "put green on yellow next to red" -> [
+    "put green_cube on top of yellow_cube"
+  ]
+- "kutuları üst üste diz 4 tanesini kule gibi" -> [
+    "put red_cube on the table",
+    "put blue_cube on top of red_cube",
+    "put green_cube on top of blue_cube",
+    "put yellow_cube on top of green_cube"
+  ]
+
+Task: "{task}"
+
+Respond with ONLY a JSON list of strings, nothing else."""
+
+        try:
+            resp = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.0, max_tokens=250
+            )
+            content = resp.choices[0].message.content.strip()
+            import json
+            import re
+            match = re.search(r"(\[.*\])", content, re.DOTALL)
+            if match:
+                steps = json.loads(match.group(1))
+                print(f"  📌 Kontrol Noktaları (Checkpoints): {steps}")
+                return steps
+        except Exception as e:
+            print(f"  ⚠️  Görev bölme hatası: {e}")
+        return [task]

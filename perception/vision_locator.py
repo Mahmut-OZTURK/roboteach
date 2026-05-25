@@ -10,7 +10,7 @@ class VisionLocator:
     """
 
     Z_MIN = 0.38
-    Z_MAX = 0.60
+    Z_MAX = 0.68
     MIN_PIXEL_COUNT = 15
 
     def __init__(self, camera, object_dimensions: dict):
@@ -33,10 +33,6 @@ class VisionLocator:
             "yellow_cube": {
                 "lower": np.array([200, 200, 0]),
                 "upper": np.array([255, 255, 60])
-            },
-            "brown_box": {
-                "lower": np.array([130, 70, 30]),
-                "upper": np.array([190, 140, 80])
             },
         }
 
@@ -67,7 +63,20 @@ class VisionLocator:
                 continue
 
             cy, cx = coords
-            d = float(depth[cy, cx])
+            
+            # Gürültüyü arındırmak için centroid çevresinde 5x5'lik derinlik penceresi al
+            h, w = depth.shape
+            ymin, ymax = max(0, cy - 2), min(h, cy + 3)
+            xmin, xmax = max(0, cx - 2), min(w, cx + 3)
+            depth_window = depth[ymin:ymax, xmin:xmax]
+            
+            # Arka plan piksellerini filtrele (değeri 1.0'a çok yakın olanlar arka plandır)
+            valid_depths = depth_window[depth_window < 0.99]
+            if len(valid_depths) > 0:
+                d = float(np.median(valid_depths))
+            else:
+                d = float(depth[cy, cx])
+                
             world_pos = self.camera.pixel_to_world(cx, cy, d, view_matrix)
 
             if world_pos[2] < self.Z_MIN or world_pos[2] > self.Z_MAX:
@@ -78,8 +87,6 @@ class VisionLocator:
             half_z = self.object_dimensions[object_name].get("half_extents", [0,0,0])[2]
             if "cube" in object_name:
                 world_pos[2] -= half_z
-            elif "box" in object_name:
-                world_pos[2] -= half_z # Kutunun taban merkezine in
 
             world_pos = [float(v) for v in world_pos]
             self._last_known[object_name] = list(world_pos)

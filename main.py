@@ -23,9 +23,10 @@ def calibrate(task, env, skills, planner, cap, scorer, calib_mgr, vision_locator
     """
     Kalibrasyon modu:
     1. LLM görevi dinamik sınıflandırır
-    2. Plan üret → çalıştır → VLM değerlendir
-    3. Başarısızsa öğren, tekrar dene
-    4. Başarılıysa kalibrasyon kaydet
+    2. Görevi ardışık kontrol noktalarına (checkpoints) böler
+    3. Her adımda Plan üret → çalıştır → VLM değerlendir (kapalı döngü)
+    4. Başarısız olan adımda öğren, tekrar dene
+    5. Başarılıysa kalibrasyonu kaydet
     """
     print(f"\n{'='*60}")
     print(f"  🔧 KALİBRASYON MODU: '{task}'")
@@ -33,68 +34,92 @@ def calibrate(task, env, skills, planner, cap, scorer, calib_mgr, vision_locator
 
     task_type = calib_mgr.classify_task(task)
     knowledge = calib_mgr.load_knowledge(task_type)
+    initial_state = calib_mgr.get_initial_scene_config(task)
+    # Kullanıcı talebi üzerine aşamalı planlama (break_down_task) kaldırıldı, tek adımda planlama yapılacak
+    checkpoints = [task]
 
     for attempt in range(1, MAX_CALIBRATION_RETRIES + 1):
         print(f"\n{'─'*30} Deneme {attempt} {'─'*30}")
 
         env.reset()
-        env.randomize()
-        vision_locator.clear_cache()
+        env.randomize(initial_state)
+        
+        success_all_checkpoints = True
+        for cp_idx, checkpoint in enumerate(checkpoints):
+            print(f"\n🚩 [Kontrol Noktası {cp_idx+1}/{len(checkpoints)}]: '{checkpoint}'")
+            vision_locator.clear_cache()
 
-        # Sahne analizi
-        print("\n🔍 Sahne Analizi:")
-        scene_desc = scorer.analyze_scene()
+            # Sahne analizi
+            print("\n🔍 Sahne Analizi:")
+            scene_desc = scorer.analyze_scene()
 
-        # Nesne konumları (kameradan)
-        positions = vision_locator.locate_all()
-        scene_objects = [{"name": n, "position": p} for n, p in positions.items()]
+            # Nesne konumları (kameradan)
+            positions = vision_locator.locate_all()
+            scene_objects = [{"name": n, "position": p} for n, p in positions.items()]
 
-        if not scene_objects:
-            print("  ❌ Hiçbir nesne tespit edilemedi!")
+            if not scene_objects:
+                print("  ❌ Hiçbir nesne tespit edilemedi!")
+                skills.home()
+                success_all_checkpoints = False
+                break
+
+            # Plan üret
+            plan = planner.plan(
+                task=checkpoint,
+                scene_description=scene_desc,
+                objects=scene_objects,
+                robot_position=[0, -0.5, 0.42],
+                extra_instructions=knowledge if knowledge else None
+            )
+
+            if not plan:
+                print("\n⚠️  Plan üretilemedi veya görev imkansız!")
+                success_all_checkpoints = False
+                break
+
+            # Çalıştır
+            success_exec = cap.execute(plan, scorer=scorer)
+
+            if not success_exec:
+                print("\n⚠️  Çalıştırma hatası!")
+                calib_mgr.save_knowledge(task_type, f"Execution failed for '{checkpoint}' - simplify the plan")
+                knowledge.append(f"Simplify plan for '{checkpoint}'")
+                skills.home()
+                success_all_checkpoints = False
+                break
+
+            # VLM değerlendirme (Token tasarrufu için sadece son adımda kontrol et)
+            is_last_checkpoint = (cp_idx == len(checkpoints) - 1)
+            if is_last_checkpoint:
+                print(f"\n📊 VLM Değerlendirme başlıyor (Final Adım: '{checkpoint}')...")
+                result = scorer.evaluate(checkpoint)
+            else:
+                print(f"\n📊 Ara adım '{checkpoint}' için VLM kontrolü atlanıyor (Token tasarrufu)...")
+                result = {"success": True, "score": 1.0, "issue": None, "instruction": "None"}
+
+            if not result["success"] or result["score"] < 0.8:
+                print(f"\n⚠️  Kontrol noktası '{checkpoint}' başarısız: {result.get('issue', 'düşük skor')}")
+
+                # Başarısız — öğren
+                if result.get("instruction") and result["instruction"] != "None":
+                    calib_mgr.save_knowledge(task_type, result["instruction"])
+                    knowledge.append(result["instruction"])
+                    print(f"  📝 Öğrenilen: {result['instruction']}")
+
+                skills.home()
+                success_all_checkpoints = False
+                break
+
+            if is_last_checkpoint:
+                print(f"  ✅ Görev başarıyla geçildi! (Final Skor: {result['score']:.2f})")
+            else:
+                print(f"  ✅ Ara adım '{checkpoint}' başarıyla geçildi! (Atlandı)")
             skills.home()
-            continue
 
-        # Plan üret
-        plan = planner.plan(
-            task=task,
-            scene_description=scene_desc,
-            objects=scene_objects,
-            robot_position=[0, -0.5, 0.42],
-            extra_instructions=knowledge if knowledge else None
-        )
-
-        # Çalıştır
-        success_exec = cap.execute(plan, scorer=scorer)
-
-        if not success_exec:
-            print("\n⚠️  Çalıştırma hatası!")
-            calib_mgr.save_knowledge(task_type, "Execution failed - simplify the plan")
-            knowledge.append("Simplify the plan")
-            skills.home()
-            continue
-
-        # VLM değerlendirme
-        print("\n📊 VLM Değerlendirme başlıyor...")
-        result = scorer.evaluate(task)
-
-        if result["success"] and result["score"] >= 0.8:
-            print(f"\n✅ KALİBRASYON BAŞARILI! (Skor: {result['score']:.2f})")
-
-            if attempt == 1 and not knowledge:
-                print("  ✨ İlk denemede kusursuz!")
-            
+        if success_all_checkpoints:
+            print(f"\n✅ KALİBRASYON BAŞARILI! Tüm kontrol noktaları geçildi.")
             calib_mgr.save_calibration(task_type, task, knowledge)
-            skills.home()
             return True
-
-        # Başarısız — öğren
-        if result.get("instruction") and result["instruction"] != "None":
-            calib_mgr.save_knowledge(task_type, result["instruction"])
-            knowledge.append(result["instruction"])
-            print(f"  📝 Öğrenilen: {result['instruction']}")
-
-        print(f"\n⚠️  Deneme {attempt} başarısız: {result.get('issue', 'düşük skor')}")
-        skills.home()
 
     return False
 
@@ -103,8 +128,9 @@ def execute(task, env, skills, planner, cap, scorer, calib_mgr, vision_locator):
     """
     Execute modu:
     1. Kalibrasyon kontrolü (yoksa zero-shot dener)
-    2. Kalibre bilgiyle çalıştır
-    3. 3 kere dene
+    2. Görevi ardışık adımlara böler
+    3. Her adımda plan üretip kapalı döngüde VLM ile doğrulayarak çalıştırır
+    4. 3 kere dene
     """
     print(f"\n{'='*60}")
     print(f"  ▶️  EXECUTE MODU: '{task}'")
@@ -112,6 +138,9 @@ def execute(task, env, skills, planner, cap, scorer, calib_mgr, vision_locator):
 
     task_type = calib_mgr.classify_task(task)
     is_calib = calib_mgr.is_calibrated(task_type)
+    initial_state = calib_mgr.get_initial_scene_config(task)
+    # Kullanıcı talebi üzerine aşamalı planlama (break_down_task) kaldırıldı, tek adımda planlama yapılacak
+    checkpoints = [task]
 
     if is_calib:
         print(f"  ✅ Kalibrasyon mevcut: {task_type}")
@@ -122,8 +151,7 @@ def execute(task, env, skills, planner, cap, scorer, calib_mgr, vision_locator):
         print(f"\n{'─'*30} Execute Deneme {attempt}/3 {'─'*30}")
 
         env.reset()
-        env.randomize()
-        vision_locator.clear_cache()
+        env.randomize(initial_state)
 
         # Bilgi birikimini yükle
         calib = calib_mgr.load_calibration(task_type)
@@ -134,42 +162,67 @@ def execute(task, env, skills, planner, cap, scorer, calib_mgr, vision_locator):
         if combined:
             print(f"  📚 {len(combined)} deneyim yüklendi")
 
-        # Sahne analizi
-        print("\n🔍 Sahne Analizi:")
-        scene_desc = scorer.analyze_scene()
+        success_all_checkpoints = True
+        for cp_idx, checkpoint in enumerate(checkpoints):
+            print(f"\n🚩 [Kontrol Noktası {cp_idx+1}/{len(checkpoints)}]: '{checkpoint}'")
+            vision_locator.clear_cache()
 
-        positions = vision_locator.locate_all()
-        scene_objects = [{"name": n, "position": p} for n, p in positions.items()]
+            # Sahne analizi
+            print("\n🔍 Sahne Analizi:")
+            scene_desc = scorer.analyze_scene()
 
-        if not scene_objects:
-            print("  ❌ Hiçbir nesne tespit edilemedi!")
-            continue
+            positions = vision_locator.locate_all()
+            scene_objects = [{"name": n, "position": p} for n, p in positions.items()]
 
-        # Plan üret + çalıştır
-        plan = planner.plan(
-            task=task,
-            scene_description=scene_desc,
-            objects=scene_objects,
-            robot_position=[0, -0.4, 0.42],
-            extra_instructions=combined if combined else None
-        )
+            if not scene_objects:
+                print("  ❌ Hiçbir nesne tespit edilemedi!")
+                success_all_checkpoints = False
+                break
 
-        success_exec = cap.execute(plan, scorer=scorer)
-        if not success_exec:
-            print("\n⚠️  Çalıştırma hatası!")
+            # Plan üret + çalıştır
+            plan = planner.plan(
+                task=checkpoint,
+                scene_description=scene_desc,
+                objects=scene_objects,
+                robot_position=[0, -0.4, 0.42],
+                extra_instructions=combined if combined else None
+            )
+
+            if not plan:
+                print("\n⚠️  Plan üretilemedi!")
+                success_all_checkpoints = False
+                break
+
+            success_exec = cap.execute(plan, scorer=scorer)
+            if not success_exec:
+                print("\n⚠️  Çalıştırma hatası!")
+                skills.home()
+                success_all_checkpoints = False
+                break
+
+            # VLM değerlendir (Token tasarrufu için sadece son adımda kontrol et)
+            is_last_checkpoint = (cp_idx == len(checkpoints) - 1)
+            if is_last_checkpoint:
+                print(f"\n📊 VLM Değerlendirme başlıyor (Final Adım: '{checkpoint}')...")
+                result = scorer.evaluate(checkpoint)
+            else:
+                print(f"\n📊 Ara adım '{checkpoint}' için VLM kontrolü atlanıyor (Token tasarrufu)...")
+                result = {"success": True, "score": 1.0, "issue": None}
             skills.home()
-            continue
 
-        # VLM değerlendir
-        print("\n📊 VLM Değerlendirme başlıyor...")
-        result = scorer.evaluate(task)
-        skills.home()
+            if not result["success"] or result["score"] < 0.7:
+                print(f"\n⚠️  Kontrol noktası '{checkpoint}' başarısız: {result.get('issue', 'düşük skor')}")
+                success_all_checkpoints = False
+                break
 
-        if result["success"] and result["score"] >= 0.7:
-            print(f"\n✅ Görev başarıyla tamamlandı! (Skor: {result['score']:.2f})")
+            if is_last_checkpoint:
+                print(f"  ✅ Görev başarıyla geçildi! (Final Skor: {result['score']:.2f})")
+            else:
+                print(f"  ✅ Ara adım '{checkpoint}' başarıyla geçildi! (Atlandı)")
+
+        if success_all_checkpoints:
+            print(f"\n✅ Görev başarıyla tamamlandı!")
             return True
-        else:
-            print(f"\n⚠️  Deneme {attempt} başarısız: {result.get('issue', 'düşük skor')}")
 
     print(f"\n❌ 3 deneme başarısız. 'calibrate' modunu deneyin.")
     return False
