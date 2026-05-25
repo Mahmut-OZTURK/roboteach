@@ -99,8 +99,9 @@ Respond ONLY: 'SAFE: True' or 'SAFE: False' with 'REASON: [reason]'."""
 TASK: "{task}"
 
 EVALUATION RULES:
-- BE EXTREMELY STRICT. Do NOT give false positives. If the task failed, say SUCCESS: False.
-- If the task is "stack on top" or "üstüne koy", the object MUST be sitting directly on top of the other object. If it fell off, SUCCESS = False.
+- BE EXTREMELY STRICT. Do NOT give false positives. If the task failed or is partially done, say SUCCESS: False.
+- If the task is "stack on top" or "üstüne koy", the object MUST be sitting directly on top of the other object. If it fell off or is only touching/next to it, SUCCESS = False.
+- For tower stacking/ordering tasks (e.g. "kule", "sırala", "üst üste diz", "order"), the cubes MUST form a single vertical tower. You MUST verify the EXACT vertical order of the colors from bottom to top. If the tower has collapsed, is slanted/fallen, or if the cubes are in the wrong vertical color sequence, SUCCESS = False and Score = 0.0.
 - If the task is "put inside" or "içine koy", the object MUST be completely inside the brown box.
 - If the task is "put beside" or "yanına koy", the objects must be next to each other on the table.
 - NEGATIVE CONSTRAINTS (e.g. "do not move X") are CRITICAL. Violation = Score 0.
