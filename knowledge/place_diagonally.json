@@ -2,6 +2,9 @@
     "task_type": "place_diagonally",
     "instructions": [
         "Ensure correct spatial arrangement according to task descriptions.",
-        "Ensure correct placement according to the task description."
+        "Ensure correct placement according to the task description.",
+        "Ensure precise diagonal placement of objects relative to each other.",
+        "Ensure blocks are placed to form diagonal relationships, not linear ones.",
+        "Ensure correct diagonal placement of objects relative to each other."
     ]
 }

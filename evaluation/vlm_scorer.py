@@ -99,14 +99,13 @@ Respond ONLY: 'SAFE: True' or 'SAFE: False' with 'REASON: [reason]'."""
 TASK: "{task}"
 
 EVALUATION RULES:
-- BE EXTREMELY STRICT. Do NOT give false positives. If the task failed or is partially done, say SUCCESS: False.
-- If the task is "stack on top" or "üstüne koy", the object MUST be sitting directly on top of the other object. If it fell off or is only touching/next to it, SUCCESS = False.
-- For tower stacking/ordering tasks (e.g. "kule", "sırala", "üst üste diz", "order"), the cubes MUST form a single vertical tower. You MUST verify the EXACT vertical order of the colors from bottom to top. If the tower has collapsed, is slanted/fallen, or if the cubes are in the wrong vertical color sequence, SUCCESS = False and Score = 0.0.
-- If the task is "put inside" or "içine koy", the object MUST be completely inside the brown box.
-- If the task is "put beside" or "yanına koy", the objects must be next to each other on the table.
-- If the task is "diagonal" or "çaprazına", the object MUST be placed diagonally relative to the other object (offsetted on both X and Y axes, forming a 45-degree corner relationship), NOT directly stacked and NOT directly straight side-by-side. Verify from the top view.
-- NEGATIVE CONSTRAINTS (e.g. "do not move X") are CRITICAL. Violation = Score 0.
-- Objects MUST NOT be on the floor.
+- BE FAIR AND REALISTIC. Do NOT be overly paranoid. If the placement reasonably achieves the user's intent, mark SUCCESS = True.
+- If the task is "stack on top" or "üstüne koy", the object MUST be sitting on top of the other object.
+- For tower stacking/ordering tasks (e.g. "kule", "sırala", "üst üste diz", "order"), verify the vertical order of colors. The tower should be upright and in the correct order.
+- If the task is "put inside" or "içine koy", the object must be inside the box.
+- If the task is "put beside" or "yanına koy", the objects must be next to each other.
+- If the task is "diagonal" or "çaprazına", the objects should be placed diagonally relative to each other (offset on both axes) or form a diagonal corner relationship (like a neat 2x2 grid where opposite colors align diagonally). If the layout looks balanced, neat, and satisfies the diagonal/grid intention, SUCCESS = True.
+- Objects must not have fallen off the table.
 
 ANALYSIS: Briefly (2 sentences max) describe what you see. Is the task 100% achieved?
 

@@ -4,7 +4,10 @@
     "last_task": "kırmızının çaprazına mavi kutuyu sarı kutunun çaprazına yeşil kutuyu koy",
     "instructions": [
         "Ensure correct spatial arrangement according to task descriptions.",
-        "Ensure correct placement according to the task description."
+        "Ensure correct placement according to the task description.",
+        "Ensure precise diagonal placement of objects relative to each other.",
+        "Ensure blocks are placed to form diagonal relationships, not linear ones.",
+        "Ensure correct diagonal placement of objects relative to each other."
     ],
-    "success_count": 1
+    "success_count": 2
 }

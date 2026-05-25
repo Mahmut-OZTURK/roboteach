@@ -1,0 +1,7 @@
+{
+    "task_type": "put_diagonally",
+    "instructions": [
+        "Execution failed for 'kırmızının çaprazına mavi kutuyu sarı kutunun çaprazına yeşil kutuyu koy' - simplify the plan",
+        "To improve, focus on achieving a diagonal placement where boxes are offset on both axes relative to their counterparts."
+    ]
+}

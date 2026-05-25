@@ -107,6 +107,14 @@ IF THE TASK IS PHYSICALLY IMPOSSIBLE (e.g. "fly", "paint", "destroy", "shrink", 
         )
 
         plan = response.choices[0].message.content.strip()
+        if "</think>" in plan:
+            plan = plan.split("</think>")[-1].strip()
+        elif "<think>" in plan:
+            # If thinking got cut off, try to remove everything up to the last character or handle gracefully
+            parts = plan.split("<think>")
+            if len(parts) > 1:
+                # If there's content after <think> but it didn't finish, it's probably all thoughts
+                plan = parts[-1].strip()
         plan = plan.replace("```python", "").replace("```", "").strip()
 
         # İmkansız görev kontrolü
