@@ -7,7 +7,7 @@ from groq import Groq
 class ProgPrompt:
     def __init__(self):
         self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-        self.model = "llama-3.3-70b-versatile"
+        self.model = "meta-llama/llama-4-scout-17b-16e-instruct"
         print(f"✅ Planner hazır ({self.model})")
 
     def plan(self, task: str, scene_description: str,
@@ -55,10 +55,14 @@ PHYSICS RULES:
 4. "touching" / "temas": Use 0.06m offset from target center in XY
 5. Each object must be grasped individually. Release before grasping the next.
 6. ALWAYS end with home()
-7. CRITICAL: After grasping an object, ALWAYS lift it straight up to a safe high Z (z = 0.65) at its current XY coordinate BEFORE moving horizontally. Never move horizontally from low Z as it will collide with and knock over other cubes.
+7. CRITICAL: After grasping an object, ALWAYS lift it straight up to a safe high Z (z = 0.65 or higher if there are taller stacked towers in the scene) at its current XY coordinate BEFORE moving horizontally. Never move horizontally from low Z as it will collide with and knock over other cubes.
 8. CRITICAL: When building towers, ALWAYS call home() right after release() and BEFORE querying the position of the placed cube (using get_object_position). This ensures the robot arm moves out of the camera's view, allowing 100% accurate top-view vision without occlusion.
-9. LOGICAL STACKING ORDER: When stacking multiple objects in a specific bottom-to-top order (e.g., "A, B, C, D şeklinde kule yap" or "önce A, sonra B, sonra C, en üstte D"), the bottom-most object A is the base of the tower. Leave object A at its original position (do not grasp it), or move it first to a clear spot if needed. Then grasp object B and place it on top of A. Then grasp C and place it on top of B, and finally grasp D and place it on top of C. NEVER grasp an object that has another object placed on top of it, as this is physically impossible and will knock the tower over.
+9. LOGICAL STACKING ORDER: When stacking multiple objects into a tower (e.g., "A, B, C, D'yi üst üste diz" or "küpleri üst üste diz"), choose one object as the BASE (bottom-most object, e.g., A). LEAVE the base object A at its original position (do NOT grasp it). Then, grasp B and place it on top of A. Then grasp C and place it on B. Then grasp D and place it on C. CRITICAL: NEVER grasp the base object (A) after other objects have been placed on top of it. Grasping an object that is at the bottom of a stack is physically impossible, will collapse the tower, and is strictly prohibited.
 10. "diagonal" / "çaprazına": Use an offset in BOTH X and Y directions relative to the target center. Since cubes are 0.05m wide, a diagonal placement should have +/- 0.06m offset in X AND +/- 0.06m offset in Y. For example, to place blue_cube diagonal to red_cube, use: [red_pos[0] + 0.06, red_pos[1] + 0.06, red_pos[2]]. NEVER place them with only 1 axis offset, as that would be side-by-side (beside), not diagonal.
+11. OBSTACLE AVOIDANCE: When there are existing stacks or kuleler in the scene, make sure to plan horizontal movements (`move_to`) with a safe high Z (z = 0.65 or 0.70) to avoid any collision with existing towers on the path.
+12. "beside" / "yanına" / "yan yana": Place objects side-by-side by applying a 0.06m offset to ONLY ONE axis (either X or Y, but not both). For example, to place blue_cube beside red_cube along the Y axis, use: [red_pos[0], red_pos[1] + 0.06, red_pos[2]]. Never apply offsets to both X and Y, as that is diagonal placement. Never use 0 offset as they will collide.
+
+
 
 
 
@@ -72,22 +76,45 @@ move_to([target[0], target[1], target[2] + 0.052]) # Lower straight down!
 release()
 home()
 
-TOWER STACKING EXAMPLE (3 levels) — "red_cube, blue_cube ve green_cube'u kule gibi üst üste diz":
+TOWER STACKING EXAMPLE (4 levels) — "red_cube, blue_cube, green_cube ve yellow_cube'u kule gibi üst üste diz":
+# Step 1: red_cube is the base. Leave it at its position! Grasp blue_cube and stack it on red_cube.
 red_pos = get_object_position("red_cube")
 blue_pos = get_object_position("blue_cube")
 grasp("blue_cube")
-move_to([blue_pos[0], blue_pos[1], 0.65]) # Lift straight up!
-move_to([red_pos[0], red_pos[1], 0.65])   # Move horizontally!
-move_to([red_pos[0], red_pos[1], red_pos[2] + 0.052]) # Lower!
+move_to([blue_pos[0], blue_pos[1], 0.65])
+move_to([red_pos[0], red_pos[1], 0.65])
+move_to([red_pos[0], red_pos[1], red_pos[2] + 0.052])
 release()
-home() # ALWAYS go home to clear camera occlusion!
+home()
 
-blue_placed_pos = get_object_position("blue_cube") # Query after going home!
+# Step 2: Grasp green_cube and stack it on the placed blue_cube.
+blue_placed_pos = get_object_position("blue_cube")
 green_pos = get_object_position("green_cube")
 grasp("green_cube")
-move_to([green_pos[0], green_pos[1], 0.65]) # Lift straight up!
-move_to([blue_placed_pos[0], blue_placed_pos[1], 0.65]) # Move horizontally!
-move_to([blue_placed_pos[0], blue_placed_pos[1], blue_placed_pos[2] + 0.052]) # Lower!
+move_to([green_pos[0], green_pos[1], 0.65])
+move_to([blue_placed_pos[0], blue_placed_pos[1], 0.65])
+move_to([blue_placed_pos[0], blue_placed_pos[1], blue_placed_pos[2] + 0.052])
+release()
+home()
+
+# Step 3: Grasp yellow_cube and stack it on the placed green_cube.
+green_placed_pos = get_object_position("green_cube")
+yellow_pos = get_object_position("yellow_cube")
+grasp("yellow_cube")
+move_to([yellow_pos[0], yellow_pos[1], 0.65])
+move_to([green_placed_pos[0], green_placed_pos[1], 0.65])
+move_to([green_placed_pos[0], green_placed_pos[1], green_placed_pos[2] + 0.052])
+release()
+home()
+# TASK COMPLETE. Red_cube was NEVER grasped because it was the base! Only blue, green, and yellow were moved.
+
+BESIDE EXAMPLE — "mavi küpü kırmızının yanına koy":
+red_pos = get_object_position("red_cube")
+blue_pos = get_object_position("blue_cube")
+grasp("blue_cube")
+move_to([blue_pos[0], blue_pos[1], 0.65])
+move_to([red_pos[0], red_pos[1] + 0.06, 0.65]) # Place beside along Y axis with 0.06m offset
+move_to([red_pos[0], red_pos[1] + 0.06, red_pos[2]]) # Same height as target cube (restitution/surface level)
 release()
 home()
 

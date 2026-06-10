@@ -36,7 +36,7 @@ class VLMScorer:
 
         prompt = """Describe the robot manipulation scene in the image.
 List all visible objects with their approximate positions (left/right/center, on table, etc.).
-Describe spatial relationships between objects.
+Describe spatial relationships between objects. Specifically, mention if any cubes are stacked on top of each other (specify which color is on top of which) or if there are any existing towers that could act as obstacles.
 Keep it concise and factual. No speculation."""
 
         content = [{"type": "text", "text": prompt}]

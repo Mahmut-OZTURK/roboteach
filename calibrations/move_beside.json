@@ -1,0 +1,9 @@
+{
+    "task_type": "move_beside",
+    "calibrated": true,
+    "last_task": "küpleri yan yana koy",
+    "instructions": [
+        "Execution failed for 'küpleri yan yana koy' - simplify the plan"
+    ],
+    "success_count": 1
+}

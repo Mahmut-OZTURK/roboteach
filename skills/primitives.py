@@ -22,6 +22,16 @@ class RobotSkills:
         self.rest_poses = [-1.2, 0.0, 0.0, -1.5708, 0.0, 1.8675, 0.0]
         self.grip_orn = p.getQuaternionFromEuler([0, math.pi, 0])
 
+    def get_safe_z(self):
+        """Masadaki tüm küplerin Z pozisyonunu sorgulayıp en yüksek olanına göre dinamik güvenli geçiş Z seviyesi döner."""
+        max_z = 0.425
+        for obj_id in self.objects.values():
+            pos, _ = p.getBasePositionAndOrientation(obj_id)
+            if pos[2] > max_z:
+                max_z = pos[2]
+        # Küpler 0.05m boyunda. En yüksek küpün üstünden 0.12m yukarısı güvenli yörüngedir.
+        return max(0.65, max_z + 0.12)
+
     def _stabilize_cubes(self):
         """Tutulmayan tüm küplerin hız ve açısal momentumunu sıfırlar, yönelimlerini dikleştirir.
         Bu, _ik_move ve home() sırasında çalışan yüzlerce stepSimulation'ın
@@ -130,6 +140,14 @@ class RobotSkills:
             print(f"  ❌ '{object_name}' kamerada görülemiyor!")
             return False
 
+        # Robot parmaklarının mevcut yerinden yeni küpe yatayda giderken masadakileri devirmemesi için:
+        # Önce mevcut konumunda Z ekseninde güvenli yüksekliğe kalk, sonra yeni küpün XY'sine git.
+        current_ee = self.get_ee_pos()
+        safe_z = self.get_safe_z()
+        if current_ee[2] < safe_z - 0.05:
+            print(f"     ⬆️ Grasp öncesi güvenli yüksekliğe kalkılıyor: {safe_z:.3f}m")
+            self._ik_move([current_ee[0], current_ee[1], safe_z])
+
         print(f"  🟢 grasp('{object_name}') → {[round(x, 3) for x in obj_pos]}")
 
         obj_id = self.objects[object_name]
@@ -137,7 +155,8 @@ class RobotSkills:
         self.open_gripper()
 
         # 1. Yüksekten yaklaş
-        self._ik_move([obj_pos[0], obj_pos[1], 0.65])
+        safe_z = self.get_safe_z()
+        self._ik_move([obj_pos[0], obj_pos[1], safe_z])
 
         # 2. Kademeli iniş — objenin tam üzerinde hizalan
         self._ik_move([obj_pos[0], obj_pos[1], obj_pos[2] + 0.06])
@@ -185,7 +204,8 @@ class RobotSkills:
         print(f"     ✅ '{object_name}' tutuldu!")
 
         # 7. Kaldır
-        self._ik_move([obj_pos[0], obj_pos[1], obj_pos[2] + 0.12])
+        safe_z = self.get_safe_z()
+        self._ik_move([obj_pos[0], obj_pos[1], safe_z])
         return True
 
     def release(self):
@@ -225,7 +245,9 @@ class RobotSkills:
 
         # 7. Yukarı çekil (Dikey olarak)
         ee_pos = self.get_ee_pos()
-        self._ik_move([ee_pos[0], ee_pos[1], ee_pos[2] + 0.15])
+        safe_z = self.get_safe_z()
+        target_lift_z = max(ee_pos[2] + 0.15, safe_z)
+        self._ik_move([ee_pos[0], ee_pos[1], target_lift_z])
 
         # 8. Robot geri çekildikten sonra bırakılan nesnenin robotla olan çarpışmasını geri etkinleştir
         for link_idx in range(-1, p.getNumJoints(self.robot_id)):

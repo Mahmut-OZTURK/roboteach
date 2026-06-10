@@ -1,0 +1,9 @@
+{
+    "task_type": "stack_on_top",
+    "calibrated": true,
+    "last_task": "küpleri üst üste diz",
+    "instructions": [
+        "To accomplish the task \"küpleri üst üste diz,\" the robot needs to stack the cubes vertically rather than arranging them in a line."
+    ],
+    "success_count": 2
+}
