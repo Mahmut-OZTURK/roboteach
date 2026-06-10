@@ -113,13 +113,30 @@ class RobotSkills:
             time.sleep(1.0 / 240.0)
 
     def move_to(self, position, speed=0.5):
-        """Kartezyen koordinata git."""
+        """Kartezyen koordinata git. Çarpışmaları önlemek için akıllı yükselme mekanizması içerir."""
         x = max(-0.4, min(0.4, position[0]))
         y = max(-0.3, min(0.4, position[1]))
         z = max(0.42, min(0.85, position[2]))
         clamped = [x, y, z]
-        print(f"  🔵 move_to({[round(v, 3) for v in clamped]})")
-        return self._ik_move(clamped)
+        
+        current_ee = self.get_ee_pos()
+        xy_dist = math.sqrt((current_ee[0] - x)**2 + (current_ee[1] - y)**2)
+        safe_z = self.get_safe_z()
+        
+        # Eğer XY düzleminde hareket varsa ve Z seviyelerinden biri güvenli Z'nin altındaysa,
+        # çarpışmayı önlemek için hareketi 3 aşamalı (yukarı -> yatay -> aşağı) yap.
+        if xy_dist > 0.02 and (current_ee[2] < safe_z - 0.01 or z < safe_z - 0.01):
+            print(f"     🛡️ Güvenli Hareket: Dikey kalkış, yatay taşıma ve dikey iniş uygulanıyor (safe_z: {safe_z:.3f}m)")
+            # 1. Mevcut XY koordinatında güvenli yüksekliğe çık (eğer zaten yüksekte değilse)
+            if current_ee[2] < safe_z:
+                self._ik_move([current_ee[0], current_ee[1], safe_z])
+            # 2. Güvenli yükseklikte hedef XY koordinatına git
+            self._ik_move([x, y, safe_z])
+            # 3. Hedef XY koordinatında hedef Z yüksekliğine in
+            return self._ik_move([x, y, z])
+        else:
+            print(f"  🔵 move_to({[round(v, 3) for v in clamped]})")
+            return self._ik_move(clamped)
 
     def get_object_position(self, object_name):
         """Kameradan nesne konumu al (pure vision)."""

@@ -61,18 +61,38 @@ PHYSICS RULES:
 10. "diagonal" / "çaprazına": Use an offset in BOTH X and Y directions relative to the target center. Since cubes are 0.05m wide, a diagonal placement should have +/- 0.06m offset in X AND +/- 0.06m offset in Y. For example, to place blue_cube diagonal to red_cube, use: [red_pos[0] + 0.06, red_pos[1] + 0.06, red_pos[2]]. NEVER place them with only 1 axis offset, as that would be side-by-side (beside), not diagonal.
 11. OBSTACLE AVOIDANCE: When there are existing stacks or kuleler in the scene, make sure to plan horizontal movements (`move_to`) with a safe high Z (z = 0.65 or 0.70) to avoid any collision with existing towers on the path.
 12. "beside" / "yanına" / "yan yana": Place objects side-by-side by applying a 0.06m offset to ONLY ONE axis (either X or Y, but not both). For example, to place blue_cube beside red_cube along the Y axis, use: [red_pos[0], red_pos[1] + 0.06, red_pos[2]]. Never apply offsets to both X and Y, as that is diagonal placement. Never use 0 offset as they will collide.
+13. MULTIPLE BESIDE / PLURAL LINE-UP: When asked to place all cubes side-by-side or in a row (e.g., "küpleri yan yana koy" or "küpleri yan yana diz"), you MUST arrange ALL available cubes in a single row (line) using one cube as the base (e.g. red_cube) and placing the others at progressive offsets on the Y-axis: B at base_y + 0.06, C at base_y + 0.12, D at base_y + 0.18. Do NOT leave any cubes out. Make sure all cubes are moved into the row.
 
 
 
 
 
-STACKING EXAMPLE — "yeşili kırmızının üstüne koy":
-target = get_object_position("red_cube")
+BESIDE EXAMPLE (Plural/Multiple cubes beside each other) — "küpleri yan yana koy":
+# Choose red_cube as the base of the row, and place blue, green, and yellow cubes sequentially beside it on the Y-axis.
+red_pos = get_object_position("red_cube")
+blue_pos = get_object_position("blue_cube")
+grasp("blue_cube")
+move_to([blue_pos[0], blue_pos[1], 0.65])
+move_to([red_pos[0], red_pos[1] + 0.06, 0.65])
+move_to([red_pos[0], red_pos[1] + 0.06, red_pos[2]])
+release()
+home()
+
+# Place green_cube next to the placed blue_cube
 green_pos = get_object_position("green_cube")
 grasp("green_cube")
-move_to([green_pos[0], green_pos[1], 0.65]) # Lift straight up to safe Z!
-move_to([target[0], target[1], 0.65])        # Move horizontally at safe Z!
-move_to([target[0], target[1], target[2] + 0.052]) # Lower straight down!
+move_to([green_pos[0], green_pos[1], 0.65])
+move_to([red_pos[0], red_pos[1] + 0.12, 0.65])
+move_to([red_pos[0], red_pos[1] + 0.12, red_pos[2]])
+release()
+home()
+
+# Place yellow_cube next to the placed green_cube
+yellow_pos = get_object_position("yellow_cube")
+grasp("yellow_cube")
+move_to([yellow_pos[0], yellow_pos[1], 0.65])
+move_to([red_pos[0], red_pos[1] + 0.18, 0.65])
+move_to([red_pos[0], red_pos[1] + 0.18, red_pos[2]])
 release()
 home()
 
@@ -108,15 +128,6 @@ release()
 home()
 # TASK COMPLETE. Red_cube was NEVER grasped because it was the base! Only blue, green, and yellow were moved.
 
-BESIDE EXAMPLE — "mavi küpü kırmızının yanına koy":
-red_pos = get_object_position("red_cube")
-blue_pos = get_object_position("blue_cube")
-grasp("blue_cube")
-move_to([blue_pos[0], blue_pos[1], 0.65])
-move_to([red_pos[0], red_pos[1] + 0.06, 0.65]) # Place beside along Y axis with 0.06m offset
-move_to([red_pos[0], red_pos[1] + 0.06, red_pos[2]]) # Same height as target cube (restitution/surface level)
-release()
-home()
 
 OUTPUT: ONLY flat Python lines. No comments, no markdown, no def/class/if/for.
 IF THE TASK IS PHYSICALLY IMPOSSIBLE (e.g. "fly", "paint", "destroy", "shrink", objects don't exist, or contradicts physics), output ONLY: IMPOSSIBLE: <reason>

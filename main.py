@@ -231,7 +231,7 @@ def execute(task, env, skills, planner, cap, scorer, calib_mgr, vision_locator):
 def main():
     print("\n" + "=" * 60)
     print("  🤖 RoboTeach — İki Modlu Robot Kontrol Sistemi")
-    print("  Planner: llama-3.3-70b-versatile")
+    print("  Planner: llama-4-scout-17b-16e-instruct")
     print("  Vision : llama-4-scout-17b-16e-instruct")
     print("  Görev Tipleri: LLM-native (sınırsız)")
     print("=" * 60)
