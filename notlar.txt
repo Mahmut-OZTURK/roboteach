@@ -1,5 +1,0 @@
-kalibrasyonda mavi kutuyu kırmızıya koy şeklinde değil de aksiyona odaklanmalı ve genel bir kalibrasyon yapmalı
-execute verildiğinde öncesinde masa bi resetlenmeli kutular eski yerlerine geri dönmeli
-mantıksak olarak mesela kırmızı zaten mavinin üzerindeyse ve maviyi kırmızının üstüne koy dediysem bu farklı görevdir ona göre kalibre olmalı ona göre simulasyon ayarlanmalı spesifik bir görev 
-
-kutuları random yerlerde üretsin execute aşamasında kamerası ile analiz edip gruplayıp görevi yapabilmeli
