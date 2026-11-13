@@ -1,0 +1,251 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[turkish,shorthands=:!]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{cite}
+\usepackage[hidelinks]{hyperref}
+
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\begin{document}
+
+\title{Simüle Edilmiş Sürtünmeli Temas Fiziği Altında Kapalı Döngü Nöro-Sembolik Deneyim Kalibrasyonu, Çok Bakışlı 3B Nokta Bulutu Algılama ve Kanonik Görev Ontolojisi}
+
+\author{Muhammed~Emin~\c{C}elik, Bar\i\c{s}~Kaya, Mahmut~\"{O}zt\"{u}rk ve \.{I}smail~\.{I}\c{s}eri\textsuperscript{*}%
+\thanks{M.~E.~\c{C}elik, B.~Kaya, M.~\"{O}zt\"{u}rk ve \.{I}.~\.{I}\c{s}eri; Bilgisayar M\"{u}hendisli\u{g}i B\"{o}l\"{u}m\"{u}, Ondokuz May\i s \"{U}niversitesi, Samsun, T\"{u}rkiye b\"{u}nyesinde g\"{o}rev yapmaktad\i r (e-posta: muhammedemin.celik@omu.edu.tr; baris.kaya@omu.edu.tr; mahmut.ozturk@omu.edu.tr; ismail.iseri@omu.edu.tr). \textsuperscript{*}Sorumlu yazar: \.{I}smail~\.{I}\c{s}eri.}}
+
+\markboth{\c{C}EL\.{I}K VE ARK.: S\.{I}M\"{U}LE ED\.{I}LM\.{I}\c{S} TEMAS F\.{I}Z\.{I}\u{G}\.{I} ALTINDA KAPALI D\"{O}NG\"{U} N\"{O}RO-SEMBOL\.{I}K ROBOT\.{I}K MAN\.{I}P\"{U}LASYON}{IEEE ARA\c{S}TIRMA MAKALES\.{I}}
+
+\maketitle
+
+\begin{abstract}
+B\"{u}y\"{u}k dil modelleri arac\i l\i\u{g}\i yla do\u{g}rudan y\"{u}r\"{u}t\"{u}lebilir robotik kontrol politikalar\i{} sentezleyen a\c{c}\i k d\"{o}ng\"{u} (\textit{open-loop}) yakla\c{s}\i mlar, alg\i sal derinlik sapmalar\i, fiziksel s\"{u}rt\"{u}nme belirsizlikleri ve e\c{s} anlaml\i{} do\u{g}al dil komutlar\i nda ortaya \c{c}\i kan bellek par\c{c}alanmas\i{} nedeniyle temas a\c{c}\i s\i ndan zengin masa\"{u}st\"{u} manip\"{u}lasyon g\"{o}revlerinde ciddi ba\c{s}ar\i s\i zl\i klar sergilemektedir. \"{O}te yandan, istem metnine ham s\"{o}zel \"{o}zele\c{s}tiri c\"{u}mleleri ekleyen yans\i ma mekanizmalar\i, nicel kinematik parametreleri g\"{u}ncelleyemeyip ba\u{g}lam \c{s}i\c{s}mesine yol a\c{c}arak g\"{u}\c{c}l\"{u} a\c{c}\i k d\"{o}ng\"{u} temel \c{c}izgisinin dahi alt\i na d\"{u}\c{s}ebilmektedir. Bu \c{c}al\i\c{s}mada, 240~Hz PyBullet sim\"{u}lasyon ortam\i nda 7-DOF Franka Emika Panda manip\"{u}lat\"{o}r\"{u} \"{u}zerinde yapay sabit-ba\u{g} veya poz \i\c{s}\i nlamas\i{} olmaks\i z\i n koni s\"{u}rt\"{u}nmesi ($F_{\text{grasp}}=75$~N, $\mu=2,2$) alt\i nda \c{c}al\i\c{s}an kapal\i{} d\"{o}ng\"{u} bir n\"{o}ro-sembolik deneyim kalibrasyonu mimarisi \"{o}nerilmektedir. \c{C}er\c{c}eve; deterministik kanonik g\"{o}rev ontolojisini ($\mathcal{O}_{\text{task}}$), d\"{o}rt bak\i\c{s}l\i{} ayd\i nlanma-de\u{g}i\c{s}mez ve yanal \i\c{s}\i n-telafili 3B alg\i lamay\i{} ($\Phi_{\text{3D}}$), AST g\"{u}venlik kalkanl\i{} minimum-sars\i nt\i l\i{} PD kontrolc\"{u}s\"{u}n\"{u} ($\mathcal{C}_{\text{PD}}$) ve politika sentezleyicisinden (\texttt{gpt-6-luna}) mimari olarak ayr\i\c{s}t\i r\i lm\i\c{s} \c{c}apraz-aile VLM hakemi (\texttt{gpt-4.1}) g\"{u}d\"{u}ml\"{u} \c{c}ift kanall\i{} deneyim belle\u{g}ini ($\mathcal{M}_{\text{NS}}$) b\"{u}t\"{u}nle\c{s}tirmektedir. Altm\i\c{s} sahneli alg\i lama k\i yaslamas\i nda $\Phi_{\text{3D}}$, \"{o}rt\"{u}lmemi\c{s} 3B RMSE hatas\i n\i{} nominal ko\c{s}ullarda 23,85~mm'den 2,63~mm'ye (9,07~kat), sens\"{o}r/kalibrasyon g\"{u}r\"{u}lt\"{u}s\"{u} alt\i nda 24,12~mm'den 3,99~mm'ye (6,05~kat) d\"{u}\c{s}\"{u}rmekte ve her iki rejimde \%100,0 \"{o}rt\"{u}l\"{u} geri \c{c}a\u{g}\i rma elde etmektedir. G\"{o}rev ba\c{s}\i na $n=30$ tohumlu d\"{o}rt katmanl\i{} ablasyonda (720 ko\c{s}um) \"{o}nerilen mimari \%87,22 (157/180; \%95 GA [81,56, 91,33]) genel ba\c{s}ar\i ya ula\c{s}arak s\i f\i r-\"{o}rne\u{g}i (\%37,78; $p=2,38\times10^{-22}$), adil Code-as-Policies temelini (\%58,89; $p=2,24\times10^{-10}$) ve s\"{o}zel yans\i may\i{} (\%53,89; $p=5,63\times10^{-13}$) ge\c{c}mekte; \c{c}\i kt\i{} token maliyetini \%29,1 azalt\i p `T4`--`T6` ba\c{s}ar\i s\i n\i{} \%92,22'ye ta\c{s}\i maktad\i r. \.{I}lave 1.080 bile\c{s}en/DR ko\c{s}umu ontoloji \c{c}\i karman\i n en kritik kay\i p (-47,78~yp) oldu\u{g}unu ve sistemin alan rastgelele\c{s}tirmesi alt\i nda \%81,67 ba\c{s}ar\i yla (\%54,44; $p=1,38\times10^{-9}$) dayand\i\u{g}\i n\i{} do\u{g}rulamakta; $N=120$ hakem denetimi \texttt{gpt-4.1}'in $\kappa=0,6082$ uyum ve \%53,9 daha d\"{u}\c{s}\"{u}k medyan gecikme sa\u{g}lad\i\u{g}\i n\i{} kan\i tlamaktad\i r.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Bedenlenmi\c{s} yapay zek\^{a}, \c{c}ok bak\i\c{s}l\i{} 3B nokta bulutu alg\i lama, g\"{o}rsel-dil modelleri, kanonik g\"{o}rev ontolojisi, kapal\i{} d\"{o}ng\"{u} robotik manip\"{u}lasyon, n\"{o}ro-sembolik deneyim kalibrasyonu, sim\"{u}le s\"{u}rt\"{u}nmeli temas kontrol\"{u}.
+\end{IEEEkeywords}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../figures/graphical_abstract.png}
+\caption{G\"{o}rsel \"{O}zet: A\c{c}\i k d\"{o}ng\"{u} dil modeli politikalar\i{} ile yap\i land\i r\i lmam\i\c{s} s\"{o}zel yans\i man\i n fiziksel temas alt\i ndaki k\i r\i lma modlar\i, \"{o}nerilen kapal\i{} d\"{o}ng\"{u} n\"{o}ro-sembolik manip\"{u}lasyon mimarisi ve deneysel do\u{g}rulama bulgular\i.}
+\label{fig:ga}
+\end{figure*}
+
+\section{Giri\c{s}}
+\IEEEPARstart{F}{iziksel} d\"{u}nyada yap\i land\i r\i lmam\i\c{s} do\u{g}al dil emirlerini alg\i sal g\"{o}zlemler ve temas kuvvetleri alt\i nda g\"{u}venilir motor eylemlere d\"{o}n\"{u}\c{s}t\"{u}rmek, modern robotik manip\"{u}lasyonun en \c{c}etin a\c{c}\i k problemlerinden birini olu\c{s}turmaktad\i r~\cite{billard2019trends,kroemer2021review}. Klasik b\"{u}t\"{u}nle\c{s}ik g\"{o}rev ve hareket planlama (TAMP) yakla\c{s}\i mlar\i, tam tan\i ml\i{} geometrik sahne modelleri ve el yap\i m\i{} sembolik \"{o}nko\c{s}ul tan\i mlar\i{} bulundu\u{g}unda uzun ufuklu manip\"{u}lasyon dizilerini matematiksel tutarl\i l\i kla \c{c}\"{o}zebilmektedir~\cite{garrett2021tamp}. Son y\i llarda b\"{u}y\"{u}k dil modellerinin ortak sa\u{g}duyu ve programlama yeteneklerinden yararlanan eylem temellendirme~\cite{ahn2022saycan}, kod-politika sentezi~\cite{liang2023cap,singh2023progprompt} ve \"{u}\c{c} boyutlu de\u{g}er haritas\i{} \"{u}retimi~\cite{huang2023voxposer} yakla\c{s}\i mlar\i{} ek y\"{o}r\"{u}nge e\u{g}itimi gerektirmeksizin kontrol betikleri \"{u}retebilmi\c{s}; \c{c}ok kipli bedenlenmi\c{s} temel modeller~\cite{driess2023palme,zitkovich2023rt2} g\"{o}rsel-dilsel temsilleri motor eylemlere ba\u{g}lam\i\c{s}t\i r.
+
+Bununla birlikte s\i f\i r-\"{o}rnek a\c{c}\i k d\"{o}ng\"{u} kod-politika (\textit{code-as-policies}) sentezi, temas a\c{c}\i s\i ndan zengin rijit cisim fizi\u{g}i alt\i nda \"{u}\c{c} yap\i sal darbo\u{g}azla kar\c{s}\i la\c{s}maktad\i r. \.{I}lk olarak a\c{c}\i k d\"{o}ng\"{u} politikalar, tekil tepe kameras\i ndaki y\"{u}zey-merkez derinlik sapmas\i na, istiflenmi\c{s} nesnelerdeki tam \"{o}rt\"{u}lmeye ve s\"{u}p\"{u}rme hacmi (\textit{swept-volume}) \c{c}arp\i\c{s}malar\i na kar\c{s}\i{} geri bildirimden yoksundur. \.{I}kinci olarak, y\"{u}r\"{u}tme sonras\i{} kapal\i{} d\"{o}ng\"{u} d\"{u}zeltme sa\u{g}lamak amac\i yla \"{o}nerilen i\c{c}sel monolog~\cite{huang2022inner}, deneyim \"{o}zetleme~\cite{liu2023reflect} ve s\"{o}zel yans\i ma~\cite{shinn2023reflexion,madaan2023selfrefine} y\"{o}ntemleri, hata geri bildirimini yap\i land\i r\i lmam\i\c{s} ham metin olarak istem penceresine eklemektedir. \"{U}retken modellerdeki hal\"{u}sinasyon e\u{g}ilimi~\cite{ji2023hallucination} ve uzun ba\u{g}lamlarda orta-ba\u{g}lam dikkat zay\i flamas\i{} (\textit{lost-in-the-middle})~\cite{liu2024lost}, biriken s\"{o}zel tavsiyelerin say\i sal kinematik parametreleri karars\i zla\c{s}t\i rmas\i na yol a\c{c}maktad\i r. \"{U}\c{c}\"{u}nc\"{u} olarak, kalibre edilen becerilerin serbest LLM fonksiyon adlar\i{} alt\i nda saklanmas\i, e\c{s} anlaml\i{} komutlarda b\"{o}l\"{u}nm\"{u}\c{s} beyin (\textit{split-brain}) bellek par\c{c}alanmas\i na neden olmaktad\i r.
+
+Bu yap\i sal k\i s\i tlar\i{} a\c{s}mak i\c{c}in n\"{o}ro-sembolik bili\c{s}sel mimariler g\"{u}\c{c}l\"{u} bir kuramsal \c{c}er\c{c}eve sunmaktad\i r~\cite{marra2024neurosymbolic,badreddine2022ltn,sumers2024coala}. Bu makalede, 240~Hz PyBullet sim\"{u}lasyonunda 7-DOF Franka Emika Panda kolu \"{u}zerinde yapay sabit-ba\u{g} veya poz \i\c{s}\i nlamas\i{} olmaks\i z\i n koni s\"{u}rt\"{u}nmesi fizi\u{g}iyle \c{c}al\i\c{s}an kapal\i{} d\"{o}ng\"{u} bir n\"{o}ro-sembolik manip\"{u}lasyon mimarisi sunulmaktad\i r. \c{C}al\i\c{s}man\i n d\"{o}rt \"{o}zg\"{u}n katk\i s\i{}; e\c{s} anlaml\i{} komut y\"{o}nlendirmesini \%0,0'dan \%100,0'a ta\c{s}\i yan kanonik g\"{o}rev ontolojisi ($\mathcal{O}_{\text{task}}$), 3B konumland\i rma RMSE hatas\i n\i{} nominalde 9,07~kat (2,63~mm) ve g\"{u}r\"{u}lt\"{u} alt\i nda 6,05~kat (3,99~mm) azaltan d\"{o}rt bak\i\c{s}l\i{} \i\c{s}\i n-telafili nokta bulutu alg\i lay\i c\i s\i{} ($\Phi_{\text{3D}}$), 1.800 sim\"{u}lasyon ko\c{s}umunda genel ba\c{s}ar\i y\i{} \%87,22'ye (Adil CaP \%58,89; $p=2,24\times10^{-10}$) ve alan rastgelele\c{s}tirmesinde \%81,67'ye (\%54,44; $p=1,38\times10^{-9}$) \c{c}\i karan \c{c}ift kanall\i{} deneyim belle\u{g}i ($\mathcal{M}_{\text{NS}}$) ile minimum-sars\i nt\i l\i{} PD kontrolc\"{u}s\"{u} ($\mathcal{C}_{\text{PD}}$) ve $N=120$ denemede k\^{a}hine kar\c{s}\i{} $\kappa=0,6082$ uyum ile \%53,9 daha d\"{u}\c{s}\"{u}k gecikme sa\u{g}layan \c{c}apraz-aile alg\i sal hakem (\texttt{gpt-4.1}) do\u{g}rulamas\i d\i r.
+
+\section{\.{I}lgili \c{C}al\i\c{s}malar}
+
+\subsection{G\"{o}rev ve Hareket Planlama ile Kod-Politika Sentezi}
+Hiyerar\c{s}ik g\"{o}rev ve hareket planlama yakla\c{s}\i mlar\i, ayr\i k sembolik eylem \c{s}emalar\i n\i{} s\"{u}rekli geometrik k\i s\i t \c{c}\"{o}z\"{u}c\"{u}lerle birle\c{s}tirmi\c{s}tir~\cite{kaelbling2011hpn,srivastava2014combined}. Ak\i\c{s} tabanl\i{} iyimser planlay\i c\i lar~\cite{garrett2020pddlstream} sembolik aramay\i{} y\"{o}r\"{u}nge \"{o}rnekleyicileriyle ba\u{g}lasa da el yap\i m\i{} alan \c{s}emalar\i{} gerektirir. Dil modellerinin s\i f\i r-\"{o}rnekli planlay\i c\i{} olarak kullan\i lmas\i~\cite{huang2022zeroshot} bu k\i s\i t\i{} esnetmi\c{s}, ard\i ndan geometrik yap\i labilirlik puanlamas\i~\cite{lin2023text2motion} ve do\u{g}rudan kod-politika sentezi~\cite{liang2023cap,singh2023progprompt,wu2023tidybot,lynch2023interactive} geli\c{s}tirilmi\c{s}tir. Mevcut \c{c}er\c{c}eveler \c{c}o\u{g}unlukla a\c{c}\i k d\"{o}ng\"{u} veya yapay kavrama yamalar\i yla \c{c}al\i\c{s}\i rken, \"{o}nerilen mimari AST do\u{g}rulamal\i{} politikalar\i{} ger\c{c}ek s\"{u}rt\"{u}nmeli temas ve kapal\i{} d\"{o}ng\"{u} \"{o}nsel kalibrasyonuyla b\"{u}t\"{u}nle\c{s}tirmektedir.
+
+\subsection{\c{C}ok Bak\i\c{s}l\i{} 3B Alg\i lama, Temas Tabanl\i{} Kavrama ve Y\"{o}r\"{u}nge Kontrol\"{u}}
+G\"{o}rsel manip\"{u}lasyonda ta\c{s}\i y\i c\i{} a\u{g}lar~\cite{zeng2021transporter}, iki ak\i\c{s}l\i{} g\"{o}rsel-dil yollar\i~\cite{shridhar2022cliport}, \c{c}ok bak\i\c{s}l\i{} voksel d\"{o}n\"{u}\c{s}t\"{u}r\"{u}c\"{u}leri~\cite{shridhar2023peract}, ger\c{c}ek d\"{u}nya d\"{o}n\"{u}\c{s}t\"{u}r\"{u}c\"{u}leri~\cite{brohan2023rt1} ve dif\"{u}zyon politikalar\i~\cite{chi2024diffusion} g\"{u}\c{c}l\"{u} sonu\c{c}lar \"{u}retmi\c{s}; a\c{c}\i k s\"{o}zl\"{u}kl\"{u} g\"{o}rsel temsiller~\cite{radford2021clip} ile nokta bulutu geometrisi~\cite{rusu2011pcl} birle\c{s}tirilmi\c{s}tir. Kararl\i{} fiziksel kavrama, s\"{u}rt\"{u}nme konisi ve kuvvet kapan\i m\i{} ko\c{s}ullar\i n\i{} gerektirir~\cite{bicchi2000grasping,bohg2014grasp,mahler2019scirob}. Minimum-sars\i nt\i l\i{} be\c{s}inci derece y\"{o}r\"{u}nge profilleri~\cite{flash1985coordination}, 7-DOF manip\"{u}lat\"{o}rlerde~\cite{haddadin2022franka} ivme s\i\c{c}ramalar\i n\i{} bast\i r\i r. Rijit cisim temas sim\"{u}lasyonu~\cite{todorov2012mujoco}, alan rastgelele\c{s}tirmesi~\cite{tobin2017domain} ve standart k\i yaslama ortamlar\i~\cite{james2020rlbench}, yapay sabit-ba\u{g}lar kald\i r\i ld\i\u{g}\i nda a\c{c}\i k d\"{o}ng\"{u} politikalar\i n h\i zla devrildi\u{g}ini do\u{g}rulamaktad\i r.
+
+\subsection{G\"{o}rsel-Dil Ele\c{s}tirmenleri, Deneyim Belle\u{g}i ve Hakem G\"{u}venilirli\u{g}i}
+Beceri k\"{u}t\"{u}phanelerinin kod senteziyle b\"{u}y\"{u}t\"{u}lmesi~\cite{wang2024voyager}, evrimsel \"{o}d\"{u}l tasar\i m\i~\cite{ma2024eureka} ve g\"{o}rsel-dil \"{o}d\"{u}l modelleri~\cite{rocamonde2024vlmrm}, y\"{u}r\"{u}tme geri bildiriminden \"{o}\u{g}renmeyi desteklemi\c{s}tir. Ancak LLM-hakem de\u{g}erlendirmelerinde~\cite{zheng2023judging} ayn\i{} model ailesinin kullan\i lmas\i{} kendi kendini onaylama yanl\i l\i\u{g}\i{} do\u{g}urdu\u{g}undan, alg\i sal hakemlerin ba\u{g}\i ms\i z ger\c{c}ek-durum referans\i na kar\c{s}\i{} \c{s}ans d\"{u}zeltmeli uyum istatistikleriyle~\cite{cohen1960kappa,landis1977kappa} denetlenmesi zorunludur.
+
+\section{A\c{c}\i k D\"{o}ng\"{u} ve S\"{o}zel Yans\i ma Politikalar\i n\i n Ampirik Ar\i za Taksonomisi}
+240~Hz rijit cisim temas sim\"{u}lasyonunda y\"{u}r\"{u}t\"{u}len tan\i sal denemeler sonucunda alt\i{} ayr\i k nedensel ar\i za s\i n\i f\i{} (\texttt{F1}--\texttt{F6}) tan\i mlanm\i\c{s}t\i r (\c{S}ekil~\ref{fig:tax} ve Tablo~\ref{tab:tax}): topolojik s\i ra ihlali (\texttt{F1}), d\"{u}zlemsel XY sapmas\i{} (\texttt{F2}), y\"{u}ksek b\i rakma pay\i ndan ($\Delta z_{\text{rel}}=75$~mm) kaynaklanan d\"{u}\c{s}ey darbe devrilmesi (\texttt{F3}), al\c{c}ak yatay ge\c{c}i\c{s}ten ($z_{\text{trans}}=0,56$~m) kaynaklanan s\"{u}p\"{u}rme hacmi \c{c}arp\i\c{s}mas\i{} (\texttt{F4}), i\c{c}i bo\c{s} kapta ayn\i{} merkeze b\i rakmadan do\u{g}an kenar sekmesi ve y\i\u{g}\i lma (\texttt{F5}) ile tepe kameras\i{} \"{o}rt\"{u}lmesi veya bayat poz kullan\i m\i{} (\texttt{F6}).
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../figures/failure_taxonomy_evolution.png}
+\caption{Fiziksel temas tabanl\i{} robotik manip\"{u}lasyonda g\"{o}zlemlenen alt\i{} s\i n\i fl\i{} nedensel ar\i za taksonomisi (\texttt{F1}--\texttt{F6}) ve n\"{o}ro-sembolik kinematik \"{o}nsel ile sembolik de\u{g}i\c{s}mez e\c{s}lemeleri.}
+\label{fig:tax}
+\end{figure*}
+
+\begin{table*}[!t]
+\centering
+\caption{Temas Tabanl\i{} Manip\"{u}lasyonda Alt\i{} S\i n\i fl\i{} Nedensel Ar\i za Taksonomisi ve N\"{o}ro-Sembolik Bellek E\c{s}lemeleri}
+\label{tab:tax}
+\begin{tabularx}{\textwidth}{c l Y Y Y}
+\toprule
+\textbf{S\i n\i f} & \textbf{Ar\i za Modu} & \textbf{Fiziksel ve Alg\i sal K\"{o}k Neden} & \textbf{K\^{a}hin ($\mathcal{O}_{\text{GT}}$) Tan\i{} \"{O}l\c{c}\"{u}t\"{u}} & \textbf{N\"{o}ro-Sembolik ($\mathcal{M}_{\text{NS}}$) G\"{u}ncellemesi} \\
+\midrule
+\textbf{F1} & Topolojik S\i ra \.{I}hlali & Taban blo\u{g}un gereksiz kavranmas\i{} veya ters s\i ra & Katman $z$ s\i ras\i n\i n hedef diziden sapmas\i{} & Deterministik s\i ra vekt\"{o}r\"{u} ve sabit taban kural\i{} ($r_{\text{F1}}$) \\
+\textbf{F2} & D\"{u}zlemsel XY Sapmas\i{} & \c{C}aprazda tek eksen kayd\i rma veya s\i ra hatas\i{} & $|\Delta x|<30$~mm $\lor$ $|\Delta y|<30$~mm ya da $>38$~mm sapma & $\delta_{\text{row}}=62$~mm ve \c{c}ift eksen \c{c}apraz \"{o}nseli ($\pm 62$~mm) \\
+\textbf{F3} & D\"{u}\c{s}ey Darbe Devrilmesi & Y\"{u}ksek b\i rakma pay\i{} ($\Delta z_{\text{rel}}=75$~mm) sekmesi & \"{U}st blo\u{g}un temas sonras\i{} devrilip d\"{u}\c{s}mesi & $\Delta z_{\text{rel}} \leftarrow 52$~mm ve yumu\c{s}ak al\c{c}alma kural\i{} ($r_{\text{F3}}$) \\
+\textbf{F4} & S\"{u}p\"{u}rme \c{C}arp\i\c{s}mas\i{} & Al\c{c}ak ge\c{c}i\c{s} ($z_{\text{trans}}=0,56$~m) ile duvara \c{c}arpma & Engel duvar\i{} ($z=0,53$~m) veya mevcut kule y\i k\i m\i{} & Ge\c{c}i\c{s} irtifas\i n\i n $z_{\text{trans}} \leftarrow 0,68$~m'ye \c{c}ekilimi ($r_{\text{F4}}$) \\
+\textbf{F5} & Kap Kenar\i{} ve Y\i\u{g}\i lma & \c{C}oklu k\"{u}plerin kap merkezine \"{u}st \"{u}ste at\i lmas\i{} & $13,8\times 13,8$~cm oyuk d\i\c{s}\i na sekme veya ta\c{s}ma & Ayr\i k alt-yuva ofsetleri ($\pm 32$~mm, $z=0,525$~m) ($r_{\text{F5}}$) \\
+\textbf{F6} & \"{O}rt\"{u}lme ve Bayat Poz & Tepe \"{o}rt\"{u}lmesi veya eylem \"{o}ncesi bayat koordinat & \.{I}stif alt\i{} hedef kayb\i{} veya bo\c{s}a kavrama kapan\i\c{s}\i{} & Yanal \i\c{s}\i n-telafili 3B f\"{u}zyon ($\Phi_{\text{3D}}$) ve alt-hedef b\"{o}lme \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{\"{O}nerilen Kapal\i{} D\"{o}ng\"{u} N\"{o}ro-Sembolik Manip\"{u}lasyon Mimarisi}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../figures/closed_loop_architecture.png}
+\caption{\"{O}nerilen kapal\i{} d\"{o}ng\"{u} n\"{o}ro-sembolik robotik manip\"{u}lasyon ve nedensel deneyim kalibrasyonu mimarisi.}
+\label{fig:arch}
+\end{figure*}
+
+\subsection{K\i smi G\"{o}zlemlenebilir Form\"{u}lasyon ve Kanonik G\"{o}rev Ontolojisi}
+Ger\c{c}ek sim\"{u}lat\"{o}r durumunun $s_t \in \mathcal{S}$ gizli tutuldu\u{g}u ve ajan\i n yaln\i zca d\"{o}rt RGB-D kameradan $o_t = \{(I_t^{(v)}, D_t^{(v)})\}_{v=1}^{4}$ g\"{o}zlemlerini ald\i\u{g}\i{} kapal\i{} d\"{o}ng\"{u} kontrol yasas\i{} (\c{S}ekil~\ref{fig:arch}) a\c{s}a\u{g}\i daki gibi tan\i mlan\i r:
+\begin{equation}
+a_t = \mathcal{C}_{\text{PD}}\!\left(\pi_\theta\!\left(\Phi_{\text{3D}}(o_t),\, \mathcal{O}_{\text{task}}(u),\, \psi_k,\, \mathcal{R}_{\text{sym}}\right)\right).
+\end{equation}
+Deterministik kanonik g\"{o}rev ontolojisi $\mathcal{O}_{\text{task}}$, iki dilli komut $u$'yu alt\i{} g\"{o}rev ailesinden birine ve sembolik g\"{o}rev demetine e\c{s}ler:
+\begin{equation}
+\mathcal{O}_{\text{task}}(u) = g_{\text{task}} = \langle \tau_{\text{fam}},\, \mathbf{b}_{\text{ord}},\, \mathcal{P}_{\text{rel}},\, c_{\text{box}},\, \mathcal{G}_{\text{sub}} \rangle.
+\end{equation}
+\"{O}nko\c{s}ul ba\u{g}\i ml\i l\i\u{g}\i{} i\c{c}eren \texttt{T5} g\"{o}revinde $\mathcal{O}_{\text{task}}$, s\"{u}reci $\mathcal{G}_{\text{sub}}=(g_1, g_2)$ kontrol noktalar\i na ay\i rarak \"{o}nce \"{u}stteki engelleyici blo\u{g}un serbest b\"{o}lgeye indirilmesini, ard\i ndan g\"{u}ncel kamera g\"{o}zlemleriyle nihai istiflemenin yap\i lmas\i n\i{} sa\u{g}lar.
+
+\subsection{\c{C}ok Bak\i\c{s}l\i{} I\c{s}\i n-Telafili 3B Nokta Bulutu Alg\i lama}
+Kalibre kamera $v$ i\c{c}in $(u_p, v_p)$ pikseli ve do\u{g}rusal derinlik $d_p$ d\"{u}nya koordinatlar\i na geri-projekte edilir:
+\begin{equation}
+\mathbf{p}_w(u_p, v_p) = T_{w \leftarrow c_v} \begin{bmatrix} d_p K_v^{-1} [u_p,\, v_p,\, 1]^\top \\ 1 \end{bmatrix}.
+\end{equation}
+Ayd\i nlanma-de\u{g}i\c{s}mez kromatik oran $\rho_c = I_c / (\sum_j I_j + \varepsilon)$ ile b\"{o}l\"{u}tlenen nokta bulutunda, hedef nesne tepe kameras\i ndan \"{o}rt\"{u}ld\"{u}\u{g}\"{u}nde ($|\mathcal{P}_{\text{top}}| < N_{\min}$) yanal bak\i\c{s} \i\c{s}\i nlar\i{} $\mathbf{u}_{\text{ray}}^{(v)}$ boyunca yar\i-kal\i nl\i k ($r_{\text{half}}=25$~mm, $\eta=0,82$) telafisi uygulan\i r:
+\begin{equation}
+\hat{\mathbf{p}}_{xy} = \operatorname{med}_{v \in \mathcal{V}_{\text{lat}}}\!\left(\operatorname{med}(\mathcal{P}_{\text{lat}}^{(v)})_{xy} + \eta\, r_{\text{half}}\, \mathbf{u}_{\text{ray},xy}^{(v)}\right).
+\end{equation}
+Burada $\rho_c$ yaln\i zca mod\"{u}ler bir 2B \"{o}rnek-maskeleme \"{o}n-y\"{u}z\"{u} (\textit{modular 2D instance-masking front-end}) olarak g\"{o}rev yapar; dokulu veya \c{c}ok renkli nesnelerde a\c{c}\i k-s\"{o}zl\"{u}kl\"{u} 2B b\"{o}l\"{u}tleme maskeleriyle~\cite{radford2021clip} (\"{o}rn. Grounded-SAM t\"{u}revleri) de\u{g}i\c{s}tirildi\u{g}inde (3)--(4) nokta bulutu ve \i\c{s}\i n-telafisi geometrisi de\u{g}i\c{s}meden korunur.
+
+\subsection{AST G\"{u}venlik Kalkan\i{}, Minimum-Sars\i nt\i l\i{} PD Kontrol ve S\"{u}rt\"{u}nmeli Temas}
+Politika sentezleyicisi $\pi_\theta$'n\i n \"{u}retti\u{g}i kod statik AST do\u{g}rulamas\i ndan ge\c{c}irilerek yaln\i zca be\c{s} atomik beceri eylemine ve aritmetik ifadelere izin verilir. Yatay mesafe $\|\Delta \mathbf{p}_{xy}\|_2 > 40$~mm oldu\u{g}unda alg\i lanan tepe kotlar\i{} $\hat{z}_{\text{top}}^{(i)}$ \"{u}zerinden g\"{u}venli k\"{o}pr\"{u} irtifas\i{} hesaplan\i r:
+\begin{equation}
+z_{\text{safe}} = \max\!\left(z_{\text{trans}},\, \max_{i} \hat{z}_{\text{top}}^{(i)} + h_{\text{clear}},\, z_{\text{start}} + \delta_{\text{lift}},\, z_{\text{goal}} + \delta_{\text{lift}}\right).
+\end{equation}
+7-DOF eklem hedefleri 240~Hz frekansta be\c{s}inci derece minimum-sars\i nt\i l\i{} polinom ve PD kontrol yasas\i yla ($K_p=0,28$, $K_d=1,05$) s\"{u}r\"{u}l\"{u}r:
+\begin{equation}
+s(\tau) = 10\tau^3 - 15\tau^4 + 6\tau^5, \quad \mathbf{u}_{\text{PD}}(t) = K_p(\mathbf{q}_{\text{ref}}(t) - \mathbf{q}(t)) - K_d \dot{\mathbf{q}}(t).
+\end{equation}
+Paralel \c{c}ene parmaklar\i{} ($\mu=2,2$, $F_{\text{grasp}}=75$~N) her iki parmakta pozitif normal temas kuvveti do\u{g}rulayarak yapay sabit-ba\u{g} olmaks\i z\i n kavrama yapar.
+
+\subsection{\c{C}apraz-Aile Alg\i sal Hakem ve N\"{o}ro-Sembolik Deneyim Belle\u{g}i}
+Ak\i l y\"{u}r\"{u}tme tabanl\i{} politika sentezleyicisinden (\texttt{gpt-6-luna}) nesilsel ve mimari olarak ayr\i\c{s}t\i r\i lm\i\c{s} \c{c}apraz-aile alg\i sal hakem $\mathcal{J}_{\text{VLM}}$ (\texttt{gpt-4.1}, $768\times192$ \"{u}\c{c} bak\i\c{s}l\i{} RGB \c{s}erit ve 3B sahne \"{o}zeti), $\hat{y}_{\text{VLM}} \in \{0,1\}$, $\hat{s} \in [0,1]$ ve nedensel s\i n\i f $\hat{c} \in \{\text{F1},\dots,\text{F6}\}$ \"{u}retir. Kalibrasyon d\"{o}ng\"{u}s\"{u}nde $\mathcal{M}_{\text{NS}}$ \c{c}ift kanall\i{} g\"{u}ncelleme yapar:
+\begin{equation}
+\psi_{k+1} = \Pi_{\Psi}\!\left(\psi_k \oplus \Delta\psi(\hat{c})\right), \quad \mathcal{R}_{\text{sym}}[\hat{c}] \leftarrow r(\hat{c}), \quad |\mathcal{R}_{\text{sym}}| \le 6.
+\end{equation}
+Ajan d\"{o}ng\"{u}s\"{u}nden yal\i t\i lm\i\c{s} ger\c{c}ek-durum k\^{a}hini $\mathcal{O}_{\text{GT}}$ ile $\mathcal{J}_{\text{VLM}}$ aras\i ndaki \c{s}ans d\"{u}zeltmeli uyum Cohen'in $\kappa$ istatisti\u{g}i ile \"{o}l\c{c}\"{u}l\"{u}r:
+\begin{equation}
+\kappa = \frac{p_o - p_e}{1 - p_e}, \quad p_o = \frac{\text{DP} + \text{DN}}{N}, \quad p_e = p_{\hat{y}=1} p_{y=1} + p_{\hat{y}=0} p_{y=0}.
+\end{equation}
+
+\section{Deneysel De\u{g}erlendirme ve Bulgular}
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=\textwidth]{../figures/ablation_and_judge_agreement.png}
+\caption{240~Hz temas sim\"{u}lasyonunda d\"{o}rt katmanl\i{} ablasyon ($n=30$/g\"{o}rev, 720 ko\c{s}um), bile\c{s}en/DR sonu\c{c}lar\i{} (1.080 ko\c{s}um), 60 sahneli 3B alg\i lama ve $N=120$ hakem uyum analizi.}
+\label{fig:res}
+\end{figure*}
+
+\subsection{3B Nokta Bulutu Alg\i lama ve E\c{s} Anlaml\i{} Bellek Y\"{o}nlendirme}
+Altm\i\c{s} rastgele sahne (180 \"{o}rt\"{u}lmemi\c{s}, 60 tam \"{o}rt\"{u}l\"{u} sorgu) \"{u}zerindeki sonu\c{c}lar Tablo~\ref{tab:perc}'de sunulmu\c{s}tur. $\Phi_{\text{3D}}$, \"{o}rt\"{u}lmemi\c{s} 3B RMSE hatas\i n\i{} nominalde 23,85~mm'den 2,63~mm'ye (9,07~kat), sens\"{o}r ve kalibrasyon g\"{u}r\"{u}lt\"{u}s\"{u} ($\sigma_d=3,0$~mm, $\pm3,0$~mm / $\pm1,5^\circ$) alt\i nda 24,12~mm'den 3,99~mm'ye (6,05~kat) d\"{u}\c{s}\"{u}rerek her iki rejimde \%100,0 \"{o}rt\"{u}l\"{u} geri \c{c}a\u{g}\i rma sa\u{g}lam\i\c{s}; $\mathcal{O}_{\text{task}}$ e\c{s} anlaml\i{} y\"{o}nlendirmeyi \%0,0'dan \%100,0'a \c{c}\i karm\i\c{s}t\i r.
+
+\begin{table}[!t]
+\centering
+\caption{60 Sahneli Nominal/G\"{u}r\"{u}lt\"{u}l\"{u} 3B Alg\i lama ve E\c{s} Anlaml\i{} Y\"{o}nlendirme}
+\label{tab:perc}
+\begin{tabularx}{\columnwidth}{Y c c}
+\toprule
+\textbf{Metrik} & \textbf{Naif Temel} & \textbf{\"{O}nerilen} \\
+\midrule
+Nominal \"{O}rt\"{u}lmemi\c{s} 3B RMSE ($n=180$) & 23,85 mm & \textbf{2,63 mm} \\
+Nominal \"{O}rt\"{u}l\"{u} Geri \c{C}a\u{g}\i rma ($n=60$) & \%73,3 & \textbf{\%100,0 (27,91 mm)} \\
+G\"{u}r\"{u}lt\"{u}l\"{u} 3B RMSE ($n=180$, $\sigma_d=3$~mm) & 24,12 mm & \textbf{3,99 mm} \\
+G\"{u}r\"{u}lt\"{u}l\"{u} \"{O}rt\"{u}l\"{u} Geri \c{C}a\u{g}\i rma ($n=60$) & \%66,7 & \textbf{\%100,0 (27,68 mm)} \\
+E\c{s} Anlaml\i{} \"{O}nbellek \.{I}sabeti ($6$ \c{c}ift) & \%0,0 (0/6) & \textbf{\%100,0 (6/6)} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{D\"{o}rt Katmanl\i{} Geni\c{s} \"{O}l\c{c}ekli Fiziksel Ablasyon ($n=30$/G\"{o}rev)}
+720 canl\i{} sim\"{u}lasyon denemesinin sonu\c{c}lar\i{} \c{S}ekil~\ref{fig:res} ve Tablo~\ref{tab:abl}'de g\"{o}r\"{u}lmektedir. S\i f\i r-\"{o}rnek (\texttt{K1}) \%37,78'de kal\i rken, ayn\i{} $\Phi_{\text{3D}}$ alg\i lay\i c\i s\i na sahip adil Code-as-Policies temeli (\texttt{K2}) \%58,89'a ula\c{s}m\i\c{s}; yap\i land\i r\i lmam\i\c{s} s\"{o}zel yans\i ma (\texttt{K3}) ise \%0,0 e\c{s} anlaml\i{} isabet ve istem \c{s}i\c{s}mesi (89,4K \c{c}\i kt\i{} token\i) nedeniyle \%53,89'a gerilemi\c{s}tir. \"{O}nerilen mimari (\texttt{K4}) \textbf{\%87,22 (157/180)} ba\c{s}ar\i ya ula\c{s}arak \texttt{K1}'e ($p=2,38\times10^{-22}$), \texttt{K2}'ye ($p=2,24\times10^{-10}$) ve \texttt{K3}'e ($p=5,63\times10^{-13}$) g\"{o}re anlaml\i{} \"{u}st\"{u}nl\"{u}k kurmu\c{s}, \c{c}\i kt\i{} tokenlar\i n\i{} \%29,1 azaltm\i\c{s} ve \texttt{T4}--\texttt{T6} ba\c{s}ar\i s\i n\i{} \textbf{\%92,22 (83/90)} d\"{u}zeyine \c{c}\i karm\i\c{s}t\i r.
+
+\begin{table*}[!t]
+\centering
+\caption{Alt\i{} Kanonik G\"{o}revde D\"{o}rt Katmanl\i{} Ba\c{s}ar\i{} Oranlar\i{} (240~Hz Sim\"{u}le PD Temas Fizi\u{g}i, $n=30$/G\"{o}rev, 720 Ko\c{s}um)}
+\label{tab:abl}
+\begin{tabularx}{\textwidth}{Y c c c c}
+\toprule
+\textbf{G\"{o}rev Ailesi} & \textbf{K1: S\i f\i r-\"{O}rnek} & \textbf{K2: Adil CaP+3B} & \textbf{K3: S\"{o}zel Yans.} & \textbf{K4: \"{O}nerilen} \\
+\midrule
+\textbf{T1} --- D\"{o}rt Katl\i{} Kule ($n=30$) & \%23,33 (7/30) & \%23,33 (7/30) & \%23,33 (7/30) & \textbf{\%70,00 (21/30)} \\
+\textbf{T2} --- Do\u{g}rusal S\i ra ($n=30$) & \%10,00 (3/30) & \%30,00 (9/30) & \%23,33 (7/30) & \textbf{\%93,33 (28/30)} \\
+\textbf{T3} --- \c{C}apraz \c{C}ift ($n=30$) & \%43,33 (13/30) & \textbf{\%86,67 (26/30)} & \%76,67 (23/30) & \%83,33 (25/30) \\
+\textbf{T4} --- Kap \.{I}\c{c}i Yerle\c{s}im ($n=30$) & \%33,33 (10/30) & \%36,67 (11/30) & \%33,33 (10/30) & \textbf{\%80,00 (24/30)} \\
+\textbf{T5} --- S\"{o}k-Tak \& Tersleme ($n=30$) & \%30,00 (9/30) & \%80,00 (24/30) & \%73,33 (22/30) & \textbf{\%96,67 (29/30)} \\
+\textbf{T6} --- Engel A\c{s}arak \.{I}stifleme ($n=30$) & \%86,67 (26/30) & \%96,67 (29/30) & \%93,33 (28/30) & \textbf{\%100,00 (30/30)} \\
+\midrule
+\textbf{K\i s\i t-Yo\u{g}un (T4--T6, $n=90$)} & \%50,00 (45/90) & \%71,11 (64/90) & \%66,67 (60/90) & \textbf{\%92,22 (83/90)} \\
+\textbf{Genel Ba\c{s}ar\i{} [\%95 GA] ($n=180$)} & \textbf{\%37,78 [31,0, 45,1]} & \textbf{\%58,89 [51,6, 65,8]} & \textbf{\%53,89 [46,6, 61,0]} & \textbf{\%87,22 [81,6, 91,3]} \\
+\textbf{\c{C}\i kt\i{} Token / Ort. $p_{50}$ Gecikme} & 86,8K / 4.995 ms & 87,5K / 4.902 ms & 89,4K / 5.126 ms & \textbf{62,0K / 4.068 ms} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{Bile\c{s}en \c{C}\i karma (LOO) ve Fiziksel / Sens\"{o}r Alan Rastgelele\c{s}tirmesi (1.080 Ko\c{s}um)}
+Tablo~\ref{tab:dr}'de g\"{o}sterildi\u{g}i \"{u}zere, kanonik ontolojinin \c{c}\i kar\i lmas\i{} genel ba\c{s}ar\i y\i{} -47,78~yp (%39,44) d\"{u}\c{s}\"{u}r\"{u}rken $\Phi_{\text{3D}}$ \c{c}\i kar\i lmas\i{} -21,11~yp (%66,11), $\Delta\psi$ \c{c}\i kar\i lmas\i{} -6,11~yp (%81,11) ve $\mathcal{R}_{\text{sym}}$ \c{c}\i kar\i lmas\i{} -2,22~yp (%85,00) kayba yol a\c{c}maktad\i r. K\"{u}tle ($\pm\%30$), s\"{u}rt\"{u}nme ve RGB-D sens\"{o}r g\"{u}r\"{u}lt\"{u}s\"{u} i\c{c}eren alan rastgelele\c{s}tirmesi (DR) alt\i nda \"{o}nerilen mimari \textbf{\%81,67 (147/180)} ba\c{s}ar\i y\i{} koruyarak Adil CaP temeline (%54,44) g\"{o}re +27,23~yp ($p=1,38\times10^{-9}$) \"{u}st\"{u}nl\"{u}k sa\u{g}lam\i\c{s}t\i r.
+
+\begin{table}[!t]
+\centering
+\caption{Bile\c{s}en \c{C}\i karma ve Alan Rastgelele\c{s}tirmesi (1.080 Ko\c{s}um)}
+\label{tab:dr}
+\begin{tabularx}{\columnwidth}{Y c c}
+\toprule
+\textbf{Varyant ($n=180$/sat\i r)} & \textbf{Genel [\%95 GA]} & \textbf{T4--T6} \\
+\midrule
+Tam Mimari (Nominal) & \textbf{\%87,22 [81,6, 91,3]} & \textbf{\%92,22} \\
+$-$ Sembolik Kurallar ($\mathcal{R}_{\text{sym}}$) & \%85,00 [79,1, 89,5] & \%87,78 \\
+$-$ Nicel \"{O}nseller ($\Delta\psi$) & \%81,11 [74,8, 86,2] & \%82,22 \\
+$-$ 4-Bak\i\c{s}l\i{} 3B ($\Phi_{\text{3D}}$) & \%66,11 [58,9, 72,6] & \%86,67 \\
+$-$ Kanonik Ontoloji ($\mathcal{O}_{\text{task}}$) & \%39,44 [32,6, 46,7] & \%42,22 \\
+\midrule
+DR: Adil CaP + 3B & \%54,44 [47,2, 61,6] & \%63,33 \\
+DR: \"{O}nerilen Mimari & \textbf{\%81,67 [75,4, 86,6]} & \textbf{\%87,78} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{$N=120$ E\c{s}le\c{s}tirilmi\c{s} VLM Hakem Denetimi: \texttt{gpt-4.1} vs \texttt{gpt-6-luna}}
+Tablo~\ref{tab:judge}'de sunulan $N=120$ kar\c{s}\i la\c{s}t\i rmal\i{} denetimde, \c{c}apraz-aile hakem \texttt{gpt-4.1} ($\kappa=0,6082$, duyarl\i l\i k \%79,45, kesinlik \%87,88) ve ayn\i-aile \"{o}z-ele\c{s}tirmen \texttt{gpt-6-luna} ($\kappa=0,6702$, \"{o}zg\"{u}ll\"{u}k \%95,74) her ikisi de \textit{\"{o}nemli uyum} band\i na ula\c{s}m\i\c{s}, \texttt{gpt-4.1} medyan gecikmeyi \%53,9 (3.445~ms $\to$ \textbf{1.587~ms}) d\"{u}\c{s}\"{u}rm\"{u}\c{s}t\"{u}r.
+
+\begin{table}[!t]
+\centering
+\caption{$N=120$ Hakem (\texttt{gpt-4.1} vs \texttt{gpt-6-luna}) Denetimi}
+\label{tab:judge}
+\begin{tabularx}{\columnwidth}{Y c c}
+\toprule
+\textbf{\"{O}l\c{c}\"{u}t} & \textbf{\texttt{gpt-4.1} (\c{C}apraz)} & \textbf{\texttt{gpt-6-luna} (\"{O}z)} \\
+\midrule
+DP / DN / YP / YN & \textbf{58 / 39 / 8 / 15} & 55 / 45 / 2 / 18 \\
+Do\u{g}ruluk / Kesinlik & \%80,83 / \textbf{\%87,88} & \%83,33 / \%96,49 \\
+Duyarl\i l\i k / \"{O}zg\"{u}ll\"{u}k & \textbf{\%79,45} / \%82,98 & \%75,34 / \textbf{\%95,74} \\
+Cohen $\kappa$ / F1 / MAE & \textbf{0,6082} / 0,835 / 0,19 & \textbf{0,6702} / 0,846 / 0,12 \\
+Gecikme $p_{50}$ ($p_{95}$) [ms] & \textbf{1.587 (2.582)} & 3.445 (5.708) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Tart\i\c{s}ma ve Ge\c{c}erlilik Tehditleri}
+1.800 ko\c{s}umluk ablasyon, s\"{o}zel yans\i man\i n (\%53,89) istem \c{s}i\c{s}mesi ve \%0,0 e\c{s} anlaml\i{} isabet nedeniyle Adil CaP'tan (\%58,89) geri kald\i\u{g}\i n\i, ba\c{s}ar\i n\i n ise $\mathcal{O}_{\text{task}}$ (-47,78~yp) ve $\Phi_{\text{3D}}$ (-21,11~yp) temeline dayanan \c{c}ift kanall\i{} bellekten (\%87,22) geldi\u{g}ini kan\i tlamaktad\i r. D\i\c{s} finansman bulunmamas\i{} nedeniyle t\"{u}m deneyler s\i f\i r sabit-ba\u{g}l\i{} 240~Hz koni-s\"{u}rt\"{u}nmesi \textbf{sim\"{u}lasyonunda} y\"{u}r\"{u}t\"{u}lm\"{u}\c{s} olup fiziksel donan\i m i\c{c}ermemektedir; DR alt\i nda \%81,67 ba\c{s}ar\i{} korunmakla birlikte ger\c{c}ek donan\i ma ge\c{c}i\c{s}te a\c{c}\i k-s\"{o}zl\"{u}kl\"{u} 2B maskeler~\cite{radford2021clip} ve ger\c{c}ek RGB-D benek g\"{u}r\"{u}lt\"{u}s\"{u} ba\c{s}l\i ca ge\c{c}erlilik s\i n\i rlar\i n\i{} olu\c{s}turur.
+
+\section{Sonu\c{c}}
+Kanonik g\"{o}rev ontolojisi, d\"{o}rt bak\i\c{s}l\i{} 3B alg\i lama, minimum-sars\i nt\i l\i{} PD kontrol ve \c{c}apraz-aile VLM hakemli n\"{o}ro-sembolik bellek birle\c{s}tirilerek 240~Hz sim\"{u}lasyonda 2,63~mm 3B RMSE, \%87,22 genel ba\c{s}ar\i{} ($p=2,24\times10^{-10}$), \%92,22 \texttt{T4}--\texttt{T6} ba\c{s}ar\i s\i, \%81,67 alan rastgelele\c{s}tirmesi dayan\i kl\i l\i\u{g}\i{} ve $N=120$ denetimde $\kappa=0,6082$ uyum elde edilmi\c{s}tir.
+
+\section*{Veri ve Kod Eri\c{s}ilebilirli\u{g}i ve Bildirimler}
+Bu \c{c}al\i\c{s}madaki 240~Hz PyBullet sim\"{u}lasyonu, alg\i lama mod\"{u}l\"{u}, ontoloji, ham JSON sonu\c{c}lar\i{} ve k\i yaslama betikleri \url{https://github.com/Mahmut-OZTURK/robotech} adresinde payla\c{s}\i lm\i\c{s}t\i r. D\i\c{s} finansman ve \c{c}\i kar \c{c}at\i\c{s}mas\i{} yoktur.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
+

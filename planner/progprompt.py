@@ -1,166 +1,187 @@
-# progprompt.py — LLM tabanlı dinamik görev planlayıcı
-# Herhangi bir dilde, herhangi bir görev tipini anlayıp çalıştırılabilir Python planı üretir
+# progprompt.py — Neuro-Symbolic Code-as-Policies Synthesizer Conditioned on Structured Memory
 import os
+import time
 from groq import Groq
+from dotenv import load_dotenv
+
+from calibration.memory import DEFAULT_KINEMATIC_PRIORS
+from planner.openai_client import OpenAIChatClient
+
+load_dotenv(override=True)
 
 
 class ProgPrompt:
-    def __init__(self):
-        self.client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-        self.model = "meta-llama/llama-4-scout-17b-16e-instruct"
-        print(f"✅ Planner hazır ({self.model})")
+    """
+    Synthesizes flat, AST-safe Python manipulation policies using the primitive skill API.
+    Unlike hardcoded demonstration templates, geometric clearance, release margins, and
+    causal invariants are injected dynamically from CalibrationMemory.
+    """
 
-    def plan(self, task: str, scene_description: str,
-             objects: list, robot_position: list,
-             extra_instructions: list = None) -> str:
+    def __init__(self, client=None, model: str | None = None):
+        openai_key = (os.getenv("OPENAI_API_KEY") or "").strip()
+        groq_key = (os.getenv("GROQ_API_KEY") or "").strip()
+        if client is not None:
+            self.client = client
+            self.model = model or os.getenv("OPENAI_MODEL", "gpt-6-luna")
+        elif openai_key:
+            self.client = OpenAIChatClient(api_key=openai_key)
+            self.model = model or os.getenv("OPENAI_MODEL", "gpt-6-luna")
+        elif groq_key:
+            self.client = Groq(api_key=groq_key, max_retries=0, timeout=25.0)
+            self.model = model or "openai/gpt-oss-120b"
+        else:
+            self.client = None
+            self.model = model or "openai/gpt-oss-120b"
 
-        objects_str = "\n".join([
-            f"  - {obj['name']}: position {[round(x, 3) for x in obj['position']]}"
+    def plan(
+        self,
+        task: str,
+        scene_description: str,
+        objects: list[dict],
+        robot_position: list[float] | None = None,
+        extra_instructions: list[str] | None = None,
+        kinematic_priors: dict | None = None,
+        canonical_type: str | None = None,
+        task_spec=None,
+    ) -> str | None:
+        priors = dict(DEFAULT_KINEMATIC_PRIORS)
+        if kinematic_priors:
+            priors.update(kinematic_priors)
+
+        objects_str = "\n".join(
+            f"  - {obj['name']}: center={[round(x, 3) for x in obj['position']]}"
+            + (f", z_top={round(obj['z_top'], 3)}" if "z_top" in obj else "")
             for obj in objects
-        ])
+        )
+        obj_names = [obj["name"] for obj in objects]
 
-        learning_str = ""
+        rules_block = ""
         if extra_instructions:
-            learning_str = "\nLEARNED TIPS:\n"
-            learning_str += "\n".join([f"- {inst}" for inst in extra_instructions[-3:]])
+            rules_block = "\nCALIBRATED CAUSAL CONSTRAINTS (MUST OBEY):\n" + "\n".join(
+                f"- {r}" for r in extra_instructions
+            )
 
-        obj_names = [obj['name'] for obj in objects]
+        spec_block = ""
+        if task_spec is not None:
+            fam = task_spec.canonical_type
+            if fam in ("STACK_ORDERED", "OBSTACLE_CLEARANCE") and len(task_spec.ordered_objects) >= 2:
+                base = task_spec.ordered_objects[0]
+                uppers = task_spec.ordered_objects[1:]
+                spec_block = (
+                    f"\nSYMBOLIC ONTOLOGY GROUNDING ({fam}):\n"
+                    f"- Base block (leave ungrasped on table; query bp = get_object_position('{base}') ONCE at start while unoccluded): {base}\n"
+                    f"- Upper blocks to stack bottom-to-top onto {base}: {uppers} "
+                    f"(right after grasp(...), call move_to([bp[0], bp[1], bp[2] + k * {priors['release_margin_z']:.3f}]) directly without intermediate lower Z moves for k=1..{len(uppers)})"
+                )
+            elif fam == "ALIGN_ROW" and len(task_spec.ordered_objects) >= 2:
+                spec_block = (
+                    f"\nSYMBOLIC ONTOLOGY GROUNDING (ALIGN_ROW):\n"
+                    f"- Collinear row order: {task_spec.ordered_objects}; place along clear lane X=0.29 at Y=[-0.22 + k*{priors['row_spacing']:.3f}] (k=0..{len(task_spec.ordered_objects)-1}) and z=0.455"
+                )
+            elif fam == "DIAGONAL_PAIR" and task_spec.relational_pairs:
+                spec_block = (
+                    f"\nSYMBOLIC ONTOLOGY GROUNDING (DIAGONAL_PAIR):\n"
+                    f"- Moving-to-Reference pairs: {task_spec.relational_pairs}; "
+                    f"keep reference blocks in place and move each moving block to [ref_x + {priors['diagonal_delta']:.3f}, ref_y - {priors['diagonal_delta']:.3f}, 0.455]"
+                )
+            elif fam == "PLACE_INSIDE":
+                cname = task_spec.target_container or "brown_box"
+                spec_block = (
+                    f"\nSYMBOLIC ONTOLOGY GROUNDING (PLACE_INSIDE):\n"
+                    f"- Target blocks to place inside '{cname}' (query bp = get_object_position('{cname}')): {task_spec.ordered_objects}\n"
+                    f"- Hollow '{cname}' inner cavity half-width is 0.056m (do NOT use +/-0.062m row_spacing or drop multiple 0.05m cubes at the same [bp[0], bp[1]]); "
+                    f"place into distinct interior sub-slots ([bp[0]-0.032, bp[1]-0.032, bp[2]+{priors['release_margin_z']:.3f}], [bp[0]+0.032, bp[1]-0.032, bp[2]+{priors['release_margin_z']:.3f}], [bp[0], bp[1]+0.032, bp[2]+{priors['release_margin_z']:.3f}])"
+                )
+            else:
+                spec_block = f"\nCANONICAL TASK FAMILY: {fam}"
+        elif canonical_type:
+            spec_block = f"\nCANONICAL TASK FAMILY: {canonical_type}"
 
-        prompt = f"""Generate Python commands to control a robot arm for ANY manipulation task.
+        prompt = f"""Synthesize flat executable Python lines to accomplish the robotic manipulation task.
 
-SKILLS:
-- grasp("name")              → Picks up object (auto-approaches + grabs)
-- release()                  → Drops held object at current position
-- move_to([x, y, z])         → Move end-effector to [x,y,z]
-- get_object_position("name") → Returns [x,y,z] from camera
-- home()                     → Go to rest position
+AVAILABLE PRIMITIVE API:
+- pos = get_object_position("name")  # Returns [x, y, z] center of object from multi-view RGB-D camera
+- grasp("name")                      # Approaches, closes parallel-jaw gripper on cube, and lifts
+- move_to([x, y, z])                 # Moves end-effector to Cartesian target [x, y, z] in meters
+- release()                          # Opens gripper smoothly to place held cube and retracts
+- home()                             # Returns robot arm to occlusion-free rest configuration
 
-AVAILABLE OBJECTS (use ONLY these exact strings):
+DETECTED WORKSPACE OBJECTS (use ONLY exact cube names for grasp):
 {obj_names}
-
-OBJECTS WITH POSITIONS:
 {objects_str}
 
-TASK: {task}{learning_str}
+SCENE CONTEXT:
+{scene_description}
 
-OBJECT NAME MAPPING (Turkish → ID):
-- "kırmızı" / "red" → "red_cube"
-- "mavi" / "blue" → "blue_cube"
-- "yeşil" / "green" → "green_cube"
-- "sarı" / "yellow" → "yellow_cube"
-PHYSICS RULES:
-1. "on top" / "üstüne" / "üzerine": Move above at target_z + 0.15 first, then LOWER to target_z + 0.052. This gently places a 5cm cube on top.
-2. For multiple stacks (towers), ALWAYS query the position of the immediately underlying cube right before placing (using get_object_position), and place it at exactly that underlying cube's Z + 0.052. NEVER guess or accumulate manual height offsets like +0.1, +0.2 etc.
-3. "beside" / "yanına": Use target_z (same height)
-4. "touching" / "temas": Use 0.06m offset from target center in XY
-5. Each object must be grasped individually. Release before grasping the next.
-6. ALWAYS end with home()
-7. CRITICAL: After grasping an object, ALWAYS lift it straight up to a safe high Z (z = 0.65 or higher if there are taller stacked towers in the scene) at its current XY coordinate BEFORE moving horizontally. Never move horizontally from low Z as it will collide with and knock over other cubes.
-8. CRITICAL: When building towers, ALWAYS call home() right after release() and BEFORE querying the position of the placed cube (using get_object_position). This ensures the robot arm moves out of the camera's view, allowing 100% accurate top-view vision without occlusion.
-9. LOGICAL STACKING ORDER: When stacking multiple objects into a tower (e.g., "A, B, C, D'yi üst üste diz" or "küpleri üst üste diz"), choose one object as the BASE (bottom-most object, e.g., A). LEAVE the base object A at its original position (do NOT grasp it). Then, grasp B and place it on top of A. Then grasp C and place it on B. Then grasp D and place it on C. CRITICAL: NEVER grasp the base object (A) after other objects have been placed on top of it. Grasping an object that is at the bottom of a stack is physically impossible, will collapse the tower, and is strictly prohibited.
-10. "diagonal" / "çaprazına": Use an offset in BOTH X and Y directions relative to the target center. Since cubes are 0.05m wide, a diagonal placement should have +/- 0.06m offset in X AND +/- 0.06m offset in Y. For example, to place blue_cube diagonal to red_cube, use: [red_pos[0] + 0.06, red_pos[1] + 0.06, red_pos[2]]. NEVER place them with only 1 axis offset, as that would be side-by-side (beside), not diagonal.
-11. OBSTACLE AVOIDANCE: When there are existing stacks or kuleler in the scene, make sure to plan horizontal movements (`move_to`) with a safe high Z (z = 0.65 or 0.70) to avoid any collision with existing towers on the path.
-12. "beside" / "yanına" / "yan yana": Place objects side-by-side by applying a 0.06m offset to ONLY ONE axis (either X or Y, but not both). For example, to place blue_cube beside red_cube along the Y axis, use: [red_pos[0], red_pos[1] + 0.06, red_pos[2]]. Never apply offsets to both X and Y, as that is diagonal placement. Never use 0 offset as they will collide.
-13. MULTIPLE BESIDE / PLURAL LINE-UP: When asked to place all cubes side-by-side or in a row (e.g., "küpleri yan yana koy" or "küpleri yan yana diz"), you MUST arrange ALL available cubes in a single row (line) using one cube as the base (e.g. red_cube) and placing the others at progressive offsets on the Y-axis: B at base_y + 0.06, C at base_y + 0.12, D at base_y + 0.18. Do NOT leave any cubes out. Make sure all cubes are moved into the row.
+CALIBRATED KINEMATIC PARAMETERS:
+- Safe horizontal transit Z: {priors['transit_z']:.3f} m
+- Stack release Z offset above lower cube center: +{priors['release_margin_z']:.3f} m (cubes are 0.05m wide)
+- Row single-axis center spacing: {priors['row_spacing']:.3f} m
+- Diagonal dual-axis (both X and Y) offset: {priors['diagonal_delta']:.3f} m
+- Re-localize after home(): {priors['require_home_relocate']}{spec_block}
 
+USER TASK: "{task}"{rules_block}
 
+OBJECT COLOR ALIASES:
+- kırmızı/red -> "red_cube", mavi/blue -> "blue_cube", yeşil/green -> "green_cube", sarı/yellow -> "yellow_cube"
+- kutu/kap/box -> "brown_box" (fixed hollow container; NEVER pass "brown_box" or "obstacle_wall" to grasp())
 
+SYNTAX CONSTRAINTS:
+- Output ONLY flat Python statements using the 5 functions above, variable assignments, list indexing, and +/- arithmetic.
+- NO markdown fences, NO comments, NO imports, NO loops/if/def. Always finish with home().
+- If physically impossible (non-existent objects, flying, etc.), output ONLY: IMPOSSIBLE: <reason>"""
 
+        if self.client is None:
+            return None
 
-BESIDE EXAMPLE (Plural/Multiple cubes beside each other) — "küpleri yan yana koy":
-# Choose red_cube as the base of the row, and place blue, green, and yellow cubes sequentially beside it on the Y-axis.
-red_pos = get_object_position("red_cube")
-blue_pos = get_object_position("blue_cube")
-grasp("blue_cube")
-move_to([blue_pos[0], blue_pos[1], 0.65])
-move_to([red_pos[0], red_pos[1] + 0.06, 0.65])
-move_to([red_pos[0], red_pos[1] + 0.06, red_pos[2]])
-release()
-home()
-
-# Place green_cube next to the placed blue_cube
-green_pos = get_object_position("green_cube")
-grasp("green_cube")
-move_to([green_pos[0], green_pos[1], 0.65])
-move_to([red_pos[0], red_pos[1] + 0.12, 0.65])
-move_to([red_pos[0], red_pos[1] + 0.12, red_pos[2]])
-release()
-home()
-
-# Place yellow_cube next to the placed green_cube
-yellow_pos = get_object_position("yellow_cube")
-grasp("yellow_cube")
-move_to([yellow_pos[0], yellow_pos[1], 0.65])
-move_to([red_pos[0], red_pos[1] + 0.18, 0.65])
-move_to([red_pos[0], red_pos[1] + 0.18, red_pos[2]])
-release()
-home()
-
-TOWER STACKING EXAMPLE (4 levels) — "red_cube, blue_cube, green_cube ve yellow_cube'u kule gibi üst üste diz":
-# Step 1: red_cube is the base. Leave it at its position! Grasp blue_cube and stack it on red_cube.
-red_pos = get_object_position("red_cube")
-blue_pos = get_object_position("blue_cube")
-grasp("blue_cube")
-move_to([blue_pos[0], blue_pos[1], 0.65])
-move_to([red_pos[0], red_pos[1], 0.65])
-move_to([red_pos[0], red_pos[1], red_pos[2] + 0.052])
-release()
-home()
-
-# Step 2: Grasp green_cube and stack it on the placed blue_cube.
-blue_placed_pos = get_object_position("blue_cube")
-green_pos = get_object_position("green_cube")
-grasp("green_cube")
-move_to([green_pos[0], green_pos[1], 0.65])
-move_to([blue_placed_pos[0], blue_placed_pos[1], 0.65])
-move_to([blue_placed_pos[0], blue_placed_pos[1], blue_placed_pos[2] + 0.052])
-release()
-home()
-
-# Step 3: Grasp yellow_cube and stack it on the placed green_cube.
-green_placed_pos = get_object_position("green_cube")
-yellow_pos = get_object_position("yellow_cube")
-grasp("yellow_cube")
-move_to([yellow_pos[0], yellow_pos[1], 0.65])
-move_to([green_placed_pos[0], green_placed_pos[1], 0.65])
-move_to([green_placed_pos[0], green_placed_pos[1], green_placed_pos[2] + 0.052])
-release()
-home()
-# TASK COMPLETE. Red_cube was NEVER grasped because it was the base! Only blue, green, and yellow were moved.
-
-
-OUTPUT: ONLY flat Python lines. No comments, no markdown, no def/class/if/for.
-IF THE TASK IS PHYSICALLY IMPOSSIBLE (e.g. "fly", "paint", "destroy", "shrink", objects don't exist, or contradicts physics), output ONLY: IMPOSSIBLE: <reason>
-"""
-        print(f"\n🧠 Plan üretiliyor ({self.model}): '{task}'")
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {"role": "system",
-                 "content": "You are a robot motion planner. Output ONLY executable Python lines. No comments, no markdown. Follow the example format exactly. Always end with home(). If the task is physically impossible for a pick-and-place robot arm, output ONLY: IMPOSSIBLE: <reason>"},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.0,
-            max_tokens=500
-        )
-
-        plan = response.choices[0].message.content.strip()
+        plan = ""
+        for attempt in range(5):
+            try:
+                req_kwargs = dict(
+                    model=self.model,
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "You are an embodied robot manipulation code synthesizer. "
+                                "Emit ONLY flat executable Python statements calling get_object_position, grasp, move_to, release, home. "
+                                "No comments, no markdown fences, no control flow statements."
+                            ),
+                        },
+                        {"role": "user", "content": prompt},
+                    ],
+                )
+                if "gpt-6" in self.model or "gpt-5" in self.model:
+                    req_kwargs["reasoning_effort"] = "low"
+                    req_kwargs["max_completion_tokens"] = 1200 + attempt * 250
+                else:
+                    req_kwargs["temperature"] = 0.0
+                    req_kwargs["max_tokens"] = 1200 + attempt * 200
+                    if "gpt-oss" in self.model:
+                        req_kwargs["reasoning_effort"] = "low"
+                    elif "qwen" in self.model:
+                        req_kwargs["reasoning_effort"] = "none"
+                resp = self.client.chat.completions.create(**req_kwargs)
+                raw_content = (resp.choices[0].message.content or "").strip()
+                if raw_content:
+                    plan = raw_content
+                    break
+            except Exception as exc:
+                err = str(exc).lower()
+                if any(tok in err for tok in ("tokens per day", "tpd", "insufficient_quota", "invalid_api_key", "model_not_found")):
+                    return None
+                if ("429" in err or "rate_limit" in err or "timeout" in err or "503" in err) and attempt < 4:
+                    time.sleep(6 * (attempt + 1))
+                else:
+                    return None
+        if not plan:
+            return None
         if "</think>" in plan:
             plan = plan.split("</think>")[-1].strip()
         elif "<think>" in plan:
-            # If thinking got cut off, try to remove everything up to the last character or handle gracefully
-            parts = plan.split("<think>")
-            if len(parts) > 1:
-                # If there's content after <think> but it didn't finish, it's probably all thoughts
-                plan = parts[-1].strip()
+            plan = plan.split("<think>")[-1].strip()
         plan = plan.replace("```python", "").replace("```", "").strip()
 
-        # İmkansız görev kontrolü
         if plan.upper().startswith("IMPOSSIBLE"):
-            reason = plan.split(":", 1)[1].strip() if ":" in plan else "Bilinmeyen sebep"
-            print(f"\n🚫 İMKANSIZ GÖREV: {reason}")
             return None
-
-        print(f"\n📋 Üretilen Plan:\n{plan}\n")
         return plan
-

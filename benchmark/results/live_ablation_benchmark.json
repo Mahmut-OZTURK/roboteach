@@ -1,0 +1,1864 @@
+{
+  "trials_per_task": 30,
+  "total_tasks": 6,
+  "models": {
+    "policy_synthesizer": "gpt-6-luna",
+    "cross_family_multimodal_vlm_judge": "gpt-4.1"
+  },
+  "results_by_method": {
+    "zero_shot_open_loop": {
+      "T1_STACK_ORDERED": {
+        "success": 7,
+        "trials": 30,
+        "sr_pct": 23.33,
+        "ci95_pct": [
+          11.79,
+          40.93
+        ],
+        "seed_outcomes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "failure_distribution": {
+          "F_XY_ALIGN": 13,
+          "F_COLLISION": 9,
+          "F_Z_DROP": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 22080,
+          "completion_tokens": 13739,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5812.86,
+            "p50": 5457.03,
+            "p95": 7045.05,
+            "p99": 9888.77,
+            "p50_ci95": [
+              5131.15,
+              6340.38
+            ],
+            "p95_ci95": [
+              6712.08,
+              11016.88
+            ]
+          }
+        }
+      },
+      "T2_ALIGN_ROW": {
+        "success": 3,
+        "trials": 30,
+        "sr_pct": 10.0,
+        "ci95_pct": [
+          3.46,
+          25.62
+        ],
+        "seed_outcomes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 12,
+          "F_XY_ALIGN": 13,
+          "F_Z_DROP": 2
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21810,
+          "completion_tokens": 17395,
+          "latency_ms": {
+            "n": 30,
+            "mean": 6887.79,
+            "p50": 6565.84,
+            "p95": 9520.98,
+            "p99": 9654.24,
+            "p50_ci95": [
+              6115.22,
+              7291.23
+            ],
+            "p95_ci95": [
+              7957.69,
+              9692.89
+            ]
+          }
+        }
+      },
+      "T3_DIAGONAL_PAIR": {
+        "success": 13,
+        "trials": 30,
+        "sr_pct": 43.33,
+        "ci95_pct": [
+          27.38,
+          60.8
+        ],
+        "seed_outcomes": [
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 10,
+          "F_EXEC_SYNTAX": 4,
+          "F_XY_ALIGN": 3
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21870,
+          "completion_tokens": 15750,
+          "latency_ms": {
+            "n": 30,
+            "mean": 4174.13,
+            "p50": 4062.86,
+            "p95": 5320.83,
+            "p99": 5607.04,
+            "p50_ci95": [
+              3911.68,
+              4330.52
+            ],
+            "p95_ci95": [
+              4747.85,
+              5703.8
+            ]
+          }
+        }
+      },
+      "T4_PLACE_INSIDE": {
+        "success": 10,
+        "trials": 30,
+        "sr_pct": 33.33,
+        "ci95_pct": [
+          19.23,
+          51.22
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "failure_distribution": {
+          "F_CONTAINER_RIM": 20
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21750,
+          "completion_tokens": 14896,
+          "latency_ms": {
+            "n": 30,
+            "mean": 4822.22,
+            "p50": 4854.49,
+            "p95": 5918.37,
+            "p99": 6449.11,
+            "p50_ci95": [
+              4608.93,
+              4933.64
+            ],
+            "p95_ci95": [
+              5543.36,
+              6628.11
+            ]
+          }
+        }
+      },
+      "T5_UNSTACK_SWAP": {
+        "success": 9,
+        "trials": 30,
+        "sr_pct": 30.0,
+        "ci95_pct": [
+          16.66,
+          47.88
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_EXEC_SYNTAX": 3,
+          "F_ORDER": 2,
+          "F_COLLISION": 13,
+          "F_Z_DROP": 2,
+          "F_XY_ALIGN": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21500,
+          "completion_tokens": 15354,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5209.19,
+            "p50": 5546.59,
+            "p95": 7901.72,
+            "p99": 8072.64,
+            "p50_ci95": [
+              4604.33,
+              6375.6
+            ],
+            "p95_ci95": [
+              7033.79,
+              8125.05
+            ]
+          }
+        }
+      },
+      "T6_OBSTACLE_CLEARANCE": {
+        "success": 26,
+        "trials": 30,
+        "sr_pct": 86.67,
+        "ci95_pct": [
+          70.32,
+          94.69
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 2,
+          "F_Z_DROP": 2
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 23250,
+          "completion_tokens": 9635,
+          "latency_ms": {
+            "n": 30,
+            "mean": 3523.99,
+            "p50": 3480.83,
+            "p95": 4658.93,
+            "p99": 5189.87,
+            "p50_ci95": [
+              3118.67,
+              3769.32
+            ],
+            "p95_ci95": [
+              3973.26,
+              5265.41
+            ]
+          }
+        }
+      }
+    },
+    "fair_cap_multiview": {
+      "T1_STACK_ORDERED": {
+        "success": 7,
+        "trials": 30,
+        "sr_pct": 23.33,
+        "ci95_pct": [
+          11.79,
+          40.93
+        ],
+        "seed_outcomes": [
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "failure_distribution": {
+          "F_XY_ALIGN": 16,
+          "F_Z_DROP": 5,
+          "F_COLLISION": 2
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 22080,
+          "completion_tokens": 13310,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5371.76,
+            "p50": 5077.76,
+            "p95": 7292.59,
+            "p99": 9003.64,
+            "p50_ci95": [
+              4835.33,
+              5405.59
+            ],
+            "p95_ci95": [
+              6112.06,
+              9469.85
+            ]
+          }
+        }
+      },
+      "T2_ALIGN_ROW": {
+        "success": 9,
+        "trials": 30,
+        "sr_pct": 30.0,
+        "ci95_pct": [
+          16.66,
+          47.88
+        ],
+        "seed_outcomes": [
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 2,
+          "F_XY_ALIGN": 19
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21810,
+          "completion_tokens": 17687,
+          "latency_ms": {
+            "n": 30,
+            "mean": 7172.99,
+            "p50": 6880.34,
+            "p95": 9540.27,
+            "p99": 10448.06,
+            "p50_ci95": [
+              6544.23,
+              7382.59
+            ],
+            "p95_ci95": [
+              8075.92,
+              10652.65
+            ]
+          }
+        }
+      },
+      "T3_DIAGONAL_PAIR": {
+        "success": 26,
+        "trials": 30,
+        "sr_pct": 86.67,
+        "ci95_pct": [
+          70.32,
+          94.69
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_EXEC_SYNTAX": 1,
+          "F_XY_ALIGN": 2,
+          "F_COLLISION": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21870,
+          "completion_tokens": 16113,
+          "latency_ms": {
+            "n": 30,
+            "mean": 4499.63,
+            "p50": 4338.66,
+            "p95": 5475.55,
+            "p99": 6984.67,
+            "p50_ci95": [
+              4051.48,
+              4690.17
+            ],
+            "p95_ci95": [
+              5126.36,
+              7596.72
+            ]
+          }
+        }
+      },
+      "T4_PLACE_INSIDE": {
+        "success": 11,
+        "trials": 30,
+        "sr_pct": 36.67,
+        "ci95_pct": [
+          21.87,
+          54.49
+        ],
+        "seed_outcomes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_CONTAINER_RIM": 19
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21750,
+          "completion_tokens": 14249,
+          "latency_ms": {
+            "n": 30,
+            "mean": 4658.6,
+            "p50": 4555.25,
+            "p95": 5902.93,
+            "p99": 6802.78,
+            "p50_ci95": [
+              4412.85,
+              4803.57
+            ],
+            "p95_ci95": [
+              5396.25,
+              7162.15
+            ]
+          }
+        }
+      },
+      "T5_UNSTACK_SWAP": {
+        "success": 24,
+        "trials": 30,
+        "sr_pct": 80.0,
+        "ci95_pct": [
+          62.69,
+          90.49
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_ORDER": 1,
+          "F_COLLISION": 3,
+          "F_EXEC_SYNTAX": 1,
+          "F_Z_DROP": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21800,
+          "completion_tokens": 17705,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5919.54,
+            "p50": 5481.58,
+            "p95": 7878.37,
+            "p99": 9632.01,
+            "p50_ci95": [
+              5249.99,
+              6083.03
+            ],
+            "p95_ci95": [
+              7017.28,
+              10205.77
+            ]
+          }
+        }
+      },
+      "T6_OBSTACLE_CLEARANCE": {
+        "success": 29,
+        "trials": 30,
+        "sr_pct": 96.67,
+        "ci95_pct": [
+          83.33,
+          99.41
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_Z_DROP": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 23250,
+          "completion_tokens": 8415,
+          "latency_ms": {
+            "n": 30,
+            "mean": 3093.4,
+            "p50": 3077.86,
+            "p95": 3971.27,
+            "p99": 4065.08,
+            "p50_ci95": [
+              2864.33,
+              3175.12
+            ],
+            "p95_ci95": [
+              3304.05,
+              4091.54
+            ]
+          }
+        }
+      }
+    },
+    "unstructured_verbal_reflexion": {
+      "T1_STACK_ORDERED": {
+        "success": 7,
+        "trials": 30,
+        "sr_pct": 23.33,
+        "ci95_pct": [
+          11.79,
+          40.93
+        ],
+        "seed_outcomes": [
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "failure_distribution": {
+          "F_Z_DROP": 6,
+          "F_XY_ALIGN": 16,
+          "F_COLLISION": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21840,
+          "completion_tokens": 14653,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5763.65,
+            "p50": 5688.85,
+            "p95": 7324.17,
+            "p99": 7858.71,
+            "p50_ci95": [
+              5285.16,
+              6324.36
+            ],
+            "p95_ci95": [
+              6509.23,
+              8034.87
+            ]
+          }
+        },
+        "calib_iters": 1,
+        "synonym_cache_hit": false
+      },
+      "T2_ALIGN_ROW": {
+        "success": 7,
+        "trials": 30,
+        "sr_pct": 23.33,
+        "ci95_pct": [
+          11.79,
+          40.93
+        ],
+        "seed_outcomes": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 1,
+          "F_XY_ALIGN": 21,
+          "F_Z_DROP": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21810,
+          "completion_tokens": 16971,
+          "latency_ms": {
+            "n": 30,
+            "mean": 6462.93,
+            "p50": 6569.99,
+            "p95": 8349.69,
+            "p99": 8372.43,
+            "p50_ci95": [
+              6287.18,
+              7032.69
+            ],
+            "p95_ci95": [
+              7576.29,
+              8377.27
+            ]
+          }
+        },
+        "calib_iters": 1,
+        "synonym_cache_hit": false
+      },
+      "T3_DIAGONAL_PAIR": {
+        "success": 23,
+        "trials": 30,
+        "sr_pct": 76.67,
+        "ci95_pct": [
+          59.07,
+          88.21
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 1,
+          "F_XY_ALIGN": 6
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 22110,
+          "completion_tokens": 16279,
+          "latency_ms": {
+            "n": 30,
+            "mean": 4672.97,
+            "p50": 4630.68,
+            "p95": 5452.79,
+            "p99": 6664.23,
+            "p50_ci95": [
+              4342.8,
+              4949.12
+            ],
+            "p95_ci95": [
+              5130.94,
+              7093.49
+            ]
+          }
+        },
+        "calib_iters": 5,
+        "synonym_cache_hit": false
+      },
+      "T4_PLACE_INSIDE": {
+        "success": 10,
+        "trials": 30,
+        "sr_pct": 33.33,
+        "ci95_pct": [
+          19.23,
+          51.22
+        ],
+        "seed_outcomes": [
+          true,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          false
+        ],
+        "failure_distribution": {
+          "F_CONTAINER_RIM": 19,
+          "F_COLLISION": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21720,
+          "completion_tokens": 15767,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5335.6,
+            "p50": 5224.84,
+            "p95": 6339.58,
+            "p99": 6892.86,
+            "p50_ci95": [
+              4973.59,
+              5681.83
+            ],
+            "p95_ci95": [
+              6264.86,
+              7111.12
+            ]
+          }
+        },
+        "calib_iters": 1,
+        "synonym_cache_hit": false
+      },
+      "T5_UNSTACK_SWAP": {
+        "success": 22,
+        "trials": 30,
+        "sr_pct": 73.33,
+        "ci95_pct": [
+          55.55,
+          85.82
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 6,
+          "F_Z_DROP": 1,
+          "F_ORDER": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 21740,
+          "completion_tokens": 17163,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5757.56,
+            "p50": 5416.2,
+            "p95": 8007.83,
+            "p99": 8168.36,
+            "p50_ci95": [
+              4960.78,
+              6083.59
+            ],
+            "p95_ci95": [
+              7047.52,
+              8203.53
+            ]
+          }
+        },
+        "calib_iters": 5,
+        "synonym_cache_hit": false
+      },
+      "T6_OBSTACLE_CLEARANCE": {
+        "success": 28,
+        "trials": 30,
+        "sr_pct": 93.33,
+        "ci95_pct": [
+          78.68,
+          98.15
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_XY_ALIGN": 1,
+          "F_Z_DROP": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 23250,
+          "completion_tokens": 8533,
+          "latency_ms": {
+            "n": 30,
+            "mean": 3257.44,
+            "p50": 3226.99,
+            "p95": 3923.51,
+            "p99": 4009.05,
+            "p50_ci95": [
+              3120.43,
+              3444.39
+            ],
+            "p95_ci95": [
+              3668.47,
+              4021.23
+            ]
+          }
+        },
+        "calib_iters": 2,
+        "synonym_cache_hit": false
+      }
+    },
+    "neuro_symbolic_roboteach": {
+      "T1_STACK_ORDERED": {
+        "success": 21,
+        "trials": 30,
+        "sr_pct": 70.0,
+        "ci95_pct": [
+          52.12,
+          83.34
+        ],
+        "seed_outcomes": [
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          true,
+          true,
+          false
+        ],
+        "failure_distribution": {
+          "F_Z_DROP": 7,
+          "F_COLLISION": 2
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 25290,
+          "completion_tokens": 5685,
+          "latency_ms": {
+            "n": 30,
+            "mean": 2748.47,
+            "p50": 2639.72,
+            "p95": 3475.43,
+            "p99": 4085.75,
+            "p50_ci95": [
+              2532.82,
+              2777.45
+            ],
+            "p95_ci95": [
+              2978.08,
+              4307.77
+            ]
+          }
+        },
+        "calib_iters": 2
+      },
+      "T2_ALIGN_ROW": {
+        "success": 28,
+        "trials": 30,
+        "sr_pct": 93.33,
+        "ci95_pct": [
+          78.68,
+          98.15
+        ],
+        "seed_outcomes": [
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 2
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 23970,
+          "completion_tokens": 10038,
+          "latency_ms": {
+            "n": 30,
+            "mean": 4302.53,
+            "p50": 4281.41,
+            "p95": 4891.32,
+            "p99": 5141.46,
+            "p50_ci95": [
+              4081.34,
+              4506.38
+            ],
+            "p95_ci95": [
+              4704.47,
+              5231.53
+            ]
+          }
+        },
+        "calib_iters": 2
+      },
+      "T3_DIAGONAL_PAIR": {
+        "success": 25,
+        "trials": 30,
+        "sr_pct": 83.33,
+        "ci95_pct": [
+          66.44,
+          92.66
+        ],
+        "seed_outcomes": [
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "failure_distribution": {
+          "F_XY_ALIGN": 4,
+          "F_COLLISION": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 25770,
+          "completion_tokens": 12192,
+          "latency_ms": {
+            "n": 30,
+            "mean": 5227.18,
+            "p50": 5103.39,
+            "p95": 6195.95,
+            "p99": 6492.0,
+            "p50_ci95": [
+              4957.6,
+              5451.69
+            ],
+            "p95_ci95": [
+              5766.29,
+              6508.52
+            ]
+          }
+        },
+        "calib_iters": 3
+      },
+      "T4_PLACE_INSIDE": {
+        "success": 24,
+        "trials": 30,
+        "sr_pct": 80.0,
+        "ci95_pct": [
+          62.69,
+          90.49
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_CONTAINER_RIM": 5,
+          "F_COLLISION": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 31,
+          "prompt_tokens": 27869,
+          "completion_tokens": 11218,
+          "latency_ms": {
+            "n": 31,
+            "mean": 4518.84,
+            "p50": 4282.72,
+            "p95": 5421.41,
+            "p99": 9124.71,
+            "p50_ci95": [
+              3931.57,
+              4507.5
+            ],
+            "p95_ci95": [
+              4972.66,
+              10704.21
+            ]
+          }
+        },
+        "calib_iters": 2
+      },
+      "T5_UNSTACK_SWAP": {
+        "success": 29,
+        "trials": 30,
+        "sr_pct": 96.67,
+        "ci95_pct": [
+          83.33,
+          99.41
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {
+          "F_COLLISION": 1
+        },
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 59,
+          "prompt_tokens": 46107,
+          "completion_tokens": 14098,
+          "latency_ms": {
+            "n": 59,
+            "mean": 3596.82,
+            "p50": 3440.41,
+            "p95": 4649.28,
+            "p99": 5507.1,
+            "p50_ci95": [
+              3371.13,
+              3661.84
+            ],
+            "p95_ci95": [
+              4247.17,
+              5376.2
+            ]
+          }
+        },
+        "calib_iters": 5
+      },
+      "T6_OBSTACLE_CLEARANCE": {
+        "success": 30,
+        "trials": 30,
+        "sr_pct": 100.0,
+        "ci95_pct": [
+          88.65,
+          100.0
+        ],
+        "seed_outcomes": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "failure_distribution": {},
+        "model": "gpt-6-luna",
+        "llm_usage": {
+          "calls": 30,
+          "prompt_tokens": 26520,
+          "completion_tokens": 8747,
+          "latency_ms": {
+            "n": 30,
+            "mean": 4642.17,
+            "p50": 4658.69,
+            "p95": 6193.03,
+            "p99": 6521.24,
+            "p50_ci95": [
+              4208.3,
+              4959.02
+            ],
+            "p95_ci95": [
+              5623.5,
+              6643.87
+            ]
+          }
+        },
+        "calib_iters": 2
+      }
+    }
+  },
+  "summary": {
+    "zero_shot_open_loop": {
+      "total_success": 68,
+      "total_trials": 180,
+      "overall_sr_pct": 37.78,
+      "ci95_pct": [
+        31.02,
+        45.05
+      ]
+    },
+    "fair_cap_multiview": {
+      "total_success": 106,
+      "total_trials": 180,
+      "overall_sr_pct": 58.89,
+      "ci95_pct": [
+        51.59,
+        65.82
+      ]
+    },
+    "unstructured_verbal_reflexion": {
+      "total_success": 97,
+      "total_trials": 180,
+      "overall_sr_pct": 53.89,
+      "ci95_pct": [
+        46.6,
+        61.01
+      ]
+    },
+    "neuro_symbolic_roboteach": {
+      "total_success": 157,
+      "total_trials": 180,
+      "overall_sr_pct": 87.22,
+      "ci95_pct": [
+        81.56,
+        91.33
+      ]
+    }
+  },
+  "paired_mcnemar_tests": {
+    "ns_vs_zero_shot_open_loop": {
+      "n_matched": 180,
+      "b_only_a": 94,
+      "c_only_b": 5,
+      "p_value": 0.0
+    },
+    "ns_vs_fair_cap_multiview": {
+      "n_matched": 180,
+      "b_only_a": 60,
+      "c_only_b": 9,
+      "p_value": 0.0
+    },
+    "ns_vs_unstructured_verbal_reflexion": {
+      "n_matched": 180,
+      "b_only_a": 68,
+      "c_only_b": 8,
+      "p_value": 0.0
+    }
+  },
+  "synonym_routing": {
+    "total_pairs": 6,
+    "freeform_hit_pct": 0.0,
+    "ontology_hit_pct": 100.0,
+    "pairs": [
+      {
+        "task_id": "T1_STACK_ORDERED",
+        "freeform_calib_key": "stack_boxes_by_color",
+        "freeform_synonym_key": "stack_colored_cubes",
+        "freeform_hit": false,
+        "ontology_canonical_type": "STACK_ORDERED",
+        "ontology_hit": true
+      },
+      {
+        "task_id": "T2_ALIGN_ROW",
+        "freeform_calib_key": "line_up_cubes",
+        "freeform_synonym_key": "align_cubes_by_color",
+        "freeform_hit": false,
+        "ontology_canonical_type": "ALIGN_ROW",
+        "ontology_hit": true
+      },
+      {
+        "task_id": "T3_DIAGONAL_PAIR",
+        "freeform_calib_key": "place_diagonal_boxes",
+        "freeform_synonym_key": "place_diagonal_cubes",
+        "freeform_hit": false,
+        "ontology_canonical_type": "DIAGONAL_PAIR",
+        "ontology_hit": true
+      },
+      {
+        "task_id": "T4_PLACE_INSIDE",
+        "freeform_calib_key": "place_cubes_in_box",
+        "freeform_synonym_key": "place_blocks_in_box",
+        "freeform_hit": false,
+        "ontology_canonical_type": "PLACE_INSIDE",
+        "ontology_hit": true
+      },
+      {
+        "task_id": "T5_UNSTACK_SWAP",
+        "freeform_calib_key": "place_blue_on_red",
+        "freeform_synonym_key": "stack_blue_on_red",
+        "freeform_hit": false,
+        "ontology_canonical_type": "UNSTACK_SWAP",
+        "ontology_hit": true
+      },
+      {
+        "task_id": "T6_OBSTACLE_CLEARANCE",
+        "freeform_calib_key": "place_blue_on_red",
+        "freeform_synonym_key": "place_blue_over_red",
+        "freeform_hit": false,
+        "ontology_canonical_type": "OBSTACLE_CLEARANCE",
+        "ontology_hit": true
+      }
+    ]
+  },
+  "calibration_curves": {
+    "T1_STACK_ORDERED": {
+      "calibrated": true,
+      "iterations_to_converge": 2,
+      "iteration_gt_scores": [
+        1.0,
+        0.0
+      ],
+      "final_priors": {
+        "transit_z": 0.56,
+        "release_margin_z": 0.075,
+        "row_spacing": 0.062,
+        "diagonal_delta": 0.062,
+        "grasp_force": 75.0,
+        "require_home_relocate": false
+      },
+      "learned_rules": []
+    },
+    "T2_ALIGN_ROW": {
+      "calibrated": true,
+      "iterations_to_converge": 2,
+      "iteration_gt_scores": [
+        1.0,
+        1.0
+      ],
+      "final_priors": {
+        "transit_z": 0.56,
+        "release_margin_z": 0.075,
+        "row_spacing": 0.062,
+        "diagonal_delta": 0.062,
+        "grasp_force": 75.0,
+        "require_home_relocate": false
+      },
+      "learned_rules": []
+    },
+    "T3_DIAGONAL_PAIR": {
+      "calibrated": true,
+      "iterations_to_converge": 3,
+      "iteration_gt_scores": [
+        0.0,
+        1.0,
+        0.5
+      ],
+      "final_priors": {
+        "transit_z": 0.68,
+        "release_margin_z": 0.052,
+        "row_spacing": 0.062,
+        "diagonal_delta": 0.062,
+        "grasp_force": 75.0,
+        "require_home_relocate": false
+      },
+      "learned_rules": [
+        "Lift end-effector to safe transit height z >= 0.68m before any horizontal XY motion and release at +0.052m per stacked layer."
+      ]
+    },
+    "T4_PLACE_INSIDE": {
+      "calibrated": true,
+      "iterations_to_converge": 2,
+      "iteration_gt_scores": [
+        1.0,
+        1.0
+      ],
+      "final_priors": {
+        "transit_z": 0.56,
+        "release_margin_z": 0.075,
+        "row_spacing": 0.062,
+        "diagonal_delta": 0.062,
+        "grasp_force": 75.0,
+        "require_home_relocate": false
+      },
+      "learned_rules": []
+    },
+    "T5_UNSTACK_SWAP": {
+      "calibrated": false,
+      "iterations_to_converge": 5,
+      "iteration_gt_scores": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "final_priors": {
+        "transit_z": 0.68,
+        "release_margin_z": 0.052,
+        "row_spacing": 0.062,
+        "diagonal_delta": 0.062,
+        "grasp_force": 75.0,
+        "require_home_relocate": false
+      },
+      "learned_rules": [
+        "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+      ]
+    },
+    "T6_OBSTACLE_CLEARANCE": {
+      "calibrated": true,
+      "iterations_to_converge": 2,
+      "iteration_gt_scores": [
+        1.0,
+        1.0
+      ],
+      "final_priors": {
+        "transit_z": 0.56,
+        "release_margin_z": 0.075,
+        "row_spacing": 0.062,
+        "diagonal_delta": 0.062,
+        "grasp_force": 75.0,
+        "require_home_relocate": false
+      },
+      "learned_rules": []
+    }
+  },
+  "calibration_vlm_vs_oracle_agreement": {
+    "n": 33,
+    "tp": 12,
+    "tn": 12,
+    "fp": 2,
+    "fn": 7,
+    "accuracy": 0.7273,
+    "precision": 0.8571,
+    "recall": 0.6316,
+    "specificity": 0.8571,
+    "f1": 0.7273,
+    "cohen_kappa": 0.4668,
+    "score_mae": 0.2944
+  }
+}

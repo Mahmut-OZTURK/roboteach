@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 484" width="1240" height="484" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e"/>
+    </marker>
+  </defs>
+
+  <rect width="1240" height="484" fill="#f8fafc" rx="8"/>
+  <rect x="10" y="10" width="1220" height="464" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" rx="6"/>
+
+  <rect x="10" y="10" width="1220" height="44" fill="#0f2942" rx="6"/>
+  <rect x="10" y="34" width="1220" height="20" fill="#0f2942"/>
+  <text x="620" y="37" text-anchor="middle" fill="#ffffff" font-size="15.5" font-weight="bold">Açık Döngü Dil Modeli Politikalarından Nöro-Sembolik Değişmezlere: Altı Sınıflı Nedensel Manipülasyon Arıza Taksonomisi</text>
+
+  <!-- Row Labels -->
+  <text x="26" y="76" fill="#991b1b" font-size="12.5" font-weight="bold">ÜST KATMAN — Açık Döngü / Sözel Yansıma Kırılma Modları (F1–F6: Fiziksel ve Algısal Kök Nedenler)</text>
+
+  <!-- F1 -->
+  <rect x="24" y="88" width="186" height="142" fill="#fef2f2" stroke="#dc2626" stroke-width="1.4" rx="6"/>
+  <text x="33" y="108" fill="#991b1b" font-size="11.2" font-weight="bold">F1: Topolojik Sıra İhlali</text>
+  <text x="33" y="127" fill="#1e293b" font-size="10.6">• Taban bloğun gereksiz</text>
+  <text x="41" y="142" fill="#1e293b" font-size="10.6">kavranıp havadan atılması</text>
+  <text x="33" y="160" fill="#1e293b" font-size="10.6">• Eş anlamlı komutlarda ters</text>
+  <text x="41" y="175" fill="#1e293b" font-size="10.6">taban-tavan dizilimi</text>
+  <text x="33" y="196" fill="#7f1d1d" font-size="10.2" font-style="italic">Etki: Ters kule / taban kayması</text>
+
+  <!-- F2 -->
+  <rect x="224" y="88" width="186" height="142" fill="#fff7ed" stroke="#ea580c" stroke-width="1.4" rx="6"/>
+  <text x="233" y="108" fill="#9a3412" font-size="11.2" font-weight="bold">F2: Düzlemsel XY Sapması</text>
+  <text x="233" y="127" fill="#1e293b" font-size="10.6">• Çapraz dizilimde tek eksenli</text>
+  <text x="241" y="142" fill="#1e293b" font-size="10.6">(yalnızca Δx veya Δy) öteleme</text>
+  <text x="233" y="160" fill="#1e293b" font-size="10.6">• Sıralı dizilimde blokların</text>
+  <text x="241" y="175" fill="#1e293b" font-size="10.6">çarpışması veya dağılması</text>
+  <text x="233" y="196" fill="#9a3412" font-size="10.2" font-style="italic">Etki: İlişkisel geometri hatası</text>
+
+  <!-- F3 -->
+  <rect x="424" y="88" width="186" height="142" fill="#fefce8" stroke="#ca8a04" stroke-width="1.4" rx="6"/>
+  <text x="433" y="108" fill="#854d0e" font-size="11.2" font-weight="bold">F3: Düşey Darbe Devrilmesi</text>
+  <text x="433" y="127" fill="#1e293b" font-size="10.6">• Yüksek bırakma payı</text>
+  <text x="441" y="142" fill="#1e293b" font-size="10.6">(Δz = 75 mm) ile sekme</text>
+  <text x="433" y="160" fill="#1e293b" font-size="10.6">• Ani tutucu açılışında üst</text>
+  <text x="441" y="175" fill="#1e293b" font-size="10.6">küplerde açısal devrilme</text>
+  <text x="433" y="196" fill="#854d0e" font-size="10.2" font-style="italic">Etki: 3–4 katlı kule çökmesi</text>
+
+  <!-- F4 -->
+  <rect x="624" y="88" width="186" height="142" fill="#fdf2f8" stroke="#db2777" stroke-width="1.4" rx="6"/>
+  <text x="633" y="108" fill="#9d174d" font-size="11.0" font-weight="bold">F4: Süpürme Hacmi Çarpışması</text>
+  <text x="633" y="127" fill="#1e293b" font-size="10.6">• Alçak yatay geçiş (z = 0,56 m)</text>
+  <text x="641" y="142" fill="#1e293b" font-size="10.6">nedeniyle engele çarpma</text>
+  <text x="633" y="160" fill="#1e293b" font-size="10.6">• Doğrusal uç-işlevci hareketi</text>
+  <text x="641" y="175" fill="#1e293b" font-size="10.6">sırasında mevcut kuleyi yıkma</text>
+  <text x="633" y="196" fill="#9d174d" font-size="10.2" font-style="italic">Etki: Duvar/kule çarpışması</text>
+
+  <!-- F5 -->
+  <rect x="824" y="88" width="186" height="142" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.4" rx="6"/>
+  <text x="833" y="108" fill="#5b21b6" font-size="11.2" font-weight="bold">F5: Kap Kenarı ve Yığılma</text>
+  <text x="833" y="127" fill="#1e293b" font-size="10.6">• Çoklu küplerin kap merkezine</text>
+  <text x="841" y="142" fill="#1e293b" font-size="10.6">üst üste bırakılıp taşması</text>
+  <text x="833" y="160" fill="#1e293b" font-size="10.6">• 7 cm yan duvar kenarına</text>
+  <text x="841" y="175" fill="#1e293b" font-size="10.6">temasla dışarı sekme</text>
+  <text x="833" y="196" fill="#5b21b6" font-size="10.2" font-style="italic">Etki: İçi boş kap dışı kalma</text>
+
+  <!-- F6 -->
+  <rect x="1024" y="88" width="192" height="142" fill="#ecfeff" stroke="#0891b2" stroke-width="1.4" rx="6"/>
+  <text x="1033" y="108" fill="#155e75" font-size="11.2" font-weight="bold">F6: Örtülme ve Bayat Poz</text>
+  <text x="1033" y="127" fill="#1e293b" font-size="10.6">• Tepe kamerasında üst küpün</text>
+  <text x="1041" y="142" fill="#1e293b" font-size="10.6">alt küpü tamamen gizlemesi</text>
+  <text x="1033" y="160" fill="#1e293b" font-size="10.6">• Sök-tak görevinde eylem</text>
+  <text x="1041" y="175" fill="#1e293b" font-size="10.6">öncesi bayat koordinat kullanımı</text>
+  <text x="1033" y="196" fill="#155e75" font-size="10.2" font-style="italic">Etki: %26,7 örtülü hedef kaybı</text>
+
+  <!-- Downward Causal Mapping Arrows -->
+  <line x1="117" y1="230" x2="117" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="317" y1="230" x2="317" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="517" y1="230" x2="517" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="717" y1="230" x2="717" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="917" y1="230" x2="917" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="1120" y1="230" x2="1120" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+
+  <rect x="24" y="268" width="1192" height="26" fill="#ccfbf1" stroke="#5eead4" stroke-width="1" rx="4"/>
+  <text x="620" y="285" text-anchor="middle" fill="#115e59" font-size="12" font-weight="bold">ALT KATMAN — Nöro-Sembolik Deneyim Belleği Eşlemesi: Nicel Kinematik Önseller (Δψ) ve Tekilleştirilmiş Sembolik Değişmezler</text>
+
+  <!-- Invariant 1 -->
+  <rect x="24" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="33" y="324" fill="#115e59" font-size="11.0" font-weight="bold">Değişmez I: Kanonik Ontoloji</text>
+  <text x="33" y="343" fill="#1e293b" font-size="10.5">• Deterministik taban→tavan</text>
+  <text x="41" y="358" fill="#1e293b" font-size="10.5">sıralı nesne vektörü çıkarımı</text>
+  <text x="33" y="376" fill="#1e293b" font-size="10.5">• Taban bloğu sabit tutma</text>
+  <text x="41" y="391" fill="#1e293b" font-size="10.5">sembolik kuralı (r_F1)</text>
+  <text x="33" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Eş anlamlı isabet: %100</text>
+
+  <!-- Invariant 2 -->
+  <rect x="224" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="233" y="324" fill="#115e59" font-size="11.0" font-weight="bold">Değişmez II: Çift Eksen Önseli</text>
+  <text x="233" y="343" fill="#1e293b" font-size="10.5">• Sıra aralığı: δ_row = 62 mm</text>
+  <text x="233" y="361" fill="#1e293b" font-size="10.5">• Çapraz çifti: (Δx, Δy) =</text>
+  <text x="241" y="376" fill="#1e293b" font-size="10.5">(±62 mm, ±62 mm) zorlaması</text>
+  <text x="233" y="394" fill="#1e293b" font-size="10.5">• İlişkisel çift ayrıştırma</text>
+  <text x="233" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Tek eksen çökmesi = 0</text>
+
+  <!-- Invariant 3 -->
+  <rect x="424" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="433" y="324" fill="#115e59" font-size="10.9" font-weight="bold">Değişmez III: Yumuşak Bırakma</text>
+  <text x="433" y="343" fill="#1e293b" font-size="10.5">• Kalibre bırakma yüksekliği:</text>
+  <text x="441" y="358" fill="#1e293b" font-size="10.5">Δz_rel: 75 mm → 52 mm</text>
+  <text x="433" y="376" fill="#1e293b" font-size="10.5">• Minimum-sarsıntılı 5. derece</text>
+  <text x="441" y="391" fill="#1e293b" font-size="10.5">yörünge ve kademeli açılış</text>
+  <text x="433" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Sürtünmeli temas kararlılığı</text>
+
+  <!-- Invariant 4 -->
+  <rect x="624" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="633" y="324" fill="#115e59" font-size="11.0" font-weight="bold">Değişmez IV: Güvenli Z Zarfı</text>
+  <text x="633" y="343" fill="#1e293b" font-size="10.5">• Geçiş yüksekliği güncellemesi:</text>
+  <text x="641" y="358" fill="#1e293b" font-size="10.5">z_trans: 0,56 m → 0,68 m</text>
+  <text x="633" y="376" fill="#1e293b" font-size="10.5">• Algılanan z_top + 0,11 m</text>
+  <text x="641" y="391" fill="#1e293b" font-size="10.5">otomatik 3-aşamalı köprüleme</text>
+  <text x="633" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Engel aşma çarpışması = 0</text>
+
+  <!-- Invariant 5 -->
+  <rect x="824" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="833" y="324" fill="#115e59" font-size="11.0" font-weight="bold">Değişmez V: İç Boşluk Izgarası</text>
+  <text x="833" y="343" fill="#1e293b" font-size="10.5">• 13,8×13,8 cm iç oyukta ayrık</text>
+  <text x="841" y="358" fill="#1e293b" font-size="10.5">alt-yuva ofsetleri (±32 mm)</text>
+  <text x="833" y="376" fill="#1e293b" font-size="10.5">• Oyuk içine z = 0,525 m</text>
+  <text x="841" y="391" fill="#1e293b" font-size="10.5">kontrollü alçalma</text>
+  <text x="833" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Çoklu nesne kap içi yerleşim</text>
+
+  <!-- Invariant 6 -->
+  <rect x="1024" y="304" width="192" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="1033" y="324" fill="#115e59" font-size="11.0" font-weight="bold">Değişmez VI: Çok Bakışlı Füzyon</text>
+  <text x="1033" y="343" fill="#1e293b" font-size="10.5">• Yanal 3 izometrik RGB-D</text>
+  <text x="1041" y="358" fill="#1e293b" font-size="10.5">ışın-telafili nokta bulutu</text>
+  <text x="1033" y="376" fill="#1e293b" font-size="10.5">• Önkoşullu alt-hedef ayrıştırma</text>
+  <text x="1041" y="391" fill="#1e293b" font-size="10.5">ve her adımda taze algılama</text>
+  <text x="1033" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Örtülü geri çağırma: %100</text>
+</svg>

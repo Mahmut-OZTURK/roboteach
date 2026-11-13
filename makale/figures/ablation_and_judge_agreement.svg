@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 620" width="1280" height="620" font-family="Helvetica, Arial, sans-serif">
+  <rect width="1280" height="620" fill="#f8fafc" rx="8"/>
+  <rect x="10" y="10" width="1260" height="600" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" rx="6"/>
+
+  <rect x="10" y="10" width="1260" height="42" fill="#0f2942" rx="6"/>
+  <rect x="10" y="32" width="1260" height="20" fill="#0f2942"/>
+  <text x="640" y="36" text-anchor="middle" fill="#ffffff" font-size="15.5" font-weight="bold">240 Hz Temas Simülasyonunda Dört Katmanlı Ablasyon (n=30/Görev), Bileşen/DR Çözümlemesi (1.080 Koşum) ve N=120 Hakem Uyumu</text>
+
+  <!-- PANEL A (LEFT): 4-Tier Live Ablation -->
+  <rect x="24" y="66" width="540" height="530" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" rx="6"/>
+  <text x="294" y="88" text-anchor="middle" fill="#0f2942" font-size="13" font-weight="bold">(a) 4 Katmanlı Canlı Ablasyon (n=30/Görev, 180/Katman, 720 Deneme)</text>
+
+  <!-- Legend -->
+  <rect x="46" y="96" width="12" height="10" fill="#94a3b8"/>
+  <text x="62" y="105" fill="#334155" font-size="10">K1 Sıfır-Örnek (%37,8)</text>
+  <rect x="172" y="96" width="12" height="10" fill="#3b82f6"/>
+  <text x="188" y="105" fill="#334155" font-size="10">K2 Adil CaP+3B (%58,9)</text>
+  <rect x="308" y="96" width="12" height="10" fill="#dc2626"/>
+  <text x="324" y="105" fill="#334155" font-size="10">K3 Sözel Yans. (%53,9)</text>
+  <rect x="438" y="96" width="12" height="10" fill="#0f766e"/>
+  <text x="454" y="105" fill="#0f766e" font-size="10" font-weight="bold">K4 Önerilen (%87,2)</text>
+
+  <!-- Gridlines y=520 (0%) to y=120 (100%) => 1% = 4px -->
+  <line x1="68" y1="520" x2="548" y2="520" stroke="#64748b" stroke-width="1.2"/>
+  <line x1="68" y1="440" x2="548" y2="440" stroke="#e2e8f0" stroke-dasharray="4,3"/>
+  <line x1="68" y1="360" x2="548" y2="360" stroke="#e2e8f0" stroke-dasharray="4,3"/>
+  <line x1="68" y1="280" x2="548" y2="280" stroke="#e2e8f0" stroke-dasharray="4,3"/>
+  <line x1="68" y1="200" x2="548" y2="200" stroke="#e2e8f0" stroke-dasharray="4,3"/>
+  <line x1="68" y1="120" x2="548" y2="120" stroke="#cbd5e1" stroke-dasharray="4,3"/>
+  <text x="62" y="524" text-anchor="end" fill="#475569" font-size="10">0%</text>
+  <text x="62" y="444" text-anchor="end" fill="#475569" font-size="10">20%</text>
+  <text x="62" y="364" text-anchor="end" fill="#475569" font-size="10">40%</text>
+  <text x="62" y="284" text-anchor="end" fill="#475569" font-size="10">60%</text>
+  <text x="62" y="204" text-anchor="end" fill="#475569" font-size="10">80%</text>
+  <text x="62" y="124" text-anchor="end" fill="#475569" font-size="10">100%</text>
+
+  <!-- Bars for T1..T6, T4-6, Overall (step=60px, bar_w=10px, gap=2px) -->
+  <!-- T1: 23.3, 23.3, 23.3, 70.0 -->
+  <rect x="76" y="426.7" width="10" height="93.3" fill="#94a3b8"/>
+  <rect x="88" y="426.7" width="10" height="93.3" fill="#3b82f6"/>
+  <rect x="100" y="426.7" width="10" height="93.3" fill="#dc2626"/>
+  <rect x="112" y="240.0" width="10" height="280.0" fill="#0f766e"/>
+  <text x="117" y="235" text-anchor="middle" fill="#0f766e" font-size="9.2" font-weight="bold">70</text>
+  <text x="99" y="536" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="bold">T1</text>
+
+  <!-- T2: 10.0, 30.0, 23.3, 93.3 -->
+  <rect x="136" y="480.0" width="10" height="40.0" fill="#94a3b8"/>
+  <rect x="148" y="400.0" width="10" height="120.0" fill="#3b82f6"/>
+  <rect x="160" y="426.7" width="10" height="93.3" fill="#dc2626"/>
+  <rect x="172" y="146.7" width="10" height="373.3" fill="#0f766e"/>
+  <text x="177" y="142" text-anchor="middle" fill="#0f766e" font-size="9.2" font-weight="bold">93</text>
+  <text x="159" y="536" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="bold">T2</text>
+
+  <!-- T3: 43.3, 86.7, 76.7, 83.3 -->
+  <rect x="196" y="346.7" width="10" height="173.3" fill="#94a3b8"/>
+  <rect x="208" y="173.3" width="10" height="346.7" fill="#3b82f6"/>
+  <rect x="220" y="213.3" width="10" height="306.7" fill="#dc2626"/>
+  <rect x="232" y="186.7" width="10" height="333.3" fill="#0f766e"/>
+  <text x="237" y="182" text-anchor="middle" fill="#0f766e" font-size="9.2" font-weight="bold">83</text>
+  <text x="219" y="536" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="bold">T3</text>
+
+  <!-- T4: 33.3, 36.7, 33.3, 80.0 -->
+  <rect x="256" y="386.7" width="10" height="133.3" fill="#94a3b8"/>
+  <rect x="268" y="373.3" width="10" height="146.7" fill="#3b82f6"/>
+  <rect x="280" y="386.7" width="10" height="133.3" fill="#dc2626"/>
+  <rect x="292" y="200.0" width="10" height="320.0" fill="#0f766e"/>
+  <text x="297" y="195" text-anchor="middle" fill="#0f766e" font-size="9.2" font-weight="bold">80</text>
+  <text x="279" y="536" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="bold">T4</text>
+
+  <!-- T5: 30.0, 80.0, 73.3, 96.7 -->
+  <rect x="316" y="400.0" width="10" height="120.0" fill="#94a3b8"/>
+  <rect x="328" y="200.0" width="10" height="320.0" fill="#3b82f6"/>
+  <rect x="340" y="226.7" width="10" height="293.3" fill="#dc2626"/>
+  <rect x="352" y="133.3" width="10" height="386.7" fill="#0f766e"/>
+  <text x="357" y="128" text-anchor="middle" fill="#0f766e" font-size="9.2" font-weight="bold">97</text>
+  <text x="339" y="536" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="bold">T5</text>
+
+  <!-- T6: 86.7, 96.7, 93.3, 100.0 -->
+  <rect x="376" y="173.3" width="10" height="346.7" fill="#94a3b8"/>
+  <rect x="388" y="133.3" width="10" height="386.7" fill="#3b82f6"/>
+  <rect x="400" y="146.7" width="10" height="373.3" fill="#dc2626"/>
+  <rect x="412" y="120.0" width="10" height="400.0" fill="#0f766e"/>
+  <text x="417" y="115" text-anchor="middle" fill="#0f766e" font-size="9.2" font-weight="bold">100</text>
+  <text x="399" y="536" text-anchor="middle" fill="#1e293b" font-size="10.5" font-weight="bold">T6</text>
+
+  <!-- Divider before pooled summaries -->
+  <line x1="428" y1="120" x2="428" y2="520" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- T4-T6 Pooled (n=90): 50.0, 71.1, 66.7, 92.2 -->
+  <rect x="434" y="320.0" width="10" height="200.0" fill="#94a3b8"/>
+  <rect x="446" y="235.6" width="10" height="284.4" fill="#3b82f6"/>
+  <rect x="458" y="253.3" width="10" height="266.7" fill="#dc2626"/>
+  <rect x="470" y="151.1" width="10" height="368.9" fill="#0f766e"/>
+  <text x="475" y="145" text-anchor="middle" fill="#0f766e" font-size="9.2" font-weight="bold">92,2</text>
+  <text x="457" y="536" text-anchor="middle" fill="#0f2942" font-size="10" font-weight="bold">T4–6</text>
+
+  <!-- Overall (n=180) with Wilson 95% CI whiskers -->
+  <rect x="494" y="368.9" width="10" height="151.1" fill="#94a3b8"/>
+  <line x1="499" y1="339.8" x2="499" y2="395.9" stroke="#0f172a" stroke-width="1.2"/>
+  <rect x="506" y="284.4" width="10" height="235.6" fill="#3b82f6"/>
+  <line x1="511" y1="256.7" x2="511" y2="313.6" stroke="#0f172a" stroke-width="1.2"/>
+  <rect x="518" y="304.4" width="10" height="215.6" fill="#dc2626"/>
+  <line x1="523" y1="276.0" x2="523" y2="333.6" stroke="#0f172a" stroke-width="1.2"/>
+  <rect x="530" y="171.1" width="10" height="348.9" fill="#0f766e"/>
+  <line x1="535" y1="154.7" x2="535" y2="193.8" stroke="#0f172a" stroke-width="1.4"/>
+  <text x="535" y="148" text-anchor="middle" fill="#0f766e" font-size="9.5" font-weight="bold">87,2</text>
+  <text x="517" y="536" text-anchor="middle" fill="#0f2942" font-size="10" font-weight="bold">Genel</text>
+
+  <text x="294" y="560" text-anchor="middle" fill="#334155" font-size="10.2">Eşleştirilmiş McNemar (n=180): Önerilen vs Sıfır-Örnek p=2,38e-22 | vs Adil CaP p=2,24e-10</text>
+  <text x="294" y="576" text-anchor="middle" fill="#334155" font-size="10.2">vs Sözel Yansıma p=5,63e-13 • Çıktı token düşüşü: %29,1 (87.479 → 61.978)</text>
+
+  <!-- PANEL B (TOP RIGHT): Component Leave-One-Out & DR -->
+  <rect x="578" y="66" width="678" height="260" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" rx="6"/>
+  <text x="917" y="88" text-anchor="middle" fill="#0f2942" font-size="13" font-weight="bold">(b) Bileşen Çıkarma (LOO, 720 Koşum) &amp; Fizik/RGB-D Alan Rastgeleleştirme (DR, 360 Koşum)</text>
+
+  <!-- Horizontal bars: label x=765, bar_x0=774, scale 1%=3.8px (max 380px) -->
+  <line x1="774" y1="106" x2="774" y2="306" stroke="#64748b" stroke-width="1"/>
+  <line x1="964" y1="106" x2="964" y2="306" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+  <line x1="1154" y1="106" x2="1154" y2="306" stroke="#e2e8f0" stroke-dasharray="3,3"/>
+  <text x="774" y="318" text-anchor="middle" fill="#64748b" font-size="9.5">0%</text>
+  <text x="964" y="318" text-anchor="middle" fill="#64748b" font-size="9.5">50%</text>
+  <text x="1154" y="318" text-anchor="middle" fill="#64748b" font-size="9.5">100%</text>
+
+  <!-- Row 1: Full -->
+  <text x="766" y="121" text-anchor="end" fill="#0f766e" font-size="10.5" font-weight="bold">Tam Mimari (Nominal)</text>
+  <rect x="774" y="109" width="331.4" height="16" fill="#0f766e" rx="2"/>
+  <line x1="1083.9" y1="117" x2="1121.1" y2="117" stroke="#0f172a" stroke-width="1.3"/>
+  <text x="1127" y="121" fill="#0f766e" font-size="10.5" font-weight="bold">%87,22 (157/180)</text>
+
+  <!-- Row 2: - Symbolic Rules -->
+  <text x="766" y="148" text-anchor="end" fill="#1e293b" font-size="10.5">− Sembolik Kurallar (R_sym)</text>
+  <rect x="774" y="136" width="323.0" height="16" fill="#14b8a6" rx="2"/>
+  <line x1="1074.4" y1="144" x2="1114.0" y2="144" stroke="#0f172a" stroke-width="1.2"/>
+  <text x="1120" y="148" fill="#334155" font-size="10.5">%85,00 (-2,22 yp)</text>
+
+  <!-- Row 3: - Quant Priors -->
+  <text x="766" y="175" text-anchor="end" fill="#1e293b" font-size="10.5">− Nicel Önseller (Δψ)</text>
+  <rect x="774" y="163" width="308.2" height="16" fill="#0d9488" rx="2"/>
+  <line x1="1058.1" y1="171" x2="1101.4" y2="171" stroke="#0f172a" stroke-width="1.2"/>
+  <text x="1107" y="175" fill="#334155" font-size="10.5">%81,11 (-6,11 yp)</text>
+
+  <!-- Row 4: - Multi-View -->
+  <text x="766" y="202" text-anchor="end" fill="#1e293b" font-size="10.5">− 4-Bakışlı 3B (Φ_3D)</text>
+  <rect x="774" y="190" width="251.2" height="16" fill="#f59e0b" rx="2"/>
+  <line x1="997.9" y1="198" x2="1050.0" y2="198" stroke="#0f172a" stroke-width="1.2"/>
+  <text x="1056" y="202" fill="#92400e" font-size="10.5" font-weight="bold">%66,11 (-21,11 yp)</text>
+
+  <!-- Row 5: - Ontology -->
+  <text x="766" y="229" text-anchor="end" fill="#dc2626" font-size="10.5" font-weight="bold">− Kanonik Ontoloji (O_task)</text>
+  <rect x="774" y="217" width="149.9" height="16" fill="#dc2626" rx="2"/>
+  <line x1="897.9" y1="225" x2="951.6" y2="225" stroke="#0f172a" stroke-width="1.2"/>
+  <text x="958" y="229" fill="#991b1b" font-size="10.5" font-weight="bold">%39,44 (-47,78 yp)</text>
+
+  <!-- Divider before DR -->
+  <line x1="590" y1="242" x2="1244" y2="242" stroke="#cbd5e1" stroke-dasharray="4,2"/>
+
+  <!-- Row 6: DR NS -->
+  <text x="766" y="264" text-anchor="end" fill="#0f2942" font-size="10.5" font-weight="bold">DR: Önerilen Mimari</text>
+  <rect x="774" y="252" width="310.3" height="16" fill="#0f2942" rx="2"/>
+  <line x1="1060.4" y1="260" x2="1103.2" y2="260" stroke="#0f172a" stroke-width="1.2"/>
+  <text x="1109" y="264" fill="#0f2942" font-size="10.5" font-weight="bold">%81,67 (147/180)</text>
+
+  <!-- Row 7: DR Fair CaP -->
+  <text x="766" y="291" text-anchor="end" fill="#3b82f6" font-size="10.5" font-weight="bold">DR: Adil CaP + 3B</text>
+  <rect x="774" y="279" width="206.9" height="16" fill="#3b82f6" rx="2"/>
+  <line x1="953.2" y1="287" x2="1007.9" y2="287" stroke="#0f172a" stroke-width="1.2"/>
+  <text x="1014" y="291" fill="#1d4ed8" font-size="10.5" font-weight="bold">%54,44 (p=1,38e-9)</text>
+
+  <!-- PANEL C (BOTTOM RIGHT): 3D Perception + N=120 Judge Audit -->
+  <rect x="578" y="340" width="678" height="256" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" rx="6"/>
+  <text x="917" y="362" text-anchor="middle" fill="#0f2942" font-size="13" font-weight="bold">(c) 60-Sahneli 3B Algılama ve N=120 Çapraz-Aile vs Öz-Eleştirmen VLM Hakem Denetimi</text>
+
+  <!-- Sub-card Left: 3D Perception -->
+  <rect x="594" y="376" width="286" height="204" fill="#ffffff" stroke="#2563eb" stroke-width="1.3" rx="5"/>
+  <text x="737" y="396" text-anchor="middle" fill="#1e40af" font-size="11.5" font-weight="bold">3B Konum Doğruluğu (60+60 Sahne)</text>
+  <text x="606" y="420" fill="#1e293b" font-size="10.5">• Nominal Örtülmemiş RMSE:</text>
+  <text x="616" y="436" fill="#1d4ed8" font-size="11" font-weight="bold">23,85 mm → 2,63 mm (9,07× azalma)</text>
+  <text x="606" y="458" fill="#1e293b" font-size="10.5">• Gürültülü RGB-D (σ=3 mm, ±1,5°):</text>
+  <text x="616" y="474" fill="#1d4ed8" font-size="11" font-weight="bold">24,12 mm → 3,99 mm (6,05× azalma)</text>
+  <text x="606" y="496" fill="#1e293b" font-size="10.5">• Tam Örtülü Hedef Geri Çağırma:</text>
+  <text x="616" y="512" fill="#0f766e" font-size="11" font-weight="bold">%73,3 / %66,7 → %100,0 (60/60)</text>
+  <text x="606" y="534" fill="#1e293b" font-size="10.5">• Eş Anlamlarda Bellek Yönlendirme:</text>
+  <text x="616" y="550" fill="#0f766e" font-size="11" font-weight="bold">Serbest Metin %0,0 → Ontoloji %100,0</text>
+  <text x="606" y="570" fill="#64748b" font-size="9.5">Örtülü RMSE: 27,91 mm (nom.) / 27,68 mm (pert.)</text>
+
+  <!-- Sub-card Right: N=120 Judge Comparison -->
+  <rect x="894" y="376" width="346" height="204" fill="#ffffff" stroke="#7c3aed" stroke-width="1.3" rx="5"/>
+  <text x="1067" y="396" text-anchor="middle" fill="#5b21b6" font-size="11.5" font-weight="bold">N=120 Kâhin O_GT Karşılaştırmalı Hakem Denetimi</text>
+
+  <!-- Table inside sub-card -->
+  <rect x="906" y="408" width="322" height="22" fill="#f3e8ff" rx="3"/>
+  <text x="914" y="423" fill="#4c1d95" font-size="10" font-weight="bold">Ölçüt</text>
+  <text x="1085" y="423" text-anchor="middle" fill="#0f766e" font-size="10" font-weight="bold">gpt-4.1 (Çapraz)</text>
+  <text x="1186" y="423" text-anchor="middle" fill="#475569" font-size="10" font-weight="bold">gpt-6-luna (Öz)</text>
+
+  <text x="914" y="446" fill="#1e293b" font-size="10.2">DP / DN / YP / YN</text>
+  <text x="1085" y="446" text-anchor="middle" fill="#1e293b" font-size="10">58 / 39 / 8 / 15</text>
+  <text x="1186" y="446" text-anchor="middle" fill="#475569" font-size="10">55 / 45 / 2 / 18</text>
+
+  <text x="914" y="467" fill="#1e293b" font-size="10.2">Doğruluk / Kesinlik</text>
+  <text x="1085" y="467" text-anchor="middle" fill="#1e293b" font-size="10">%80,8 / %87,9</text>
+  <text x="1186" y="467" text-anchor="middle" fill="#475569" font-size="10">%83,3 / %96,5</text>
+
+  <text x="914" y="488" fill="#1e293b" font-size="10.2">Duyarlılık / Özgüllük</text>
+  <text x="1085" y="488" text-anchor="middle" fill="#0f766e" font-size="10" font-weight="bold">%79,5 / %83,0</text>
+  <text x="1186" y="488" text-anchor="middle" fill="#475569" font-size="10">%75,3 / %95,7</text>
+
+  <text x="914" y="509" fill="#1e293b" font-size="10.2">F1 / Cohen κ / MAE</text>
+  <text x="1085" y="509" text-anchor="middle" fill="#5b21b6" font-size="10" font-weight="bold">0,835 / 0,608 / 0,19</text>
+  <text x="1186" y="509" text-anchor="middle" fill="#475569" font-size="10">0,846 / 0,670 / 0,12</text>
+
+  <text x="914" y="530" fill="#1e293b" font-size="10.2">Gecikme p50 (p95)</text>
+  <text x="1085" y="530" text-anchor="middle" fill="#0f766e" font-size="10" font-weight="bold">1,59 s (2,58 s)</text>
+  <text x="1186" y="530" text-anchor="middle" fill="#475569" font-size="10">3,44 s (5,71 s)</text>
+
+  <line x1="906" y1="542" x2="1228" y2="542" stroke="#e2e8f0"/>
+  <text x="1067" y="558" text-anchor="middle" fill="#0f766e" font-size="10" font-weight="bold">Çapraz-aile ayrımı: κ=0,608 "önemli uyum" + %53,9 daha hızlı p50</text>
+  <text x="1067" y="572" text-anchor="middle" fill="#64748b" font-size="9.5">Öz-tercih yanlılığından arındırılmış • 0 API/ayrıştırma hatası</text>
+</svg>

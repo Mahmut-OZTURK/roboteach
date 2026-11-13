@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 484" width="1240" height="484" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e"/>
+    </marker>
+  </defs>
+
+  <rect width="1240" height="484" fill="#f8fafc" rx="8"/>
+  <rect x="10" y="10" width="1220" height="464" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" rx="6"/>
+
+  <rect x="10" y="10" width="1220" height="44" fill="#0f2942" rx="6"/>
+  <rect x="10" y="34" width="1220" height="20" fill="#0f2942"/>
+  <text x="620" y="37" text-anchor="middle" fill="#ffffff" font-size="15.5" font-weight="bold">From Open-Loop LLM Policies to Neuro-Symbolic Invariants: Six-Class Causal Manipulation Failure Taxonomy</text>
+
+  <text x="26" y="76" fill="#991b1b" font-size="12.5" font-weight="bold">UPPER LAYER — Open-Loop &amp; Unstructured Verbal Failure Modes (F1–F6: Physical &amp; Perceptual Root Causes)</text>
+
+  <!-- F1 -->
+  <rect x="24" y="88" width="186" height="142" fill="#fef2f2" stroke="#dc2626" stroke-width="1.4" rx="6"/>
+  <text x="33" y="108" fill="#991b1b" font-size="11.4" font-weight="bold">F1: Topological Order Error</text>
+  <text x="33" y="127" fill="#1e293b" font-size="10.6">• Unnecessary grasping and</text>
+  <text x="41" y="142" fill="#1e293b" font-size="10.6">high release of base block</text>
+  <text x="33" y="160" fill="#1e293b" font-size="10.6">• Inverted bottom-to-top</text>
+  <text x="41" y="175" fill="#1e293b" font-size="10.6">order under paraphrasing</text>
+  <text x="33" y="196" fill="#7f1d1d" font-size="10.2" font-style="italic">Impact: Inverted / shifted base</text>
+
+  <!-- F2 -->
+  <rect x="224" y="88" width="186" height="142" fill="#fff7ed" stroke="#ea580c" stroke-width="1.4" rx="6"/>
+  <text x="233" y="108" fill="#9a3412" font-size="11.4" font-weight="bold">F2: Planar XY Drift</text>
+  <text x="233" y="127" fill="#1e293b" font-size="10.6">• Single-axis shift (only Δx</text>
+  <text x="241" y="142" fill="#1e293b" font-size="10.6">or Δy) for diagonal pairs</text>
+  <text x="233" y="160" fill="#1e293b" font-size="10.6">• Block overlap or irregular</text>
+  <text x="241" y="175" fill="#1e293b" font-size="10.6">gaps in collinear rows</text>
+  <text x="233" y="196" fill="#9a3412" font-size="10.2" font-style="italic">Impact: Relational pose failure</text>
+
+  <!-- F3 -->
+  <rect x="424" y="88" width="186" height="142" fill="#fefce8" stroke="#ca8a04" stroke-width="1.4" rx="6"/>
+  <text x="433" y="108" fill="#854d0e" font-size="11.4" font-weight="bold">F3: Vertical Impact Topple</text>
+  <text x="433" y="127" fill="#1e293b" font-size="10.6">• Excess release margin</text>
+  <text x="441" y="142" fill="#1e293b" font-size="10.6">(Δz = 75 mm) causing bounce</text>
+  <text x="433" y="160" fill="#1e293b" font-size="10.6">• Angular tilt during abrupt</text>
+  <text x="441" y="175" fill="#1e293b" font-size="10.6">parallel-jaw finger opening</text>
+  <text x="433" y="196" fill="#854d0e" font-size="10.2" font-style="italic">Impact: 3–4 block tower collapse</text>
+
+  <!-- F4 -->
+  <rect x="624" y="88" width="186" height="142" fill="#fdf2f8" stroke="#db2777" stroke-width="1.4" rx="6"/>
+  <text x="633" y="108" fill="#9d174d" font-size="11.4" font-weight="bold">F4: Swept-Volume Collision</text>
+  <text x="633" y="127" fill="#1e293b" font-size="10.6">• Low horizontal transit</text>
+  <text x="641" y="142" fill="#1e293b" font-size="10.6">(z = 0.56 m) hitting barriers</text>
+  <text x="633" y="160" fill="#1e293b" font-size="10.6">• Direct Cartesian interpolation</text>
+  <text x="641" y="175" fill="#1e293b" font-size="10.6">sweeping standing stacks</text>
+  <text x="633" y="196" fill="#9d174d" font-size="10.2" font-style="italic">Impact: Barrier / stack knockover</text>
+
+  <!-- F5 -->
+  <rect x="824" y="88" width="186" height="142" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.4" rx="6"/>
+  <text x="833" y="108" fill="#5b21b6" font-size="11.4" font-weight="bold">F5: Container Rim &amp; Piling</text>
+  <text x="833" y="127" fill="#1e293b" font-size="10.6">• Dropping multiple cubes onto</text>
+  <text x="841" y="142" fill="#1e293b" font-size="10.6">identical box centroid</text>
+  <text x="833" y="160" fill="#1e293b" font-size="10.6">• Rim impact on 7 cm walls</text>
+  <text x="841" y="175" fill="#1e293b" font-size="10.6">deflecting blocks outside</text>
+  <text x="833" y="196" fill="#5b21b6" font-size="10.2" font-style="italic">Impact: Cavity spill / rim hang</text>
+
+  <!-- F6 -->
+  <rect x="1024" y="88" width="192" height="142" fill="#ecfeff" stroke="#0891b2" stroke-width="1.4" rx="6"/>
+  <text x="1033" y="108" fill="#155e75" font-size="11.4" font-weight="bold">F6: Occlusion &amp; Stale Pose</text>
+  <text x="1033" y="127" fill="#1e293b" font-size="10.6">• Upper block fully occluding</text>
+  <text x="1041" y="142" fill="#1e293b" font-size="10.6">lower block from top camera</text>
+  <text x="1033" y="160" fill="#1e293b" font-size="10.6">• Reusing pre-action coordinates</text>
+  <text x="1041" y="175" fill="#1e293b" font-size="10.6">during unstack-swap tasks</text>
+  <text x="1033" y="196" fill="#155e75" font-size="10.2" font-style="italic">Impact: 26.7% occluded miss</text>
+
+  <line x1="117" y1="230" x2="117" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="317" y1="230" x2="317" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="517" y1="230" x2="517" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="717" y1="230" x2="717" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="917" y1="230" x2="917" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+  <line x1="1120" y1="230" x2="1120" y2="262" stroke="#0f766e" stroke-width="2.2" marker-end="url(#arr-teal)"/>
+
+  <rect x="24" y="268" width="1192" height="26" fill="#ccfbf1" stroke="#5eead4" stroke-width="1" rx="4"/>
+  <text x="620" y="285" text-anchor="middle" fill="#115e59" font-size="12" font-weight="bold">LOWER LAYER — Neuro-Symbolic Experience Memory Mapping: Quantitative Kinematic Priors (Δψ) &amp; Deduplicated Symbolic Invariants</text>
+
+  <!-- Invariant 1 -->
+  <rect x="24" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="33" y="324" fill="#115e59" font-size="11.3" font-weight="bold">Invariant I: Task Ontology</text>
+  <text x="33" y="343" fill="#1e293b" font-size="10.5">• Deterministic bottom→top</text>
+  <text x="41" y="358" fill="#1e293b" font-size="10.5">ordered object vector</text>
+  <text x="33" y="376" fill="#1e293b" font-size="10.5">• Leave base block ungrasped</text>
+  <text x="41" y="391" fill="#1e293b" font-size="10.5">symbolic axiom (r_F1)</text>
+  <text x="33" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Synonym routing: 100%</text>
+
+  <!-- Invariant 2 -->
+  <rect x="224" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="233" y="324" fill="#115e59" font-size="11.3" font-weight="bold">Invariant II: Dual-Axis Prior</text>
+  <text x="233" y="343" fill="#1e293b" font-size="10.5">• Collinear pitch: δ_row = 62 mm</text>
+  <text x="233" y="361" fill="#1e293b" font-size="10.5">• Diagonal pair: (Δx, Δy) =</text>
+  <text x="241" y="376" fill="#1e293b" font-size="10.5">(±62 mm, ±62 mm) constraint</text>
+  <text x="233" y="394" fill="#1e293b" font-size="10.5">• Explicit moving-ref binding</text>
+  <text x="233" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Collinear diagonal error = 0</text>
+
+  <!-- Invariant 3 -->
+  <rect x="424" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="433" y="324" fill="#115e59" font-size="11.3" font-weight="bold">Invariant III: Soft Release</text>
+  <text x="433" y="343" fill="#1e293b" font-size="10.5">• Calibrated release margin:</text>
+  <text x="441" y="358" fill="#1e293b" font-size="10.5">Δz_rel: 75 mm → 52 mm</text>
+  <text x="433" y="376" fill="#1e293b" font-size="10.5">• Minimum-jerk quintic joint</text>
+  <text x="441" y="391" fill="#1e293b" font-size="10.5">profile &amp; gradual jaw opening</text>
+  <text x="433" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Stable frictional contact</text>
+
+  <!-- Invariant 4 -->
+  <rect x="624" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="633" y="324" fill="#115e59" font-size="11.3" font-weight="bold">Invariant IV: Safe-Z Envelope</text>
+  <text x="633" y="343" fill="#1e293b" font-size="10.5">• Transit clearance update:</text>
+  <text x="641" y="358" fill="#1e293b" font-size="10.5">z_trans: 0.56 m → 0.68 m</text>
+  <text x="633" y="376" fill="#1e293b" font-size="10.5">• Perceived z_top + 0.11 m</text>
+  <text x="641" y="391" fill="#1e293b" font-size="10.5">3-waypoint bridge motion</text>
+  <text x="633" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Barrier clearance hits = 0</text>
+
+  <!-- Invariant 5 -->
+  <rect x="824" y="304" width="186" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="833" y="324" fill="#115e59" font-size="11.3" font-weight="bold">Invariant V: Cavity Sub-Slots</text>
+  <text x="833" y="343" fill="#1e293b" font-size="10.5">• Disjoint interior sub-slots</text>
+  <text x="841" y="358" fill="#1e293b" font-size="10.5">(±32 mm) in 13.8×13.8 cm box</text>
+  <text x="833" y="376" fill="#1e293b" font-size="10.5">• Controlled descent into</text>
+  <text x="841" y="391" fill="#1e293b" font-size="10.5">cavity z = 0.525 m pre-release</text>
+  <text x="833" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Side-by-side packing</text>
+
+  <!-- Invariant 6 -->
+  <rect x="1024" y="304" width="192" height="154" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.4" rx="6"/>
+  <text x="1033" y="324" fill="#115e59" font-size="11.3" font-weight="bold">Invariant VI: Multi-View Cloud</text>
+  <text x="1033" y="343" fill="#1e293b" font-size="10.5">• 3 lateral isometric RGB-D</text>
+  <text x="1041" y="358" fill="#1e293b" font-size="10.5">ray-compensated point clouds</text>
+  <text x="1033" y="376" fill="#1e293b" font-size="10.5">• Precondition checkpointing</text>
+  <text x="1041" y="391" fill="#1e293b" font-size="10.5">&amp; per-step re-localization</text>
+  <text x="1033" y="416" fill="#0f766e" font-size="10.2" font-weight="bold">Occluded recall: 100%</text>
+</svg>

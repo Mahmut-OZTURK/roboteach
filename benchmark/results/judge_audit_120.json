@@ -1,0 +1,69 @@
+{
+  "target_episodes": 120,
+  "cross_family_critic": {
+    "model": "gpt-4.1",
+    "errors": 0,
+    "agreement": {
+      "n": 120,
+      "tp": 58,
+      "tn": 39,
+      "fp": 8,
+      "fn": 15,
+      "accuracy": 0.8083,
+      "precision": 0.8788,
+      "recall": 0.7945,
+      "specificity": 0.8298,
+      "f1": 0.8345,
+      "cohen_kappa": 0.6082,
+      "score_mae": 0.1941
+    },
+    "latency_ms": {
+      "n": 120,
+      "mean": 1697.4,
+      "p50": 1586.95,
+      "p95": 2581.56,
+      "p99": 3517.08,
+      "p50_ci95": [
+        1513.97,
+        1627.53
+      ],
+      "p95_ci95": [
+        2246.7,
+        3423.03
+      ]
+    }
+  },
+  "intra_family_critic": {
+    "model": "gpt-6-luna",
+    "errors": 0,
+    "agreement": {
+      "n": 120,
+      "tp": 55,
+      "tn": 45,
+      "fp": 2,
+      "fn": 18,
+      "accuracy": 0.8333,
+      "precision": 0.9649,
+      "recall": 0.7534,
+      "specificity": 0.9574,
+      "f1": 0.8462,
+      "cohen_kappa": 0.6702,
+      "score_mae": 0.1237
+    },
+    "latency_ms": {
+      "n": 120,
+      "mean": 3637.29,
+      "p50": 3444.56,
+      "p95": 5707.95,
+      "p99": 7827.15,
+      "p50_ci95": [
+        3063.97,
+        3843.82
+      ],
+      "p95_ci95": [
+        5393.86,
+        6626.15
+      ]
+    }
+  }
+}

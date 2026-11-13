@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 500" width="1240" height="500" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr-dark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f2942"/>
+    </marker>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <rect width="1240" height="500" fill="#f8fafc" rx="8"/>
+  <rect x="10" y="10" width="1220" height="480" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" rx="6"/>
+
+  <rect x="10" y="10" width="1220" height="44" fill="#0f2942" rx="6"/>
+  <rect x="10" y="34" width="1220" height="20" fill="#0f2942"/>
+  <text x="620" y="37" text-anchor="middle" fill="#ffffff" font-size="15.5" font-weight="bold">Closed-Loop Neuro-Symbolic Manipulation &amp; Cross-Family Calibration Architecture (240 Hz Contact Simulation)</text>
+
+  <!-- Input Command -->
+  <rect x="30" y="80" width="195" height="90" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4" rx="6"/>
+  <text x="127" y="104" text-anchor="middle" fill="#0f2942" font-size="12.5" font-weight="bold">Language Command (u)</text>
+  <text x="127" y="125" text-anchor="middle" fill="#334155" font-size="11">Bilingual / Paraphrased input</text>
+  <text x="127" y="143" text-anchor="middle" fill="#475569" font-size="10.5">6 canonical families (T1–T6)</text>
+  <text x="127" y="159" text-anchor="middle" fill="#475569" font-size="10.5">Unseen lexical phrasings</text>
+
+  <line x1="225" y1="125" x2="263" y2="125" stroke="#0f2942" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+  <!-- Canonical Ontology -->
+  <rect x="266" y="74" width="235" height="102" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" rx="6"/>
+  <text x="383" y="96" text-anchor="middle" fill="#1e40af" font-size="12.5" font-weight="bold">Canonical Ontology O_task</text>
+  <text x="278" y="116" fill="#1e293b" font-size="11">• Family + ordered b_ord + relational</text>
+  <text x="286" y="131" fill="#1e293b" font-size="11">poses + container ID extraction</text>
+  <text x="278" y="150" fill="#1e293b" font-size="11">• Precondition checkpoints G_sub (T5)</text>
+  <text x="278" y="167" fill="#1d4ed8" font-size="11" font-weight="bold">• Synonym cache hit: 100.0% (6/6)</text>
+
+  <line x1="501" y1="125" x2="541" y2="125" stroke="#0f2942" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+  <!-- Policy Synthesizer -->
+  <rect x="544" y="74" width="295" height="114" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.7" rx="6"/>
+  <text x="691" y="96" text-anchor="middle" fill="#115e59" font-size="12.5" font-weight="bold">Policy Synthesizer π_θ (gpt-6-luna)</text>
+  <text x="556" y="117" fill="#1e293b" font-size="11">• Inputs: Φ_3D(o_t), O_task(u), ψ_k, R_sym</text>
+  <text x="556" y="136" fill="#1e293b" font-size="11">• Output: Restricted 5-primitive Python</text>
+  <text x="564" y="151" fill="#1e293b" font-size="11">manipulation policy execute(robot)</text>
+  <text x="556" y="171" fill="#0f766e" font-size="11" font-weight="bold">• Output token reduction: 29.1% (87.5K→62.0K)</text>
+
+  <line x1="839" y1="125" x2="879" y2="125" stroke="#0f2942" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+  <!-- AST Shield + 240 Hz PD Physics -->
+  <rect x="882" y="74" width="328" height="132" fill="#f8fafc" stroke="#0f2942" stroke-width="1.6" rx="6"/>
+  <text x="1046" y="96" text-anchor="middle" fill="#0f2942" font-size="12.5" font-weight="bold">AST Shield + 240 Hz PD Contact Physics</text>
+  <text x="894" y="117" fill="#1e293b" font-size="11">1. Static AST Allowlist Verification</text>
+  <text x="894" y="135" fill="#1e293b" font-size="11">2. Safe-Z Bridge (z_safe if Δxy &gt; 40 mm)</text>
+  <text x="894" y="153" fill="#1e293b" font-size="11">3. Quintic Min-Jerk PD (Kp=0.28, Kd=1.05)</text>
+  <text x="894" y="171" fill="#1e293b" font-size="11">4. Franka Panda Cone Friction (75 N, μ=2.2)</text>
+  <text x="894" y="191" fill="#dc2626" font-size="11" font-weight="bold">Artificial Weld Constraints = ZERO</text>
+
+  <!-- Perception Box -->
+  <rect x="266" y="242" width="275" height="130" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" rx="6"/>
+  <text x="403" y="264" text-anchor="middle" fill="#1e40af" font-size="12.5" font-weight="bold">4-View 3D Perception Φ_3D</text>
+  <text x="278" y="285" fill="#1e293b" font-size="11">• 1 overhead + 3 lateral RGB-D (640×480)</text>
+  <text x="278" y="303" fill="#1e293b" font-size="11">• Modular 2D ρ_c mask + 3D deprojection</text>
+  <text x="278" y="321" fill="#1e293b" font-size="11">• Lateral ray half-width offset (η=0.82)</text>
+  <text x="278" y="340" fill="#1d4ed8" font-size="11" font-weight="bold">• Nominal RMSE: 2.63 mm (9.07×) | Occ.: 100%</text>
+  <text x="278" y="358" fill="#475569" font-size="10.5">• Perturbed RGB-D RMSE: 3.99 mm (6.05×)</text>
+
+  <path d="M 1046 206 L 1046 226 L 403 226 L 403 240" fill="none" stroke="#0f2942" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+  <path d="M 541 290 L 558 290 L 558 190" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+  <!-- Dual-Channel Memory Box -->
+  <rect x="574" y="262" width="265" height="148" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" rx="6"/>
+  <text x="706" y="284" text-anchor="middle" fill="#92400e" font-size="12.5" font-weight="bold">Dual-Channel Memory M_NS</text>
+  <text x="586" y="306" fill="#1e293b" font-size="11" font-weight="bold">Channel A — Quantitative Priors ψ_k:</text>
+  <text x="594" y="323" fill="#1e293b" font-size="10.8">• z_trans: 0.56 → 0.68 m | Δz_rel: 75 → 52 mm</text>
+  <text x="594" y="339" fill="#1e293b" font-size="10.8">• δ_row = 62 mm | ±62 mm diagonal delta</text>
+  <text x="586" y="362" fill="#1e293b" font-size="11" font-weight="bold">Channel B — Symbolic Invariants R_sym:</text>
+  <text x="594" y="379" fill="#1e293b" font-size="10.8">• ≤6 deduplicated axioms per causal class</text>
+  <text x="594" y="395" fill="#b45309" font-size="10.8" font-weight="bold">• Bounded context (zero prompt bloat)</text>
+
+  <line x1="706" y1="262" x2="706" y2="190" stroke="#0f766e" stroke-width="2" marker-end="url(#arr-teal)"/>
+
+  <!-- Cross-Family Critic -->
+  <rect x="882" y="250" width="328" height="160" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6" rx="6"/>
+  <text x="1046" y="272" text-anchor="middle" fill="#5b21b6" font-size="12.5" font-weight="bold">Cross-Family VLM Critic J_VLM (gpt-4.1)</text>
+  <text x="894" y="293" fill="#1e293b" font-size="11">• Input: 768×192 multi-view JPEG + 3D summary</text>
+  <text x="894" y="311" fill="#1e293b" font-size="11">• Output: ŷ_VLM ∈ {0,1}, score ŝ, class ĉ ∈ F1..F6</text>
+  <text x="894" y="331" fill="#6d28d9" font-size="11" font-weight="bold">• N=120 Audit: κ=0.608 | Precision 87.9%</text>
+  <text x="902" y="347" fill="#6d28d9" font-size="11" font-weight="bold">Recall 79.5% | Specificity 83.0% | F1=0.835</text>
+  <text x="894" y="367" fill="#1e293b" font-size="11">• Self-critic (gpt-6-luna) p50 = 3,445 ms vs</text>
+  <text x="902" y="383" fill="#0f766e" font-size="11" font-weight="bold">gpt-4.1 p50 = 1,587 ms (53.9% lower latency)</text>
+
+  <line x1="1125" y1="206" x2="1125" y2="248" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+  <line x1="882" y1="336" x2="842" y2="336" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+
+  <!-- Oracle Isolation Banner -->
+  <rect x="30" y="426" width="1180" height="48" fill="#fefce8" stroke="#ca8a04" stroke-width="1.3" stroke-dasharray="6,3" rx="6"/>
+  <text x="620" y="446" text-anchor="middle" fill="#854d0e" font-size="12" font-weight="bold">STRICT ISOLATION BOUNDARY: Ground-Truth Physical Oracle O_GT (Evaluation &amp; Critic Audit Only)</text>
+  <text x="620" y="463" text-anchor="middle" fill="#713f12" font-size="10.8">Both policy calibration and execution remain strictly isolated from O_GT, learning exclusively from multi-view sensory feedback and J_VLM.</text>
+</svg>

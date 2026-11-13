@@ -1,300 +1,305 @@
-# primitives.py — Robot becerileri (Vision-based, Franka Panda)
-# Hareket: Waypoint interpolasyonu + resetJointState (deterministik, kesin)
-# Fizik: Sadece obje etkileşimleri için çalışır (yerçekimi, temas, sürtünme)
-import pybullet as p
+# primitives.py — Franka Panda Manipulation Skills (True PD Motor Control & Contact Grasping)
 import math
 import time
+import pybullet as p
 
 
 class RobotSkills:
-    def __init__(self, robot_id, objects: dict, vision_locator, end_effector_index=11):
+    """
+    Low-level manipulation skills for 7-DOF Franka Emika Panda.
+    Supports:
+      - control_mode="pd" (default): Minimum-jerk quintic joint-space trajectory tracking via
+        POSITION_CONTROL motors and genuine frictional parallel-jaw contact grasping (zero weld
+        constraints, zero cube-pose teleportation).
+      - control_mode="kinematic": Legacy state-teleport baseline retained strictly for ablation.
+    """
+
+    def __init__(
+        self,
+        robot_id: int,
+        objects: dict[str, int],
+        vision_locator,
+        end_effector_index: int = 11,
+        control_mode: str = "pd",
+        realtime: bool = False,
+        physics_client_id: int = 0,
+    ):
         self.robot_id = robot_id
         self.objects = objects
         self.vision_locator = vision_locator
-        self.ee_link = end_effector_index  # panda_grasptarget
+        self.ee_link = end_effector_index
         self.num_joints = 7
-        self.grasped_object = None
-        self.constraint_id = None
+        self.control_mode = control_mode
+        self.realtime = realtime
+        self.client = physics_client_id
+
+        self.grasped_object: int | None = None
+        self.grasped_name: str | None = None
+        self.constraint_id: int | None = None
 
         self.lower_limits = [-2.9671, -1.8326, -2.9671, -3.1416, -2.9671, -0.0873, -2.9671]
         self.upper_limits = [2.9671, 1.8326, 2.9671, 0.0, 2.9671, 3.8223, 2.9671]
         self.joint_ranges = [5.9342, 3.6652, 5.9342, 3.1416, 5.9342, 3.9096, 5.9342]
-        self.rest_poses = [-1.2, 0.0, 0.0, -1.5708, 0.0, 1.8675, 0.0]
-        self.grip_orn = p.getQuaternionFromEuler([0, math.pi, 0])
+        self.rest_poses = [-1.2, 0.0, 0.0, -1.5708, 0.0, 1.8675, -0.7854]
+        self.grip_orn = p.getQuaternionFromEuler([math.pi, 0.0, math.pi / 2.0])
 
-    def get_safe_z(self):
-        """Masadaki tüm küplerin Z pozisyonunu sorgulayıp en yüksek olanına göre dinamik güvenli geçiş Z seviyesi döner."""
-        max_z = 0.425
-        for obj_id in self.objects.values():
-            pos, _ = p.getBasePositionAndOrientation(obj_id)
-            if pos[2] > max_z:
-                max_z = pos[2]
-        # Küpler 0.05m boyunda. En yüksek küpün üstünden 0.12m yukarısı güvenli yörüngedir.
-        return max(0.65, max_z + 0.12)
+        # Calibratable kinematic execution parameters (updated by CalibrationMemory)
+        self.policy_params = {
+            "transit_z": 0.64,
+            "release_margin_z": 0.052,
+            "grasp_force": 75.0,
+            "auto_safe_lift": True,
+        }
 
-    def _stabilize_cubes(self):
-        """Tutulmayan tüm küplerin hız ve açısal momentumunu sıfırlar, yönelimlerini dikleştirir.
-        Bu, _ik_move ve home() sırasında çalışan yüzlerce stepSimulation'ın
-        birikimli sayısal hatasını önleyerek kulelerin devrilmesini engeller."""
-        for obj_id in self.objects.values():
-            if obj_id == self.grasped_object:
-                continue
-            pos, _ = p.getBasePositionAndOrientation(obj_id)
-            p.resetBasePositionAndOrientation(obj_id, pos, [0, 0, 0, 1])
-            p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
+    def configure_params(self, params: dict | None):
+        if params:
+            self.policy_params.update(params)
 
-    def _solve_ik(self, position):
-        """IK çözümünü hesapla (link 11 = panda_grasptarget)."""
-        return p.calculateInverseKinematics(
-            self.robot_id, self.ee_link, position, self.grip_orn,
+    def _step_sim(self, steps: int = 1):
+        for _ in range(steps):
+            p.stepSimulation(physicsClientId=self.client)
+            if self.realtime:
+                time.sleep(1.0 / 240.0)
+
+    def get_safe_z(self) -> float:
+        """Computes safe transit height purely from perceived 3D scene bounds (never ground-truth)."""
+        base_z = float(self.policy_params.get("transit_z", 0.64))
+        if not self.policy_params.get("auto_safe_lift", True):
+            return base_z
+        details = getattr(self.vision_locator, "_last_metadata", None)
+        if not details or len(details) < 4:
+            details = self.vision_locator.locate_all_detailed()
+        max_top = 0.47
+        for info in details.values():
+            max_top = max(max_top, float(info.get("z_top", 0.47)))
+        return max(base_z, min(0.82, max_top + 0.11))
+
+    def _solve_ik(self, position: list[float]) -> list[float]:
+        angles = p.calculateInverseKinematics(
+            self.robot_id,
+            self.ee_link,
+            position,
+            self.grip_orn,
             lowerLimits=self.lower_limits,
             upperLimits=self.upper_limits,
             jointRanges=self.joint_ranges,
             restPoses=self.rest_poses,
-            maxNumIterations=1000,
-            residualThreshold=1e-5
+            maxNumIterations=600,
+            residualThreshold=1e-5,
+            physicsClientId=self.client,
         )
+        return list(angles[: self.num_joints])
 
-    def _get_joint_positions(self):
-        """Mevcut eklem açılarını oku."""
-        return [p.getJointState(self.robot_id, i)[0] for i in range(self.num_joints)]
+    def _get_joint_positions(self) -> list[float]:
+        return [
+            p.getJointState(self.robot_id, i, physicsClientId=self.client)[0]
+            for i in range(self.num_joints)
+        ]
 
-    def _ik_move(self, target_pos, num_waypoints=95, settle_steps=3):
-        """
-        Kademeli IK hareketi — son derece yavaş, yumuşak ve kararlı.
-        """
+    def _hold_gripper_command(self):
+        if self.grasped_object is not None and self.control_mode == "pd":
+            force = float(self.policy_params.get("grasp_force", 55.0))
+            p.setJointMotorControl2(
+                self.robot_id, 9, p.POSITION_CONTROL, 0.0, force=force, physicsClientId=self.client
+            )
+            p.setJointMotorControl2(
+                self.robot_id, 10, p.POSITION_CONTROL, 0.0, force=force, physicsClientId=self.client
+            )
+
+    def _move_joints(self, target_angles: list[float], duration_steps: int = 160):
+        current = self._get_joint_positions()
+        if self.control_mode == "kinematic":
+            waypoints = 75
+            for wp in range(1, waypoints + 1):
+                t = wp / waypoints
+                for i in range(self.num_joints):
+                    ang = current[i] + (target_angles[i] - current[i]) * t
+                    p.resetJointState(self.robot_id, i, ang, physicsClientId=self.client)
+                self._step_sim(2)
+            return
+
+        # True PD motor tracking along minimum-jerk quintic profile: s(t) = 10t^3 - 15t^4 + 6t^5
+        joint_indices = list(range(self.num_joints))
+        forces = [240.0, 240.0, 240.0, 240.0, 140.0, 140.0, 140.0]
+        kp = [0.28] * self.num_joints
+        kd = [1.05] * self.num_joints
+
+        for step in range(1, duration_steps + 1):
+            tau = step / duration_steps
+            s = tau * tau * tau * (10.0 + tau * (-15.0 + 6.0 * tau))
+            desired = [current[i] + (target_angles[i] - current[i]) * s for i in range(self.num_joints)]
+            p.setJointMotorControlArray(
+                self.robot_id,
+                joint_indices,
+                p.POSITION_CONTROL,
+                targetPositions=desired,
+                forces=forces,
+                positionGains=kp,
+                velocityGains=kd,
+                physicsClientId=self.client,
+            )
+            self._hold_gripper_command()
+            self._step_sim(1)
+
+        # Settle at target setpoint
+        for _ in range(35):
+            p.setJointMotorControlArray(
+                self.robot_id,
+                joint_indices,
+                p.POSITION_CONTROL,
+                targetPositions=target_angles,
+                forces=forces,
+                positionGains=kp,
+                velocityGains=kd,
+                physicsClientId=self.client,
+            )
+            self._hold_gripper_command()
+            self._step_sim(1)
+
+    def _ik_move(self, target_pos: list[float], duration_steps: int = 150) -> list[float]:
         target_angles = self._solve_ik(target_pos)
-        current_angles = self._get_joint_positions()
+        self._move_joints(target_angles, duration_steps=duration_steps)
+        return self.get_ee_pos()
 
-        for wp in range(1, num_waypoints + 1):
-            t = wp / num_waypoints
-            for i in range(self.num_joints):
-                interp_angle = current_angles[i] + (target_angles[i] - current_angles[i]) * t
-                p.resetJointState(self.robot_id, i, interp_angle)
-
-            # Fizik adımlarını çalıştır
-            for _ in range(settle_steps):
-                p.stepSimulation()
-            time.sleep(0.012)  # Ağır ve kararlı hareket için hızı yavaşlattık
-
-        # Son pozisyonu doğrula
-        final_pos = self.get_ee_pos()
-        dist = sum((final_pos[i] - target_pos[i]) ** 2 for i in range(3)) ** 0.5
-        if dist < 0.02:
-            print(f"     ✅ Ulaşıldı: {[round(x, 3) for x in final_pos]}")
-        else:
-            print(f"     ⚠️  Hedefe tam ulaşılamadı (hata: {dist:.3f}m)")
-
-        # Hareket sonrası tüm serbest küpleri stabilize et (drift önleme)
-        self._stabilize_cubes()
-
-        return final_pos
-
-    def get_ee_pos(self):
-        """End-effector (panda_grasptarget) pozisyonu."""
-        state = p.getLinkState(self.robot_id, self.ee_link)
+    def get_ee_pos(self) -> list[float]:
+        state = p.getLinkState(self.robot_id, self.ee_link, physicsClientId=self.client)
         return list(state[0])
 
-    def open_gripper(self, slow=False):
-        """Kıskacı açar."""
-        p.setJointMotorControl2(self.robot_id, 9, p.POSITION_CONTROL, 0.04, force=100)
-        p.setJointMotorControl2(self.robot_id, 10, p.POSITION_CONTROL, 0.04, force=100)
-        steps = 120 if slow else 60
-        for _ in range(steps):
-            p.stepSimulation()
-            time.sleep(1.0 / 240.0)
+    def open_gripper(self, slow: bool = False):
+        steps = 90 if slow else 50
+        cur_l = p.getJointState(self.robot_id, 9, physicsClientId=self.client)[0]
+        for s in range(1, steps + 1):
+            target = cur_l + (0.04 - cur_l) * (s / steps)
+            p.setJointMotorControl2(
+                self.robot_id, 9, p.POSITION_CONTROL, target, force=80.0, physicsClientId=self.client
+            )
+            p.setJointMotorControl2(
+                self.robot_id, 10, p.POSITION_CONTROL, target, force=80.0, physicsClientId=self.client
+            )
+            self._step_sim(1)
 
     def close_gripper(self):
-        """Kıskacı kapatır."""
-        p.setJointMotorControl2(self.robot_id, 9, p.POSITION_CONTROL, 0.0, force=200)
-        p.setJointMotorControl2(self.robot_id, 10, p.POSITION_CONTROL, 0.0, force=200)
-        for _ in range(80):
-            p.stepSimulation()
-            time.sleep(1.0 / 240.0)
+        force = float(self.policy_params.get("grasp_force", 55.0))
+        for _ in range(95):
+            p.setJointMotorControl2(
+                self.robot_id, 9, p.POSITION_CONTROL, 0.0, force=force, physicsClientId=self.client
+            )
+            p.setJointMotorControl2(
+                self.robot_id, 10, p.POSITION_CONTROL, 0.0, force=force, physicsClientId=self.client
+            )
+            self._step_sim(1)
 
-    def move_to(self, position, speed=0.5):
-        """Kartezyen koordinata git. Çarpışmaları önlemek için akıllı yükselme mekanizması içerir."""
-        x = max(-0.4, min(0.4, position[0]))
-        y = max(-0.3, min(0.4, position[1]))
-        z = max(0.42, min(0.85, position[2]))
+    def is_holding_object(self, obj_id: int | None = None) -> bool:
+        target = obj_id if obj_id is not None else self.grasped_object
+        if target is None:
+            return False
+        if self.control_mode == "kinematic" and self.constraint_id is not None:
+            return True
+        left_c = p.getContactPoints(self.robot_id, target, linkIndexA=9, physicsClientId=self.client)
+        right_c = p.getContactPoints(self.robot_id, target, linkIndexA=10, physicsClientId=self.client)
+        return len(left_c) > 0 and len(right_c) > 0
+
+    def move_to(self, position: list[float]) -> list[float]:
+        x = max(-0.35, min(0.40, float(position[0])))
+        y = max(-0.32, min(0.35, float(position[1])))
+        z = max(0.43, min(0.84, float(position[2])))
         clamped = [x, y, z]
-        
-        current_ee = self.get_ee_pos()
-        xy_dist = math.sqrt((current_ee[0] - x)**2 + (current_ee[1] - y)**2)
-        safe_z = self.get_safe_z()
-        
-        # Eğer XY düzleminde hareket varsa ve Z seviyelerinden biri güvenli Z'nin altındaysa,
-        # çarpışmayı önlemek için hareketi 3 aşamalı (yukarı -> yatay -> aşağı) yap.
-        if xy_dist > 0.02 and (current_ee[2] < safe_z - 0.01 or z < safe_z - 0.01):
-            print(f"     🛡️ Güvenli Hareket: Dikey kalkış, yatay taşıma ve dikey iniş uygulanıyor (safe_z: {safe_z:.3f}m)")
-            # 1. Mevcut XY koordinatında güvenli yüksekliğe çık (eğer zaten yüksekte değilse)
-            if current_ee[2] < safe_z:
-                self._ik_move([current_ee[0], current_ee[1], safe_z])
-            # 2. Güvenli yükseklikte hedef XY koordinatına git
-            self._ik_move([x, y, safe_z])
-            # 3. Hedef XY koordinatında hedef Z yüksekliğine in
-            return self._ik_move([x, y, z])
-        else:
-            print(f"  🔵 move_to({[round(v, 3) for v in clamped]})")
-            return self._ik_move(clamped)
 
-    def get_object_position(self, object_name):
-        """Kameradan nesne konumu al (pure vision)."""
+        if not self.policy_params.get("auto_safe_lift", True):
+            return self._ik_move(clamped, duration_steps=150)
+
+        current_ee = self.get_ee_pos()
+        xy_dist = math.hypot(current_ee[0] - x, current_ee[1] - y)
+        safe_z = max(self.get_safe_z(), min(0.82, z + 0.085))
+        if xy_dist > 0.035:
+            if current_ee[2] < safe_z - 0.005:
+                self._ik_move([current_ee[0], current_ee[1], safe_z], duration_steps=110)
+            self._ik_move([x, y, safe_z], duration_steps=140)
+            return self._ik_move([x, y, z], duration_steps=130)
+        return self._ik_move(clamped, duration_steps=140)
+
+    def get_object_position(self, object_name: str) -> list[float] | None:
         return self.vision_locator.locate(object_name)
 
-    def grasp(self, object_name):
-        """Nesneyi tut."""
+    def grasp(self, object_name: str) -> bool:
         if object_name not in self.objects:
-            print(f"  ❌ '{object_name}' bulunamadı!")
+            return False
+        if object_name in ("brown_box", "obstacle_wall"):
             return False
 
         if self.grasped_object is not None:
-            print("  ⚠️  Zaten tutuyorum, bırakıyorum...")
             self.release()
 
         obj_pos = self.vision_locator.locate(object_name)
         if obj_pos is None:
-            print(f"  ❌ '{object_name}' kamerada görülemiyor!")
             return False
 
-        # Robot parmaklarının mevcut yerinden yeni küpe yatayda giderken masadakileri devirmemesi için:
-        # Önce mevcut konumunda Z ekseninde güvenli yüksekliğe kalk, sonra yeni küpün XY'sine git.
-        current_ee = self.get_ee_pos()
-        safe_z = self.get_safe_z()
-        if current_ee[2] < safe_z - 0.05:
-            print(f"     ⬆️ Grasp öncesi güvenli yüksekliğe kalkılıyor: {safe_z:.3f}m")
-            self._ik_move([current_ee[0], current_ee[1], safe_z])
-
-        print(f"  🟢 grasp('{object_name}') → {[round(x, 3) for x in obj_pos]}")
-
         obj_id = self.objects[object_name]
-
-        self.open_gripper()
-
-        # 1. Yüksekten yaklaş
         safe_z = self.get_safe_z()
-        self._ik_move([obj_pos[0], obj_pos[1], safe_z])
+        current_ee = self.get_ee_pos()
+        if current_ee[2] < safe_z - 0.03:
+            self._ik_move([current_ee[0], current_ee[1], safe_z], duration_steps=100)
 
-        # 2. Kademeli iniş — objenin tam üzerinde hizalan
-        self._ik_move([obj_pos[0], obj_pos[1], obj_pos[2] + 0.06])
-
-        # 3. Son iniş — parmakları küpün tam merkezine getir
-        grasp_z = obj_pos[2]
-        grasp_z = max(0.43, grasp_z)
-        self._ik_move([obj_pos[0], obj_pos[1], grasp_z])
+        self.open_gripper(slow=False)
+        self._ik_move([obj_pos[0], obj_pos[1], safe_z], duration_steps=130)
+        self._ik_move([obj_pos[0], obj_pos[1], obj_pos[2] + 0.065], duration_steps=100)
+        grasp_z = max(0.438, obj_pos[2] - 0.004)
+        self._ik_move([obj_pos[0], obj_pos[1], grasp_z], duration_steps=100)
 
         self.close_gripper()
 
-        # 5. Kusursuz diklik hizalaması ve sıfır momentum
-        # Küpü mükemmel şekilde dikleştirerek kulelerin yamulmasını önler
-        obj_pos_now, _ = p.getBasePositionAndOrientation(obj_id)
-        p.resetBasePositionAndOrientation(obj_id, obj_pos_now, [0, 0, 0, 1])
-        p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
+        if self.control_mode == "kinematic":
+            ee_pos, ee_orn = p.getLinkState(self.robot_id, self.ee_link, physicsClientId=self.client)[:2]
+            op, oo = p.getBasePositionAndOrientation(obj_id, physicsClientId=self.client)
+            inv_p, inv_o = p.invertTransform(ee_pos, ee_orn)
+            rel_p, rel_o = p.multiplyTransforms(inv_p, inv_o, op, oo)
+            self.constraint_id = p.createConstraint(
+                self.robot_id, self.ee_link, obj_id, -1, p.JOINT_FIXED,
+                [0, 0, 0], rel_p, [0, 0, 0], rel_o, [0, 0, 0, 1], physicsClientId=self.client,
+            )
+            p.changeConstraint(self.constraint_id, maxForce=400, physicsClientId=self.client)
 
-        # 6. Constraint — göreceli dönüşüm ile (uzaylı gibi zıplamasını önler)
-        ee_state = p.getLinkState(self.robot_id, self.ee_link)
-        ee_pos, ee_orn = ee_state[0], ee_state[1]
-        obj_pos_now, obj_orn_now = p.getBasePositionAndOrientation(obj_id)
-
-        inv_ee_pos, inv_ee_orn = p.invertTransform(ee_pos, ee_orn)
-        rel_pos, rel_orn = p.multiplyTransforms(inv_ee_pos, inv_ee_orn, obj_pos_now, obj_orn_now)
-
-        self.constraint_id = p.createConstraint(
-            parentBodyUniqueId=self.robot_id,
-            parentLinkIndex=self.ee_link,
-            childBodyUniqueId=obj_id,
-            childLinkIndex=-1,
-            jointType=p.JOINT_FIXED,
-            jointAxis=[0, 0, 0],
-            parentFramePosition=rel_pos,
-            childFramePosition=[0, 0, 0],
-            parentFrameOrientation=rel_orn,
-            childFrameOrientation=[0, 0, 0, 1]
-        )
-        p.changeConstraint(self.constraint_id, maxForce=500)
         self.grasped_object = obj_id
-        
-        # Sadece kavranan nesne ile robot arasındaki çarpışmaları kapat (Constraint çatışmasını önlemek için)
-        for link_idx in range(-1, p.getNumJoints(self.robot_id)):
-            p.setCollisionFilterPair(self.robot_id, obj_id, link_idx, -1, enableCollision=0)
+        self.grasped_name = object_name
 
-        print(f"     ✅ '{object_name}' tutuldu!")
-
-        # 7. Kaldır
-        safe_z = self.get_safe_z()
-        self._ik_move([obj_pos[0], obj_pos[1], safe_z])
+        self._ik_move([obj_pos[0], obj_pos[1], safe_z], duration_steps=130)
+        if not self.is_holding_object(obj_id):
+            self.grasped_object = None
+            self.grasped_name = None
+            return False
         return True
 
-    def release(self):
-        """Tutulan nesneyi bırak — yüzeye hafifçe temas ettikten sonra bırak."""
+    def release(self) -> bool:
         if self.grasped_object is None:
-            print("  ⚠️  Tutulmuş nesne yok!")
             return False
 
-        obj_id = self.grasped_object
+        if self.constraint_id is not None:
+            p.removeConstraint(self.constraint_id, physicsClientId=self.client)
+            self.constraint_id = None
 
-        # 1. Momentumu sıfırla (nesne duraganlığı)
-        p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
-
-        # 2. Constraint kaldır
-        p.removeConstraint(self.constraint_id)
-        self.constraint_id = None
         self.grasped_object = None
+        self.grasped_name = None
 
-        # 3. Momentum tekrar sıfırla (constraint kaldırılınca oluşan tepki kuvvetini öldür)
-        p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
-
-        # 4. Kıskacı yavaşça aç
         self.open_gripper(slow=True)
+        self._step_sim(60)
 
-        # 5. Doğal settle süresi (yerçekimi ve temas fizikleri doğal yerleşsin)
-        for _ in range(120):
-            p.stepSimulation()
-            time.sleep(1.0 / 240.0)
-
-        # 6. Post-settle stabilizasyon: Bırakılan küpü dikleştir ve tüm küplerin birikmiş driftini sıfırla
-        obj_pos_final, _ = p.getBasePositionAndOrientation(obj_id)
-        p.resetBasePositionAndOrientation(obj_id, obj_pos_final, [0, 0, 0, 1])
-        p.resetBaseVelocity(obj_id, [0, 0, 0], [0, 0, 0])
-        self._stabilize_cubes()
-
-        print("     ✅ Nesne bırakıldı!")
-
-        # 7. Yukarı çekil (Dikey olarak)
         ee_pos = self.get_ee_pos()
+        if hasattr(self.vision_locator, "clear_cache"):
+            self.vision_locator.clear_cache()
         safe_z = self.get_safe_z()
-        target_lift_z = max(ee_pos[2] + 0.15, safe_z)
-        self._ik_move([ee_pos[0], ee_pos[1], target_lift_z])
-
-        # 8. Robot geri çekildikten sonra bırakılan nesnenin robotla olan çarpışmasını geri etkinleştir
-        for link_idx in range(-1, p.getNumJoints(self.robot_id)):
-            p.setCollisionFilterPair(self.robot_id, obj_id, link_idx, -1, enableCollision=1)
-
+        self._ik_move([ee_pos[0], ee_pos[1], max(ee_pos[2] + 0.10, safe_z)], duration_steps=100)
         return True
 
     def home(self):
-        """Başlangıç pozisyonuna dön (Yavaş ve son derece pürüzsüz enterpolasyon)."""
-        print("  🏠 home()")
         if self.grasped_object is not None:
             self.release()
-
-        current_angles = self._get_joint_positions()
-        num_steps = 80
-        
-        for wp in range(1, num_steps + 1):
-            t = wp / num_steps
-            for i in range(self.num_joints):
-                interp_angle = current_angles[i] + (self.rest_poses[i] - current_angles[i]) * t
-                p.resetJointState(self.robot_id, i, interp_angle)
-            # Parmakları yavaşça aç
-            finger_val = 0.04 * t
-            p.resetJointState(self.robot_id, 9, finger_val)
-            p.resetJointState(self.robot_id, 10, finger_val)
-            
-            p.stepSimulation()
-            time.sleep(0.012)
-            
-        print("     ✅ Eve döndü!")
-
-        # Eve döndükten sonra tüm küpleri stabilize et
-        self._stabilize_cubes()
+        ee = self.get_ee_pos()
+        if self.policy_params.get("auto_safe_lift", True):
+            if ee[0] > -0.12:
+                self._ik_move([ee[0], ee[1], max(0.80, self.get_safe_z())], duration_steps=85)
+                cur_j = self._get_joint_positions()
+                self._move_joints([cur_j[0], -0.35, 0.0, -1.45, 0.0, 1.65, -0.7854], duration_steps=75)
+        elif ee[2] < 0.62 and ee[0] > -0.12:
+            self._ik_move([ee[0], ee[1], max(0.66, self.get_safe_z())], duration_steps=85)
+        self.open_gripper(slow=False)
+        self._move_joints(self.rest_poses, duration_steps=95 if self.policy_params.get("auto_safe_lift", True) else 120)

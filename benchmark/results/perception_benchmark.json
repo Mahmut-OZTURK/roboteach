@@ -1,0 +1,26 @@
+{
+  "nominal": {
+    "num_scenes": 60,
+    "perturbed": false,
+    "unoccluded_rmse_mm_naive": 23.85,
+    "unoccluded_rmse_mm_proposed": 2.63,
+    "unoccluded_mae_mm_naive": 14.4,
+    "unoccluded_mae_mm_proposed": 2.29,
+    "occluded_recall_naive_pct": 73.3,
+    "occluded_recall_proposed_pct": 100.0,
+    "occluded_rmse_mm_proposed": 27.91,
+    "occluded_queries": 60
+  },
+  "perturbed": {
+    "num_scenes": 60,
+    "perturbed": true,
+    "unoccluded_rmse_mm_naive": 24.12,
+    "unoccluded_rmse_mm_proposed": 3.99,
+    "unoccluded_mae_mm_naive": 15.41,
+    "unoccluded_mae_mm_proposed": 3.9,
+    "occluded_recall_naive_pct": 66.7,
+    "occluded_recall_proposed_pct": 100.0,
+    "occluded_rmse_mm_proposed": 27.68,
+    "occluded_queries": 60
+  }
+}

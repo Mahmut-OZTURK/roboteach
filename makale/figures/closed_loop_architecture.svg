@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 500" width="1240" height="500" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr-dark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f2942"/>
+    </marker>
+    <marker id="arr-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#0f766e"/>
+    </marker>
+    <marker id="arr-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <rect width="1240" height="500" fill="#f8fafc" rx="8"/>
+  <rect x="10" y="10" width="1220" height="480" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" rx="6"/>
+
+  <rect x="10" y="10" width="1220" height="44" fill="#0f2942" rx="6"/>
+  <rect x="10" y="34" width="1220" height="20" fill="#0f2942"/>
+  <text x="620" y="37" text-anchor="middle" fill="#ffffff" font-size="15.5" font-weight="bold">Kapalı Döngü Nöro-Sembolik Fiziksel Manipülasyon ve Çapraz-Aile Kalibrasyon Mimarisi (240 Hz Simülasyon)</text>
+
+  <!-- Input Command -->
+  <rect x="30" y="80" width="195" height="90" fill="#f1f5f9" stroke="#64748b" stroke-width="1.4" rx="6"/>
+  <text x="127" y="104" text-anchor="middle" fill="#0f2942" font-size="12.5" font-weight="bold">Doğal Dil Komutu (u)</text>
+  <text x="127" y="125" text-anchor="middle" fill="#334155" font-size="11">İki dilli / Eş anlamlı yönerge</text>
+  <text x="127" y="143" text-anchor="middle" fill="#475569" font-size="10.5">6 görev ailesi (T1–T6)</text>
+  <text x="127" y="159" text-anchor="middle" fill="#475569" font-size="10.5">Bilinmeyen komut varyantları</text>
+
+  <line x1="225" y1="125" x2="263" y2="125" stroke="#0f2942" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+  <!-- Canonical Ontology -->
+  <rect x="266" y="74" width="235" height="102" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" rx="6"/>
+  <text x="383" y="96" text-anchor="middle" fill="#1e40af" font-size="12.5" font-weight="bold">Kanonik Ontoloji O_task</text>
+  <text x="278" y="116" fill="#1e293b" font-size="11">• Aile + sıralı b_ord + ilişkisel</text>
+  <text x="286" y="131" fill="#1e293b" font-size="11">hedef + kap ID çıkarımı</text>
+  <text x="278" y="150" fill="#1e293b" font-size="11">• T5 önkoşullu alt-hedef G_sub</text>
+  <text x="278" y="167" fill="#1d4ed8" font-size="11" font-weight="bold">• Eş anlamlı yönlendirme: %100</text>
+
+  <line x1="501" y1="125" x2="541" y2="125" stroke="#0f2942" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+  <!-- Policy Synthesizer -->
+  <rect x="544" y="74" width="295" height="114" fill="#f0fdfa" stroke="#0f766e" stroke-width="1.7" rx="6"/>
+  <text x="691" y="96" text-anchor="middle" fill="#115e59" font-size="12.5" font-weight="bold">Politika Sentezleyicisi π_θ (gpt-6-luna)</text>
+  <text x="556" y="117" fill="#1e293b" font-size="11">• Girdi: Φ_3D(o_t), O_task(u), ψ_k, R_sym</text>
+  <text x="556" y="136" fill="#1e293b" font-size="11">• Çıktı: Deterministik 5 atomik becerili</text>
+  <text x="564" y="151" fill="#1e293b" font-size="11">Python politika kodu (execute(robot))</text>
+  <text x="556" y="171" fill="#0f766e" font-size="11" font-weight="bold">• Çıktı token düşüşü: %29,1 (87,5K → 62,0K)</text>
+
+  <line x1="839" y1="125" x2="879" y2="125" stroke="#0f2942" stroke-width="2" marker-end="url(#arr-dark)"/>
+
+  <!-- AST Shield + 240 Hz PD Physics -->
+  <rect x="882" y="74" width="328" height="132" fill="#f8fafc" stroke="#0f2942" stroke-width="1.6" rx="6"/>
+  <text x="1046" y="96" text-anchor="middle" fill="#0f2942" font-size="12.5" font-weight="bold">AST Kalkanı + 240 Hz PD Sürtünmeli Temas</text>
+  <text x="894" y="117" fill="#1e293b" font-size="11">1. Statik AST İzin Listesi Doğrulama</text>
+  <text x="894" y="135" fill="#1e293b" font-size="11">2. Güvenli Z Köprüsü (Δxy &gt; 40 mm ise z_safe)</text>
+  <text x="894" y="153" fill="#1e293b" font-size="11">3. 5. Der. Min.-Sarsıntılı PD (Kp=0,28, Kd=1,05)</text>
+  <text x="894" y="171" fill="#1e293b" font-size="11">4. Franka Panda Koni Sürtünmesi (75 N, μ=2,2)</text>
+  <text x="894" y="191" fill="#dc2626" font-size="11" font-weight="bold">Yapay sabit-bağ (weld constraint) = SIFIR</text>
+
+  <!-- Perception Box (Bottom Left-Center) -->
+  <rect x="266" y="242" width="275" height="130" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5" rx="6"/>
+  <text x="403" y="264" text-anchor="middle" fill="#1e40af" font-size="12.5" font-weight="bold">4-Bakışlı 3B Algılama Φ_3D</text>
+  <text x="278" y="285" fill="#1e293b" font-size="11">• 1 tepe + 3 yanal izometrik RGB-D (640×480)</text>
+  <text x="278" y="303" fill="#1e293b" font-size="11">• Modüler 2B ρ_c maskesi + geri-projeksiyon</text>
+  <text x="278" y="321" fill="#1e293b" font-size="11">• Yanal ışın yarı-kalınlık telafisi (η=0,82)</text>
+  <text x="278" y="340" fill="#1d4ed8" font-size="11" font-weight="bold">• Nominal RMSE: 2,63 mm (9,07×) | Örtülü: %100</text>
+  <text x="278" y="358" fill="#475569" font-size="10.5">• Sensör gürültülü DR altında: 3,99 mm (6,05×)</text>
+
+  <!-- Arrow from Sim down to Perception -->
+  <path d="M 1046 206 L 1046 226 L 403 226 L 403 240" fill="none" stroke="#0f2942" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+  <!-- Arrow from Perception up to Synthesizer -->
+  <path d="M 541 290 L 558 290 L 558 190" fill="none" stroke="#0f766e" stroke-width="1.8" marker-end="url(#arr-teal)"/>
+
+  <!-- Dual-Channel Memory Box (Middle) -->
+  <rect x="574" y="262" width="265" height="148" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" rx="6"/>
+  <text x="706" y="284" text-anchor="middle" fill="#92400e" font-size="12.5" font-weight="bold">Çift Kanallı Deneyim Belleği M_NS</text>
+  <text x="586" y="306" fill="#1e293b" font-size="11" font-weight="bold">Kanal A — Nicel Kinematik Önseller ψ_k:</text>
+  <text x="594" y="323" fill="#1e293b" font-size="10.8">• z_trans: 0,56 → 0,68 m | Δz_rel: 75 → 52 mm</text>
+  <text x="594" y="339" fill="#1e293b" font-size="10.8">• δ_row = 62 mm | ±62 mm çapraz ofset</text>
+  <text x="586" y="362" fill="#1e293b" font-size="11" font-weight="bold">Kanal B — Sembolik Değişmezler R_sym:</text>
+  <text x="594" y="379" fill="#1e293b" font-size="10.8">• Nedensel sınıf başına ≤6 tekil aksiyom</text>
+  <text x="594" y="395" fill="#b45309" font-size="10.8" font-weight="bold">• Sıfır istem şişmesi (sabit üst sınır)</text>
+
+  <!-- Arrow from Memory up to Synthesizer -->
+  <line x1="706" y1="262" x2="706" y2="190" stroke="#0f766e" stroke-width="2" marker-end="url(#arr-teal)"/>
+
+  <!-- Heterogeneous Cross-Family Critic (Bottom Right) -->
+  <rect x="882" y="250" width="328" height="160" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6" rx="6"/>
+  <text x="1046" y="272" text-anchor="middle" fill="#5b21b6" font-size="12.5" font-weight="bold">Çapraz-Aile Algısal Hakem J_VLM (gpt-4.1)</text>
+  <text x="894" y="293" fill="#1e293b" font-size="11">• Girdi: 768×192 çok bakışlı JPEG + 3B özet</text>
+  <text x="894" y="311" fill="#1e293b" font-size="11">• Çıktı: ŷ_VLM ∈ {0,1}, skor ŝ, nedensel ĉ ∈ F1..F6</text>
+  <text x="894" y="331" fill="#6d28d9" font-size="11" font-weight="bold">• N=120 Denetim: κ=0,608 | Kesinlik %87,9</text>
+  <text x="902" y="347" fill="#6d28d9" font-size="11" font-weight="bold">Duyarlılık %79,5 | Özgüllük %83,0 | F1=0,835</text>
+  <text x="894" y="367" fill="#1e293b" font-size="11">• Öz-eleştirmen (gpt-6-luna) p50: 3.445 ms iken</text>
+  <text x="902" y="383" fill="#0f766e" font-size="11" font-weight="bold">gpt-4.1 p50: 1.587 ms (%53,9 daha düşük gecikme)</text>
+
+  <!-- Arrow from Env down to Critic -->
+  <line x1="1125" y1="206" x2="1125" y2="248" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+  <!-- Arrow from Critic left to Memory -->
+  <line x1="882" y1="336" x2="842" y2="336" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr-purple)"/>
+
+  <!-- Ground-Truth Oracle Separation Banner -->
+  <rect x="30" y="426" width="1180" height="48" fill="#fefce8" stroke="#ca8a04" stroke-width="1.3" stroke-dasharray="6,3" rx="6"/>
+  <text x="620" y="446" text-anchor="middle" fill="#854d0e" font-size="12" font-weight="bold">İZOLASYON SINIRI: Gerçek-Durum Fiziksel Kâhini O_GT (Sadece Değerlendirme ve Hakem Denetimi İçindir)</text>
+  <text x="620" y="463" text-anchor="middle" fill="#713f12" font-size="10.8">Kalibrasyon ve yürütme döngüsü O_GT’ye asla erişmez; politika öğrenimi yalnızca çok bakışlı görsel algı ve J_VLM geribildirimiyle yürütülür.</text>
+</svg>
