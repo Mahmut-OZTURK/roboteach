@@ -1,0 +1,38 @@
+{
+  "canonical_type": "STACK_ORDERED",
+  "calibrated": true,
+  "attempts": 2,
+  "success_count": 1,
+  "kinematic_priors": {
+    "transit_z": 0.68,
+    "release_margin_z": 0.052,
+    "row_spacing": 0.062,
+    "diagonal_delta": 0.062,
+    "grasp_force": 75.0,
+    "require_home_relocate": false
+  },
+  "rules_by_code": {
+    "F_ORDER": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+  },
+  "history": [
+    {
+      "failure_code": "F_ORDER",
+      "summary": "Green and yellow cubes are out of order in the stack.",
+      "param_updates": {
+        "release_margin_z": 0.052,
+        "transit_z": 0.68
+      },
+      "symbolic_rule": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+    },
+    {
+      "failure_code": "F_ORDER",
+      "summary": "Green and yellow cubes are out of order in the stack.",
+      "param_updates": {
+        "release_margin_z": 0.052,
+        "transit_z": 0.68
+      },
+      "symbolic_rule": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+    }
+  ],
+  "last_task": "kutuları kule gibi üst üste diz: en altta mavi, üstünde kırmızı, üstünde yeşil, en üstte sarı"
+}

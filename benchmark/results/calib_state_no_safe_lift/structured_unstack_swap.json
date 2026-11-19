@@ -1,0 +1,55 @@
+{
+  "canonical_type": "UNSTACK_SWAP",
+  "calibrated": false,
+  "attempts": 4,
+  "success_count": 0,
+  "kinematic_priors": {
+    "transit_z": 0.68,
+    "release_margin_z": 0.052,
+    "row_spacing": 0.062,
+    "diagonal_delta": 0.062,
+    "grasp_force": 75.0,
+    "require_home_relocate": false
+  },
+  "rules_by_code": {
+    "F_ORDER": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+  },
+  "history": [
+    {
+      "failure_code": "F_ORDER",
+      "summary": "Blue is still on top of red, not the other way around",
+      "param_updates": {
+        "release_margin_z": 0.052,
+        "transit_z": 0.68
+      },
+      "symbolic_rule": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+    },
+    {
+      "failure_code": "F_ORDER",
+      "summary": "Blue is still on top of red, not the reverse.",
+      "param_updates": {
+        "release_margin_z": 0.052,
+        "transit_z": 0.68
+      },
+      "symbolic_rule": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+    },
+    {
+      "failure_code": "F_ORDER",
+      "summary": "Stack order not corrected; blue remains on top of red.",
+      "param_updates": {
+        "release_margin_z": 0.052,
+        "transit_z": 0.68
+      },
+      "symbolic_rule": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+    },
+    {
+      "failure_code": "F_ORDER",
+      "summary": "Stack order not corrected; blue remains on top of red.",
+      "param_updates": {
+        "release_margin_z": 0.052,
+        "transit_z": 0.68
+      },
+      "symbolic_rule": "Leave the bottom-most base block ungrasped on the table and stack upper blocks strictly in bottom-to-top order."
+    }
+  ]
+}

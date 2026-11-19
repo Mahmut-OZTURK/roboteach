@@ -1,0 +1,840 @@
+{
+  "protocol": {
+    "arm_name": "equal_budget_key_matched_verbal",
+    "command_source": "canonical command_tr (identical to fair_cap_multiview)",
+    "seeds_formula": "3000 + 100 * t_idx + tr (30 per task, 180 total)",
+    "use_multiview": true,
+    "use_ontology": false,
+    "use_checkpoints": false,
+    "auto_safe_lift": false,
+    "priors": {
+      "transit_z": 0.56,
+      "release_margin_z": 0.075,
+      "row_spacing": 0.062,
+      "diagonal_delta": 0.062,
+      "grasp_force": 75.0,
+      "require_home_relocate": false
+    },
+    "injected_rules": "non-empty verbal_tips[-3:] collected on command_tr"
+  },
+  "calibration_verbal_tips": {
+    "T1_STACK_ORDERED": {
+      "command_tr": "kutuları kule gibi üst üste diz: en altta mavi, üstünde kırmızı, üstünde yeşil, en üstte sarı",
+      "calib_iters_run": 2,
+      "collected_tips": [
+        "Center each upper cube within 0.025 m of the cube directly below it.",
+        "Align the cubes at the same XY position and stack blue, red, green, then yellow vertically."
+      ],
+      "tip_count": 2
+    },
+    "T2_ALIGN_ROW": {
+      "command_tr": "kırmızı, mavi, yeşil ve sarı küpleri yan yana tek sıra halinde diz",
+      "calib_iters_run": 5,
+      "collected_tips": [
+        "Place consecutive cubes at similar Y coordinates with consistent X spacing.",
+        "Align the red cube’s Y position with the other cubes within 0.03 m."
+      ],
+      "tip_count": 2
+    },
+    "T3_DIAGONAL_PAIR": {
+      "command_tr": "kırmızının çaprazına mavi kutuyu, sarının çaprazına yeşil kutuyu koy",
+      "calib_iters_run": 3,
+      "collected_tips": [
+        "Place each target 0.04–0.11 m away from its reference along both X and Y.",
+        "Place each target cube on the table with both X and Y offsets of 0.04–0.11 m from its reference cube."
+      ],
+      "tip_count": 2
+    },
+    "T4_PLACE_INSIDE": {
+      "command_tr": "kırmızı, mavi ve yeşil küpleri kahverengi kutunun içine koy",
+      "calib_iters_run": 2,
+      "collected_tips": [
+        "Place every cube fully within the opening and below the rim before releasing.",
+        "Lower the green cube below the rim and center it within the box opening."
+      ],
+      "tip_count": 2
+    },
+    "T5_UNSTACK_SWAP": {
+      "command_tr": "mavi küpü kırmızının üstüne koy ama kırmızı zaten mavinin üstünde",
+      "calib_iters_run": 2,
+      "collected_tips": [
+        "Place red flat on the table, then center blue directly above it.",
+        "Place blue directly above red, with horizontal offset under 0.025 m."
+      ],
+      "tip_count": 2
+    },
+    "T6_OBSTACLE_CLEARANCE": {
+      "command_tr": "engelin üzerinden aşırarak mavi küpü kırmızı küpün üstüne koy",
+      "calib_iters_run": 5,
+      "collected_tips": [
+        "Place the blue cube directly over the red cube, aligned within 0.025 m."
+      ],
+      "tip_count": 1
+    }
+  },
+  "results_by_task": {
+    "T1_STACK_ORDERED": {
+      "success": 3,
+      "trials": 30,
+      "sr_pct": 10.0,
+      "ci95_pct": [
+        3.46,
+        25.62
+      ],
+      "seed_outcomes": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "failure_distribution": {
+        "F_XY_ALIGN": 21,
+        "F_Z_DROP": 5,
+        "F_COLLISION": 1
+      },
+      "model": "gpt-6-luna",
+      "llm_usage": {
+        "calls": 30,
+        "prompt_tokens": 23760,
+        "completion_tokens": 12728,
+        "latency_ms": {
+          "n": 30,
+          "mean": 4522.05,
+          "p50": 4347.57,
+          "p95": 5794.81,
+          "p99": 6105.01,
+          "p50_ci95": [
+            4185.53,
+            4661.09
+          ],
+          "p95_ci95": [
+            5027.8,
+            6209.7
+          ]
+        }
+      },
+      "injected_verbal_tips": [
+        "Center each upper cube within 0.025 m of the cube directly below it.",
+        "Align the cubes at the same XY position and stack blue, red, green, then yellow vertically."
+      ],
+      "calib_iters": 2
+    },
+    "T2_ALIGN_ROW": {
+      "success": 4,
+      "trials": 30,
+      "sr_pct": 13.33,
+      "ci95_pct": [
+        5.31,
+        29.68
+      ],
+      "seed_outcomes": [
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "failure_distribution": {
+        "F_COLLISION": 3,
+        "F_XY_ALIGN": 22,
+        "F_Z_DROP": 1
+      },
+      "model": "gpt-6-luna",
+      "llm_usage": {
+        "calls": 30,
+        "prompt_tokens": 23280,
+        "completion_tokens": 16188,
+        "latency_ms": {
+          "n": 30,
+          "mean": 5713.43,
+          "p50": 5511.6,
+          "p95": 7341.25,
+          "p99": 8181.2,
+          "p50_ci95": [
+            5237.65,
+            5983.05
+          ],
+          "p95_ci95": [
+            6360.2,
+            8372.89
+          ]
+        }
+      },
+      "injected_verbal_tips": [
+        "Place consecutive cubes at similar Y coordinates with consistent X spacing.",
+        "Align the red cube’s Y position with the other cubes within 0.03 m."
+      ],
+      "calib_iters": 5
+    },
+    "T3_DIAGONAL_PAIR": {
+      "success": 23,
+      "trials": 30,
+      "sr_pct": 76.67,
+      "ci95_pct": [
+        59.07,
+        88.21
+      ],
+      "seed_outcomes": [
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "failure_distribution": {
+        "F_XY_ALIGN": 6,
+        "F_COLLISION": 1
+      },
+      "model": "gpt-6-luna",
+      "llm_usage": {
+        "calls": 30,
+        "prompt_tokens": 23940,
+        "completion_tokens": 13815,
+        "latency_ms": {
+          "n": 30,
+          "mean": 4968.34,
+          "p50": 4886.6,
+          "p95": 6219.91,
+          "p99": 6792.27,
+          "p50_ci95": [
+            4590.87,
+            5365.58
+          ],
+          "p95_ci95": [
+            5537.4,
+            7017.49
+          ]
+        }
+      },
+      "injected_verbal_tips": [
+        "Place each target 0.04–0.11 m away from its reference along both X and Y.",
+        "Place each target cube on the table with both X and Y offsets of 0.04–0.11 m from its reference cube."
+      ],
+      "calib_iters": 3
+    },
+    "T4_PLACE_INSIDE": {
+      "success": 7,
+      "trials": 30,
+      "sr_pct": 23.33,
+      "ci95_pct": [
+        11.79,
+        40.93
+      ],
+      "seed_outcomes": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ],
+      "failure_distribution": {
+        "F_CONTAINER_RIM": 23
+      },
+      "model": "gpt-6-luna",
+      "llm_usage": {
+        "calls": 30,
+        "prompt_tokens": 23190,
+        "completion_tokens": 16900,
+        "latency_ms": {
+          "n": 30,
+          "mean": 5996.42,
+          "p50": 6023.05,
+          "p95": 6622.73,
+          "p99": 7111.4,
+          "p50_ci95": [
+            5836.05,
+            6154.25
+          ],
+          "p95_ci95": [
+            6379.03,
+            7309.69
+          ]
+        }
+      },
+      "injected_verbal_tips": [
+        "Place every cube fully within the opening and below the rim before releasing.",
+        "Lower the green cube below the rim and center it within the box opening."
+      ],
+      "calib_iters": 2
+    },
+    "T5_UNSTACK_SWAP": {
+      "success": 7,
+      "trials": 30,
+      "sr_pct": 23.33,
+      "ci95_pct": [
+        11.79,
+        40.93
+      ],
+      "seed_outcomes": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "failure_distribution": {
+        "F_COLLISION": 14,
+        "F_XY_ALIGN": 5,
+        "F_ORDER": 3,
+        "F_Z_DROP": 1
+      },
+      "model": "gpt-6-luna",
+      "llm_usage": {
+        "calls": 30,
+        "prompt_tokens": 23270,
+        "completion_tokens": 16341,
+        "latency_ms": {
+          "n": 30,
+          "mean": 5938.33,
+          "p50": 5796.02,
+          "p95": 8217.2,
+          "p99": 8248.84,
+          "p50_ci95": [
+            5116.42,
+            6250.15
+          ],
+          "p95_ci95": [
+            7277.15,
+            8258.22
+          ]
+        }
+      },
+      "injected_verbal_tips": [
+        "Place red flat on the table, then center blue directly above it.",
+        "Place blue directly above red, with horizontal offset under 0.025 m."
+      ],
+      "calib_iters": 2
+    },
+    "T6_OBSTACLE_CLEARANCE": {
+      "success": 27,
+      "trials": 30,
+      "sr_pct": 90.0,
+      "ci95_pct": [
+        74.38,
+        96.54
+      ],
+      "seed_outcomes": [
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "failure_distribution": {
+        "F_Z_DROP": 3
+      },
+      "model": "gpt-6-luna",
+      "llm_usage": {
+        "calls": 30,
+        "prompt_tokens": 24330,
+        "completion_tokens": 8834,
+        "latency_ms": {
+          "n": 30,
+          "mean": 3469.95,
+          "p50": 3487.33,
+          "p95": 4506.4,
+          "p99": 5187.54,
+          "p50_ci95": [
+            3149.13,
+            3659.97
+          ],
+          "p95_ci95": [
+            3920.7,
+            5453.05
+          ]
+        }
+      },
+      "injected_verbal_tips": [
+        "Place the blue cube directly over the red cube, aligned within 0.025 m."
+      ],
+      "calib_iters": 5
+    }
+  },
+  "summary": {
+    "total_success": 71,
+    "total_trials": 180,
+    "overall_sr_pct": 39.44,
+    "ci95_pct": [
+      32.6,
+      46.73
+    ],
+    "wilson_ci95_pct": [
+      32.6,
+      46.73
+    ]
+  },
+  "comparisons_n180": {
+    "key_matched_verbal_vs_fair_cap": {
+      "n_matched": 180,
+      "success_a": 71,
+      "success_b": 106,
+      "rate_a_pct": 39.44,
+      "rate_b_pct": 58.89,
+      "diff_pp": -19.44,
+      "task_stratified_bootstrap_ci95_pp": [
+        -27.22,
+        -12.22
+      ],
+      "b_only_a": 12,
+      "c_only_b": 47,
+      "mcnemar_p_value": 5.1256292496887346e-06
+    },
+    "key_matched_verbal_vs_unkeyed_verbal_k3": {
+      "n_matched": 180,
+      "success_a": 71,
+      "success_b": 97,
+      "rate_a_pct": 39.44,
+      "rate_b_pct": 53.89,
+      "diff_pp": -14.44,
+      "task_stratified_bootstrap_ci95_pp": [
+        -22.22,
+        -6.65
+      ],
+      "b_only_a": 19,
+      "c_only_b": 45,
+      "mcnemar_p_value": 0.0015627893448280279
+    },
+    "full_ns_k4_vs_key_matched_verbal": {
+      "n_matched": 180,
+      "success_a": 157,
+      "success_b": 71,
+      "rate_a_pct": 87.22,
+      "rate_b_pct": 39.44,
+      "diff_pp": 47.78,
+      "task_stratified_bootstrap_ci95_pp": [
+        40.56,
+        55.0
+      ],
+      "b_only_a": 93,
+      "c_only_b": 7,
+      "mcnemar_p_value": 2.726143732806038e-20
+    }
+  },
+  "comparisons_t4_t6_n90": {
+    "key_matched_verbal_vs_fair_cap": {
+      "n_matched": 90,
+      "success_a": 41,
+      "success_b": 64,
+      "rate_a_pct": 45.56,
+      "rate_b_pct": 71.11,
+      "diff_pp": -25.56,
+      "task_stratified_bootstrap_ci95_pp": [
+        -35.56,
+        -15.56
+      ],
+      "b_only_a": 4,
+      "c_only_b": 27,
+      "mcnemar_p_value": 3.39532271027565e-05
+    },
+    "full_ns_k4_vs_key_matched_verbal": {
+      "n_matched": 90,
+      "success_a": 83,
+      "success_b": 41,
+      "rate_a_pct": 92.22,
+      "rate_b_pct": 45.56,
+      "diff_pp": 46.67,
+      "task_stratified_bootstrap_ci95_pp": [
+        35.56,
+        56.67
+      ],
+      "b_only_a": 45,
+      "c_only_b": 3,
+      "mcnemar_p_value": 1.312585595769633e-10
+    }
+  },
+  "api_usage": {
+    "calibration": {
+      "model": "gpt-6-luna",
+      "planner_calls": 19,
+      "planner_prompt_tokens": 14298,
+      "planner_completion_tokens": 9136,
+      "vlm_calls": 19,
+      "vlm_prompt_tokens": 23280,
+      "vlm_completion_tokens": 5054,
+      "total_calls": 38,
+      "total_prompt_tokens": 37578,
+      "total_completion_tokens": 14190,
+      "cost_usd": 0.010853
+    },
+    "evaluation_180": {
+      "model": "gpt-6-luna",
+      "calls": 180,
+      "prompt_tokens": 141770,
+      "completion_tokens": 84806,
+      "cost_usd": 0.05658
+    },
+    "total_new_api_spend": {
+      "model": "gpt-6-luna",
+      "total_calls": 218,
+      "total_prompt_tokens": 179348,
+      "total_completion_tokens": 98996,
+      "total_cost_usd": 0.067433
+    }
+  },
+  "equal_budget_persisted_memory_360": {
+    "source": "Codex 360-rollout equal-budget persisted-memory experiment (seeds 90000+100*j+i)",
+    "codex_reported_summary": {
+      "memory_overall": {
+        "n": 180,
+        "memory_successes": 154,
+        "no_memory_successes": 159,
+        "difference_pp": -2.7777777777777777,
+        "memory_only": 6,
+        "no_memory_only": 11,
+        "mcnemar_p": 0.332305908203125,
+        "bootstrap_95_ci_pp": [
+          -7.222222222222221,
+          1.6666666666666667
+        ]
+      },
+      "memory_updated_families": {
+        "n": 60,
+        "memory_successes": 54,
+        "no_memory_successes": 55,
+        "difference_pp": -1.6666666666666667,
+        "memory_only": 0,
+        "no_memory_only": 1,
+        "mcnemar_p": 1,
+        "bootstrap_95_ci_pp": [
+          -5.0,
+          0.0
+        ]
+      },
+      "memory_by_task": {
+        "T1_STACK_ORDERED": {
+          "n": 30,
+          "memory_successes": 21,
+          "no_memory_successes": 21,
+          "difference_pp": 0.0,
+          "memory_only": 0,
+          "no_memory_only": 0,
+          "mcnemar_p": 1,
+          "bootstrap_95_ci_pp": [
+            0.0,
+            0.0
+          ]
+        },
+        "T2_ALIGN_ROW": {
+          "n": 30,
+          "memory_successes": 29,
+          "no_memory_successes": 30,
+          "difference_pp": -3.3333333333333335,
+          "memory_only": 0,
+          "no_memory_only": 1,
+          "mcnemar_p": 1,
+          "bootstrap_95_ci_pp": [
+            -10.0,
+            0.0
+          ]
+        },
+        "T3_DIAGONAL_PAIR": {
+          "n": 30,
+          "memory_successes": 24,
+          "no_memory_successes": 25,
+          "difference_pp": -3.3333333333333335,
+          "memory_only": 0,
+          "no_memory_only": 1,
+          "mcnemar_p": 1,
+          "bootstrap_95_ci_pp": [
+            -10.0,
+            0.0
+          ]
+        },
+        "T4_PLACE_INSIDE": {
+          "n": 30,
+          "memory_successes": 22,
+          "no_memory_successes": 24,
+          "difference_pp": -6.666666666666667,
+          "memory_only": 5,
+          "no_memory_only": 7,
+          "mcnemar_p": 0.7744140625,
+          "bootstrap_95_ci_pp": [
+            -30.0,
+            16.666666666666664
+          ]
+        },
+        "T5_UNSTACK_SWAP": {
+          "n": 30,
+          "memory_successes": 30,
+          "no_memory_successes": 30,
+          "difference_pp": 0.0,
+          "memory_only": 0,
+          "no_memory_only": 0,
+          "mcnemar_p": 1,
+          "bootstrap_95_ci_pp": [
+            0.0,
+            0.0
+          ]
+        },
+        "T6_OBSTACLE_CLEARANCE": {
+          "n": 30,
+          "memory_successes": 28,
+          "no_memory_successes": 29,
+          "difference_pp": -3.3333333333333335,
+          "memory_only": 1,
+          "no_memory_only": 2,
+          "mcnemar_p": 1,
+          "bootstrap_95_ci_pp": [
+            -13.333333333333334,
+            6.666666666666667
+          ]
+        }
+      },
+      "protocol": {
+        "task_families": 6,
+        "seeds_per_family_per_arm": 30,
+        "seed_formula": "90000 + 100 * zero_based_task_index + zero_based_trial_index",
+        "common": [
+          "paraphrased command",
+          "scene seed",
+          "multi-view locator",
+          "ontology",
+          "checkpoints",
+          "automatic lift",
+          "gpt-6-luna synthesis",
+          "final simulator criterion"
+        ],
+        "intervention": "saved numerical priors and symbolic rules versus default priors and no saved rules",
+        "updated_saved_memory_families": [
+          "T3_DIAGONAL_PAIR",
+          "T5_UNSTACK_SWAP"
+        ]
+      },
+      "api_usage": {
+        "calls": 433,
+        "usd": 0.0977079
+      }
+    },
+    "recomputed_with_repo_stats": {
+      "overall_n180": {
+        "mcnemar": {
+          "n_matched": 180,
+          "b_only_a": 6,
+          "c_only_b": 11,
+          "p_value": 0.332305908203125
+        },
+        "task_stratified_boot_5000": {
+          "n_matched": 180,
+          "n_strata": 6,
+          "success_a": 154,
+          "success_b": 159,
+          "rate_a_pct": 85.56,
+          "rate_b_pct": 88.33,
+          "diff_pp": -2.78,
+          "ci95_pp": [
+            -7.22,
+            1.67
+          ],
+          "n_boot": 5000,
+          "seed": 42
+        }
+      },
+      "updated_t3_t5_n60": {
+        "mcnemar": {
+          "n_matched": 60,
+          "b_only_a": 0,
+          "c_only_b": 1,
+          "p_value": 1.0
+        },
+        "task_stratified_boot_5000": {
+          "n_matched": 60,
+          "n_strata": 2,
+          "success_a": 54,
+          "success_b": 55,
+          "rate_a_pct": 90.0,
+          "rate_b_pct": 91.67,
+          "diff_pp": -1.67,
+          "ci95_pp": [
+            -5.0,
+            0.0
+          ],
+          "n_boot": 5000,
+          "seed": 42
+        }
+      }
+    },
+    "per_task_counts": {
+      "T1_STACK_ORDERED": {
+        "memory_success": 21,
+        "no_memory_success": 21,
+        "trials": 30
+      },
+      "T2_ALIGN_ROW": {
+        "memory_success": 29,
+        "no_memory_success": 30,
+        "trials": 30
+      },
+      "T3_DIAGONAL_PAIR": {
+        "memory_success": 24,
+        "no_memory_success": 25,
+        "trials": 30
+      },
+      "T4_PLACE_INSIDE": {
+        "memory_success": 22,
+        "no_memory_success": 24,
+        "trials": 30
+      },
+      "T5_UNSTACK_SWAP": {
+        "memory_success": 30,
+        "no_memory_success": 30,
+        "trials": 30
+      },
+      "T6_OBSTACLE_CLEARANCE": {
+        "memory_success": 28,
+        "no_memory_success": 29,
+        "trials": 30
+      }
+    }
+  }
+}

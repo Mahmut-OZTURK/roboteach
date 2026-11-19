@@ -1,0 +1,17 @@
+{
+  "canonical_type": "ALIGN_ROW",
+  "calibrated": true,
+  "attempts": 0,
+  "success_count": 1,
+  "kinematic_priors": {
+    "transit_z": 0.56,
+    "release_margin_z": 0.075,
+    "row_spacing": 0.062,
+    "diagonal_delta": 0.062,
+    "grasp_force": 75.0,
+    "require_home_relocate": false
+  },
+  "rules_by_code": {},
+  "history": [],
+  "last_task": "kırmızı, mavi, yeşil ve sarı küpleri yan yana tek sıra halinde diz"
+}

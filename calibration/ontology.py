@@ -68,19 +68,22 @@ class CanonicalTaskOntology:
 
     def _detect_initial_stacks(self, low: str) -> list[list[str]]:
         stacks: list[list[str]] = []
-        # Split precondition clause after "but / ama / fakat / ancak / already / zaten"
         pre_match = re.search(
-            r"(?:ama|fakat|ancak|but|while|whereas)\s+(.+)$", low
+            r"\b(?:ama|fakat|ancak|oysa|lakin|but|while|whereas|although|even\s+though|though|however)\b[,:\s]*(.+)$",
+            low,
         )
-        clause = pre_match.group(1) if pre_match else low
-        if not any(k in clause for k in ("zaten", "already", "başlangıçta", "starts on")):
+        if re.match(r"^(?:although|even\s+though|though|given\s+that|since|currently|initially|başlangıçta|baslangicta|şu anda|su anda)\b", low) and re.search(r"[,;]", low):
+            clause = re.split(r"[,;]", low, maxsplit=1)[0]
+        elif pre_match:
+            clause = pre_match.group(1)
+        else:
+            clause = low
+        pre_kw = ("zaten", "already", "başlangıçta", "baslangicta", "starts on", "starts atop", "currently", "initially", "halihazırda", "halihazirda", "şu anda", "su anda")
+        if not any(k in clause for k in pre_kw):
             return stacks
 
         mentions = self._extract_ordered_mentions(clause)
         if len(mentions) >= 2:
-            # Handle Turkish possessive inversion: "mavinin üstünde kırmızı zaten var" vs "kırmızı zaten mavinin üstünde"
-            first_idx = clause.find(mentions[0].split("_")[0])
-            # Check if first color has genitive "-nin/-nın/-in/-un" right before "üstünde"
             for c_a in mentions:
                 for c_b in mentions:
                     if c_a == c_b:
@@ -89,38 +92,41 @@ class CanonicalTaskOntology:
                     aliases_b = COLOR_ALIASES[c_b]
                     for aa in aliases_a:
                         for ab in aliases_b:
-                            # Pattern 1: "red is already on blue" / "kırmızı zaten mavinin üstünde"
-                            if re.search(rf"{aa}.*(?:already|zaten).*{ab}.*(?:on|üst|uzer)", clause) or re.search(
-                                rf"{aa}\s+(?:zaten\s+)?{ab}\w*\s+(?:üstünde|üzerinde)", clause
+                            if re.search(
+                                rf"{aa}.*(?:already|zaten|currently|initially|halihazırda|halihazirda|şu anda|su anda|starts).*{ab}.*(?:on|atop|above|üst|uzer)",
+                                clause,
+                            ) or re.search(
+                                rf"{aa}\s+(?:zaten\s+)?{ab}\w*\s+(?:üstünde|üzerinde|ustunde|uzerinde)", clause
                             ):
                                 return [[c_a, c_b]]
-                            # Pattern 2: "mavinin üstünde zaten kırmızı var"
-                            if re.search(rf"{ab}\w*\s+(?:üstünde|üzerinde).*{aa}", clause):
+                            if re.search(rf"{ab}\w*\s+(?:üstünde|üzerinde|ustunde|uzerinde).*{aa}", clause):
                                 return [[c_a, c_b]]
             stacks.append([mentions[0], mentions[1]])
         return stacks
 
     def _extract_diagonal_pairs(self, low: str, mentions: list[str]) -> list[tuple[str, str]]:
-        # Split into sub-clauses if multiple diagonal pairs exist
         pairs: list[tuple[str, str]] = []
-        # Turkish pattern: "<ref> çaprazına <moving>" (e.g., "kırmızının çaprazına mavi")
-        # English pattern: "place <moving> diagonally to <ref>"
         clauses = re.split(r"[,;]|(?:\bve\b|\band\b)", low)
         for cl in clauses:
             c_mentions = self._extract_ordered_mentions(cl)
             if len(c_mentions) >= 2:
-                # In Turkish "<ref>'nin çaprazına <mov>", "çapraz" sits between ref and mov
-                cap_idx = cl.find("çapraz")
-                if cap_idx == -1:
-                    cap_idx = cl.find("capraz")
+                cap_idx = -1
+                for tok in ("çapraz", "capraz", "köşegen", "kosegen"):
+                    pos = cl.find(tok)
+                    if pos != -1 and (cap_idx == -1 or pos < cap_idx):
+                        cap_idx = pos
                 if cap_idx != -1:
-                    # First mention is reference, second is moving
-                    pairs.append((c_mentions[1], c_mentions[0]))
+                    idx0 = min((cl.find(a) for a in COLOR_ALIASES[c_mentions[0]] if cl.find(a) != -1), default=0)
+                    idx1 = min((cl.find(a) for a in COLOR_ALIASES[c_mentions[1]] if cl.find(a) != -1), default=0)
+                    # "maviyi kırmızının çaprazına" (idx0 < idx1 < cap_idx): first is moving, second is ref
+                    if idx0 < idx1 < cap_idx:
+                        pairs.append((c_mentions[0], c_mentions[1]))
+                    else:
+                        pairs.append((c_mentions[1], c_mentions[0]))
                 else:
-                    # English: "put blue diagonal to red" -> first is moving, second is reference
                     pairs.append((c_mentions[0], c_mentions[1]))
         if not pairs and len(mentions) >= 2:
-            if "çapraz" in low or "capraz" in low:
+            if any(t in low for t in ("çapraz", "capraz", "köşegen", "kosegen")):
                 for i in range(0, len(mentions) - 1, 2):
                     pairs.append((mentions[i + 1], mentions[i]))
             else:
@@ -133,26 +139,46 @@ class CanonicalTaskOntology:
         initial_stacks = self._detect_initial_stacks(low)
 
         # Strip precondition clause when parsing the goal clause
-        goal_clause = re.split(r"\b(?:ama|fakat|ancak|but|while|whereas)\b", low)[0]
+        pre_split_re = r"\b(?:ama|fakat|ancak|oysa|lakin|but|while|whereas|although|even\s+though|though|however)\b"
+        lead_pre_re = r"^(?:although|even\s+though|though|given\s+that|since|currently|initially|başlangıçta|baslangicta|şu anda|su anda)\b"
+        if re.match(lead_pre_re, low) and re.search(r"[,;]", low):
+            goal_clause = re.split(r"[,;]", low, maxsplit=1)[1]
+        elif re.search(pre_split_re, low):
+            goal_clause = re.split(pre_split_re, low, maxsplit=1)[0]
+        else:
+            goal_clause = low
         mentions = self._extract_ordered_mentions(goal_clause)
 
         has_obstacle = any(
-            w in low for w in ("engel", "duvar", "barrier", "obstacle", "wall", "aşırarak", "over the wall")
+            w in low for w in (
+                "engel", "duvar", "barrier", "obstacle", "wall", "aşırarak", "over the wall",
+                "bariyer", "aşarak", "asarak", "üzerinden atlat", "üzerinden geçir", "divider", "partition", "hurdle",
+            )
         )
         is_inside = any(
-            w in goal_clause for w in ("içine", "icine", "inside", "into the box", "kutuya", "kutunun içine", "kaba")
-        )
-        is_diagonal = any(w in goal_clause for w in ("çapraz", "capraz", "diagonal", "diagonally"))
+            w in goal_clause for w in (
+                "içine", "icine", "inside", "into the box", "kutuya", "kutunun içine", "kaba",
+                "into the container", "in the box", "in the container", "within the box",
+                "inside the brown", "into brown", "içerisine", "icerisine", "kabın", "hazne",
+            )
+        ) or bool(re.search(r"\b(?:in|into|inside|within)\s+(?:the\s+)?(?:\w+\s+)?(?:box|container|brown_box)\b", goal_clause))
+        is_diagonal = any(w in goal_clause for w in ("çapraz", "capraz", "köşegen", "kosegen", "diagonal", "diagonally", "crosswise"))
         is_row = any(
             w in goal_clause
-            for w in ("yan yana", "yanyana", "yanına", "yanina", "beside", "next to", "in a row", "sıra halinde", "line up")
-        )
+            for w in (
+                "yan yana", "yanyana", "yanına", "yanina", "beside", "next to", "in a row", "sıra halinde", "line up",
+                "side by side", "side-by-side", "in a line", "collinear", "a row", "tek sıra", "tek sira", "hizala", "hizada", "sıraya", "siraya", "doğrusal", "dogrusal",
+            )
+        ) or bool(re.search(r"\b(?:row|line)\b", goal_clause))
         is_stack = any(
             w in goal_clause
-            for w in ("üst üste", "üstüne", "üzerine", "kule", "istifle", "stack", "on top", "tower")
+            for w in (
+                "üst üste", "üstüne", "üzerine", "ustune", "uzerine", "kule", "istifle",
+                "stack", "on top", "tower", "pile", "yığ", "yig", "tepesine", "atop",
+            )
         )
 
-        if initial_stacks and is_stack:
+        if initial_stacks and (is_stack or re.search(r"\b(?:on|onto|swap|reverse)\b", goal_clause) or "yer değiştir" in goal_clause):
             canonical = "UNSTACK_SWAP"
             # Goal: "put blue on red" -> bottom is red, top is blue; or Turkish "maviyi kırmızının üstüne koy" -> moving=blue, base=red
             ordered = self._resolve_two_object_stack_order(goal_clause, mentions)

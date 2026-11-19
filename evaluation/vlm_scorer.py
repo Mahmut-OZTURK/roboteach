@@ -200,7 +200,8 @@ REASONING: <1 concise factual sentence citing observed positions/views>"""
             is_reasoning = "gpt-6" in self.model or "gpt-5" in self.model or self.model.startswith("o")
             eff = "low" if is_reasoning else ("none" if "qwen" in self.model else None)
             tok_budget = 700 if is_reasoning else (240 if "qwen" in self.model else 300)
-            for attempt in range(4):
+            attempts = max(1, self.max_retries)
+            for attempt in range(attempts):
                 try:
                     resp = self._chat_create(
                         model_name=self.model,
@@ -210,21 +211,24 @@ REASONING: <1 concise factual sentence citing observed positions/views>"""
                     )
                     txt = (resp.choices[0].message.content or "").strip()
                     if txt:
-                        parsed = self._parse(txt)
-                        break
+                        cand = self._parse(txt)
+                        parsed = cand
+                        if not cand.get("parse_error"):
+                            break
+                        last_err = "Missing or invalid VISUAL_SUCCESS in VLM output"
                 except Exception as exc:
                     last_err = str(exc)
                     low_err = last_err.lower()
                     if "tokens per day" in low_err or "tpd" in low_err or "insufficient_quota" in low_err:
                         break
-                    if any(k in low_err for k in ("429", "rate_limit", "timeout", "503", "502", "connection")) and attempt < 3:
+                    if any(k in low_err for k in ("429", "rate_limit", "timeout", "503", "502", "connection")) and attempt + 1 < attempts:
                         m_wait = re.search(r"try again in\s+(\d+\.?\d*)s", low_err)
                         sleep_s = (float(m_wait.group(1)) + 1.5) if m_wait else (3.0 * (attempt + 1))
                         time.sleep(min(sleep_s, 65.0))
                     else:
                         break
 
-        if parsed is None and (not prefer_multimodal or allow_pointcloud_fallback) and perceived_details is not None:
+        if (parsed is None or parsed.get("parse_error")) and (not prefer_multimodal or allow_pointcloud_fallback) and perceived_details is not None:
             judge_mode = "rgbd_pointcloud_critic"
             obs_lines = []
             for name, info in perceived_details.items():
@@ -265,22 +269,25 @@ LEARNED_INSTRUCTION: <1 actionable geometric correction or None>"""
                         max_tokens=900 + attempt * 250,
                     )
                     txt = (resp.choices[0].message.content or "").strip()
-                    if txt and ("VISUAL_SUCCESS" in txt.upper() or "SUCCESS:" in txt.upper()):
-                        parsed = self._parse(txt)
-                        break
+                    if txt:
+                        cand = self._parse(txt)
+                        parsed = cand
+                        if not cand.get("parse_error"):
+                            break
+                        last_err = "Missing or invalid VISUAL_SUCCESS in critic output"
                 except Exception as exc:
                     last_err = str(exc)
                     if attempt + 1 < self.max_retries:
                         time.sleep(5.0 * (attempt + 1))
 
-        if parsed is None:
+        if parsed is None or parsed.get("parse_error"):
             return {
                 "success": False,
                 "score": 0.0,
                 "evaluation_error": True,
                 "judge_mode": "error",
                 "failure_code": "F_EXEC_SYNTAX",
-                "issue": f"VLM evaluation failed: {last_err}",
+                "issue": f"VLM evaluation failed: {last_err or 'Missing VISUAL_SUCCESS'}",
                 "instruction": None,
                 "diagnostic": None,
                 "api_latency_ms": self.last_api_latency_ms,
@@ -366,6 +373,20 @@ LEARNED_INSTRUCTION: <1 actionable geometric correction or None>"""
         return "F_XY_ALIGN"
 
     @staticmethod
+    def _parse_bool_verdict(val: str) -> tuple[bool, bool]:
+        """Parses VISUAL_SUCCESS value, handling negated phrases; returns (verdict, valid)."""
+        low = val.strip().lower()
+        if not low:
+            return False, False
+        if re.search(r"\b(?:not\s+true|not\s+yes|not\s+successful|unsuccessful|false)\b", low):
+            return False, True
+        if re.match(r"^\s*no\b", low) or (re.search(r"\bno\b", low) and not re.match(r"^\s*(?:true|yes)\b", low)):
+            return False, True
+        if re.search(r"\b(?:true|yes)\b", low):
+            return True, True
+        return False, False
+
+    @staticmethod
     def _parse(text: str) -> dict:
         out = {
             "visual_success": False,
@@ -374,11 +395,13 @@ LEARNED_INSTRUCTION: <1 actionable geometric correction or None>"""
             "issue": "Parse error",
             "instruction": None,
             "reasoning": "",
+            "parse_error": True,
         }
         if "</think>" in text:
             text = text.split("</think>")[-1].strip()
         clean = text.replace("**", "").replace("###", "").replace("##", "")
         found = False
+        has_visual_success = False
         for raw in clean.splitlines():
             line = raw.strip()
             if not line or ":" not in line:
@@ -390,7 +413,10 @@ LEARNED_INSTRUCTION: <1 actionable geometric correction or None>"""
                 out["reasoning"] = val
                 found = True
             elif key in ("VISUAL_SUCCESS", "SUCCESS"):
-                out["visual_success"] = "TRUE" in val.upper() or "YES" in val.upper()
+                verdict, is_valid = VLMScorer._parse_bool_verdict(val)
+                if is_valid:
+                    out["visual_success"] = verdict
+                    has_visual_success = True
                 found = True
             elif key in ("VISUAL_SCORE", "SCORE"):
                 m = re.search(r"(\d+\.?\d*)", val)
@@ -407,8 +433,14 @@ LEARNED_INSTRUCTION: <1 actionable geometric correction or None>"""
                 out["instruction"] = None if val.upper() == "NONE" else val
                 found = True
 
-        if found and out["issue"] == "Parse error":
+        out["parse_error"] = not has_visual_success
+        if out["parse_error"]:
+            out["visual_success"] = False
+            out["visual_score"] = 0.0
+            if out["issue"] in ("Parse error", "None"):
+                out["issue"] = "Parse error: missing VISUAL_SUCCESS"
+        elif found and out["issue"] == "Parse error":
             out["issue"] = "None"
-        if out["visual_success"]:
+        if out["visual_success"] and not out["parse_error"]:
             out["failure_code"] = "None"
         return out
