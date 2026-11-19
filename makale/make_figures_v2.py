@@ -144,7 +144,7 @@ def fig3():
 def fig4():
     res = json.load(open(os.path.join(ROOT, "benchmark", "results", "live_ablation_benchmark.json")))["results_by_method"]
     keys = ["zero_shot_open_loop", "fair_cap_multiview", "unstructured_verbal_reflexion", "neuro_symbolic_roboteach"]
-    labels = ["One camera", "Four cameras", "Verbal feedback", "RoboTeach"]
+    labels = ["Single camera", "Four cameras", "Verbal correction", "RoboTeach"]
     colors = ["#d1d5db", "#93c5fd", "#fcd34d", "#2563eb"]
     tasks = ["T1_STACK_ORDERED", "T2_ALIGN_ROW", "T3_DIAGONAL_PAIR", "T4_PLACE_INSIDE", "T5_UNSTACK_SWAP", "T6_OBSTACLE_CLEARANCE"]
     names = ["Tower", "Row", "Diagonal", "Box", "Swap", "Obstacle"]
